@@ -1,2 +1,4 @@
-# Project exclude paths
 /target/
+/.idea/
+/api-marketplace.iml
+/.mvn/wrapper/maven-wrapper.jar
