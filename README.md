@@ -1,3 +1,3 @@
 # api-marketplace
 
-## Marketplace Service
+## Marketplace Service App
