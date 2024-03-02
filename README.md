@@ -1,3 +1,3 @@
-# api-template
+# api-marketplace
 
-## Service Template Archetype
+## Marketplace Service
