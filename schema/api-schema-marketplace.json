@@ -1,0 +1,46 @@
+{
+  "packageName": "com.schambeck.marketplace.usecase",
+  "entities": [
+    {
+      "name": "User",
+      "resource": "users",
+      "fields": [
+        {"propertyName": "username", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "email", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "fullName", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "version", "propertyType": "Integer", "columnType": "integer", "required": true, "version": true}
+      ]
+    },
+    {
+      "name": "Seller",
+      "resource": "sellers",
+      "fields": [
+        {"propertyName": "user", "propertyType": "User", "subtype": "entity", "columnType": "integer", "manyToOneTable": "user", "required": true},
+        {"propertyName": "version", "propertyType": "Integer", "columnType": "integer", "required": true, "version": true}
+      ]
+    },
+    {
+      "name": "Buyer",
+      "resource": "buyers",
+      "fields": [
+        {"propertyName": "user", "propertyType": "User", "subtype": "entity", "columnType": "integer", "manyToOneTable": "user", "required": true},
+        {"propertyName": "version", "propertyType": "Integer", "columnType": "integer", "required": true, "version": true}
+      ]
+    },
+    {
+      "name": "Product",
+      "resource": "products",
+      "fields": [
+        {"propertyName": "name", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "description", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "price", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "quantity", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "user", "propertyType": "User", "subtype": "entity", "columnType": "integer", "manyToOneTable": "user", "required": true},
+        {"propertyName": "category", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "inventoryStatus", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "rating", "propertyType": "Integer", "columnType": "integer", "required": true},
+        {"propertyName": "version", "propertyType": "Integer", "columnType": "integer", "required": true, "version": true}
+      ]
+    }
+  ]
+}
