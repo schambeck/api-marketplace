@@ -15,6 +15,7 @@ public class ShoppingCartController {
     private static final CartItemMapper mapper = CartItemMapper.INSTANCE;
     private final CartItemService service;
     private final CreateShoppingCartItemService createService;
+    private final UpdateShoppingCartItemService updateService;
     private final RemoveShoppingCartItemService removeService;
 
     @PostMapping
@@ -24,8 +25,8 @@ public class ShoppingCartController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<CartItemWeb> update(@PathVariable int id, @RequestBody CartItemWeb web) {
-        CartItem updated = service.update(id, mapper.toEntity(web));
+    public ResponseEntity<CartItemWeb> update(@PathVariable int id, @RequestBody UpdateShoppingCartItemRequest request) {
+        CartItem updated = updateService.updateQuantity(id, request);
         return ResponseEntity.ok(mapper.toWeb(updated));
     }
 
