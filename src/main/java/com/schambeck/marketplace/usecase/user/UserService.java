@@ -30,7 +30,7 @@ public class UserService {
     }
 
     public User findById(int id) {
-        return repository.findById(id).orElseThrow();
+        return repository.findByIdOrThrow(id);
     }
 
     public Page<User> search(Pageable pageable, String text) {

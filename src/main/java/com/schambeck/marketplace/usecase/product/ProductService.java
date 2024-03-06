@@ -30,7 +30,7 @@ public class ProductService {
     }
 
     public Product findById(int id) {
-        return repository.findById(id).orElseThrow();
+        return repository.findByIdOrThrow(id);
     }
 
     public Page<Product> search(Pageable pageable, String text) {

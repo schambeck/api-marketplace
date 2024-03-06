@@ -41,6 +41,27 @@
         {"propertyName": "rating", "propertyType": "Integer", "columnType": "integer", "required": true},
         {"propertyName": "version", "propertyType": "Integer", "columnType": "integer", "required": true, "version": true}
       ]
+    },
+    {
+      "name": "Cart",
+      "resource": "carts",
+      "fields": [
+        {"propertyName": "user", "propertyType": "User", "subtype": "entity", "columnType": "integer", "manyToOneTable": "user", "required": true},
+        {"propertyName": "total", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "version", "propertyType": "Integer", "columnType": "integer", "required": true, "version": true}
+      ]
+    },
+    {
+      "name": "CartItem",
+      "resource": "cart-items",
+      "fields": [
+        {"propertyName": "cart", "propertyType": "Cart", "subtype": "entity", "columnType": "integer", "manyToOneTable": "cart", "required": true},
+        {"propertyName": "product", "propertyType": "Product", "subtype": "entity", "columnType": "integer", "manyToOneTable": "product", "required": true},
+        {"propertyName": "price", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "quantity", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "total", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "version", "propertyType": "Integer", "columnType": "integer", "required": true, "version": true}
+      ]
     }
   ]
 }
