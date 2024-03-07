@@ -39,6 +39,6 @@ public class CartItemController {
 
     @GetMapping
     public ResponseEntity<Page<CartItemWeb>> search(@PageableDefault Pageable pageable, @RequestParam(required = false) String search) {
-        return ResponseEntity.ok(service.searchByCart(pageable, search).map(mapper::toWeb));
+        return ResponseEntity.ok(service.search(pageable, search).map(mapper::toWeb));
     }
 }

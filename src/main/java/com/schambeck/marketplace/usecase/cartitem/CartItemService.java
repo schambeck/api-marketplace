@@ -33,7 +33,7 @@ public class CartItemService {
         return repository.findByIdOrThrow(id);
     }
 
-    public Page<CartItem> searchByCart(Pageable pageable, String text) {
+    public Page<CartItem> search(Pageable pageable, String text) {
         if (text == null || text.isBlank()) {
             return repository.findAllByOrderByIdAsc(pageable);
         } else {
@@ -41,11 +41,15 @@ public class CartItemService {
         }
     }
 
-    public Page<CartItem> searchByCart(Pageable pageable, String text, Integer cartId) {
+    public Page<CartItem> searchByUsername(Pageable pageable, String text, String username) {
         if (text == null || text.isBlank()) {
-            return repository.findAllByCart_IdOrderByIdAsc(pageable, cartId);
+            return repository.findAllByCart_User_UsernameOrderByIdAsc(pageable, username);
         } else {
-            return repository.findAllByProduct_DescriptionContainingIgnoreCaseAndCart_IdOrderByIdAsc(pageable, text, cartId);
+            return repository.findAllByProduct_DescriptionContainingIgnoreCaseAndCart_User_UsernameOrderByIdAsc(pageable, text, username);
         }
+    }
+    
+    public int countByUsername(String username) {
+        return repository.countByCart_User_Username(username);
     }
 }

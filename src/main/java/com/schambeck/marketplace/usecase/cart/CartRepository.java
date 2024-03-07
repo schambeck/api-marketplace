@@ -1,6 +1,6 @@
 package com.schambeck.marketplace.usecase.cart;
 
-import com.schambeck.marketplace.exception.EntityNotFoundException;
+import com.schambeck.marketplace.exception.CartNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,8 +13,12 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
     Page<Cart> findAllByUser_FullNameContainingIgnoreCaseOrderByIdAsc(Pageable pageable, String description);
     
     default Cart findByIdOrThrow(Integer id) {
-        return findById(id).orElseThrow(() -> new EntityNotFoundException(Cart.class, id));
+        return findById(id).orElseThrow(() -> new CartNotFoundException(id));
     }
     
     Optional<Cart> findByUser_Username(String username);
+    
+    default Cart findByUser_UsernameOrThrow(String username) {
+        return findByUser_Username(username).orElseThrow(() -> new CartNotFoundException(username));
+    }
 }

@@ -36,8 +36,13 @@ public class ShoppingCartController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("{cartId}")
-    public ResponseEntity<Page<CartItemWeb>> searchByCart(@PageableDefault Pageable pageable, @RequestParam(required = false) String search, @PathVariable Integer cartId) {
-        return ResponseEntity.ok(service.searchByCart(pageable, search, cartId).map(mapper::toWeb));
+    @GetMapping("{username}")
+    public ResponseEntity<Page<CartItemWeb>> searchByCart(@PageableDefault Pageable pageable, @RequestParam(required = false) String search, @PathVariable String username) {
+        return ResponseEntity.ok(service.searchByUsername(pageable, search, username).map(mapper::toWeb));
+    }
+
+    @GetMapping("{username}/count")
+    public ResponseEntity<CountShoppingCartItemResponse> countByUsername(@PathVariable String username) {
+        return ResponseEntity.ok(new CountShoppingCartItemResponse(service.countByUsername(username)));
     }
 }

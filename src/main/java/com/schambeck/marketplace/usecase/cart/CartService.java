@@ -32,6 +32,10 @@ public class CartService {
     public Cart findById(int id) {
         return repository.findByIdOrThrow(id);
     }
+    
+    public Cart findByUsername(String username) {
+        return repository.findByUser_UsernameOrThrow(username);
+    }
 
     public Page<Cart> search(Pageable pageable, String text) {
         if (text == null || text.isBlank()) {

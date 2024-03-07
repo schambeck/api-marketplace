@@ -32,9 +32,9 @@ public class CartController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<CartWeb> get(@PathVariable int id) {
-        return ResponseEntity.ok(mapper.toWeb(service.findById(id)));
+    @GetMapping("{username}")
+    public ResponseEntity<CartWeb> get(@PathVariable String username) {
+        return ResponseEntity.ok(mapper.toWeb(service.findByUsername(username)));
     }
 
     @GetMapping
