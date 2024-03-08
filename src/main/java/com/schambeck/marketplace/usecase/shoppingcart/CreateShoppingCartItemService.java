@@ -27,10 +27,10 @@ public class CreateShoppingCartItemService {
     private final ProductRepository productRepository;
 
     @Transactional
-    public CartItem create(CreateShoppingCartItemRequest request) {
+    public CartItem create(CreateShoppingCartItemRequest request, String username) {
         Product product = productRepository.findByIdOrThrow(request.getProductId());
         BigDecimal total = calculateTotal(product.getPrice(), request.getQuantity());
-        Cart cart = createCart(request);
+        Cart cart = createCart(username);
         cart.setTotal(cart.getTotal().add(total));
         CartItem cartItem = createCartItem(request, cart, product, total);
         return cartItemRepository.save(cartItem);
@@ -47,10 +47,10 @@ public class CreateShoppingCartItemService {
                 .build();
     }
     
-    private Cart createCart(CreateShoppingCartItemRequest request) {
-        return cartRepository.findByUser_Username(request.getUsername())
+    private Cart createCart(String username) {
+        return cartRepository.findByUser_Username(username)
                 .orElse(Cart.builder()
-                        .user(userRepository.findByUsernameOrThrow(request.getUsername()))
+                        .user(userRepository.findByUsernameOrThrow(username))
                         .total(ZERO)
                         .version(0)
                         .build());

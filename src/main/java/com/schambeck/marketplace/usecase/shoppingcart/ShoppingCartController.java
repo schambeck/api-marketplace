@@ -1,5 +1,6 @@
 package com.schambeck.marketplace.usecase.shoppingcart;
 
+import com.schambeck.marketplace.security.AuthenticationService;
 import com.schambeck.marketplace.usecase.cartitem.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -7,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("shopping-cart")
@@ -17,10 +20,12 @@ public class ShoppingCartController {
     private final CreateShoppingCartItemService createService;
     private final UpdateShoppingCartItemService updateService;
     private final RemoveShoppingCartItemService removeService;
+    private final AuthenticationService authenticationService;
 
     @PostMapping
-    public ResponseEntity<CartItemWeb> create(@RequestBody CreateShoppingCartItemRequest request) {
-        CartItem created = createService.create(request);
+    public ResponseEntity<CartItemWeb> create(@RequestBody CreateShoppingCartItemRequest request, Principal principal) {
+        String username = authenticationService.getLoggedUsername(principal);
+        CartItem created = createService.create(request, username);
         return ResponseEntity.ok(mapper.toWeb(created));
     }
 
@@ -36,13 +41,15 @@ public class ShoppingCartController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("{username}")
-    public ResponseEntity<Page<CartItemWeb>> searchByCart(@PageableDefault Pageable pageable, @RequestParam(required = false) String search, @PathVariable String username) {
+    @GetMapping
+    public ResponseEntity<Page<CartItemWeb>> searchByCart(@PageableDefault Pageable pageable, @RequestParam(required = false) String search, Principal principal) {
+        String username = authenticationService.getLoggedUsername(principal);
         return ResponseEntity.ok(service.searchByUsername(pageable, search, username).map(mapper::toWeb));
     }
 
-    @GetMapping("{username}/count")
-    public ResponseEntity<CountShoppingCartItemResponse> countByUsername(@PathVariable String username) {
+    @GetMapping("count")
+    public ResponseEntity<CountShoppingCartItemResponse> countByUsername(Principal principal) {
+        String username = authenticationService.getLoggedUsername(principal);
         return ResponseEntity.ok(new CountShoppingCartItemResponse(service.countByUsername(username)));
     }
 }

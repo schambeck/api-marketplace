@@ -40,4 +40,8 @@ public class UserService {
             return repository.findAllByFullNameContainingIgnoreCaseOrderByIdAsc(pageable, text);
         }
     }
+
+    public boolean existsByUsername(String username) {
+        return repository.existsByUsername(username);
+    }
 }
