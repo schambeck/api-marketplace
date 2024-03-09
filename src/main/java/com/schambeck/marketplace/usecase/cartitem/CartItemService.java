@@ -43,9 +43,9 @@ public class CartItemService {
 
     public Page<CartItem> searchByUsername(Pageable pageable, String text, String username) {
         if (text == null || text.isBlank()) {
-            return repository.findAllByCart_User_UsernameOrderByIdAsc(pageable, username);
+            return repository.findAllByCart_User_UsernameOrderByIdDesc(pageable, username);
         } else {
-            return repository.findAllByProduct_DescriptionContainingIgnoreCaseAndCart_User_UsernameOrderByIdAsc(pageable, text, username);
+            return repository.findAllByProduct_DescriptionContainingIgnoreCaseAndCart_User_UsernameOrderByIdDesc(pageable, text, username);
         }
     }
     
