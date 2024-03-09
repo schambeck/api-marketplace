@@ -29,6 +29,14 @@ public class ShoppingCartController {
         return ResponseEntity.ok(mapper.toWeb(created));
     }
 
+    @PostMapping("createIfAbsent")
+    public ResponseEntity<CreateIfAbsentShoppingCartItemResponse> createIfAbsent(@RequestBody CreateShoppingCartItemRequest request, Principal principal) {
+        String username = authenticationService.getLoggedUsername(principal);
+        return createService.createIfAbsent(request, username)
+                .map(created -> ResponseEntity.ok(new CreateIfAbsentShoppingCartItemResponse(true, mapper.toWeb(created))))
+                .orElse(ResponseEntity.ok(new CreateIfAbsentShoppingCartItemResponse(false, null)));
+    }
+
     @PutMapping("{id}")
     public ResponseEntity<CartItemWeb> update(@PathVariable int id, @RequestBody UpdateShoppingCartItemRequest request) {
         CartItem updated = updateService.updateQuantity(id, request);

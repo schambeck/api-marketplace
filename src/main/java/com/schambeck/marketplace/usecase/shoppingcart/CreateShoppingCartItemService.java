@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_UP;
@@ -34,6 +35,15 @@ public class CreateShoppingCartItemService {
         cart.setTotal(cart.getTotal().add(total));
         CartItem cartItem = createCartItem(request, cart, product, total);
         return cartItemRepository.save(cartItem);
+    }
+    
+    @Transactional
+    public Optional<CartItem> createIfAbsent(CreateShoppingCartItemRequest request, String username) {
+        if (cartItemRepository.existsByCart_User_UsernameAndProduct_Id(username, request.getProductId())) {
+            return Optional.empty();
+        } else {
+            return Optional.of(create(request, username));
+        }
     }
     
     private static CartItem createCartItem(CreateShoppingCartItemRequest request, Cart cart, Product product, BigDecimal total) {
