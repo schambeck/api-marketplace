@@ -1,5 +1,5 @@
 services:
-  web:
+  api:
     image: api-marketplace:latest
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/marketplace
