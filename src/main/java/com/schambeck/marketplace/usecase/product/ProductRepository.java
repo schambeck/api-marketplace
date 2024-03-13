@@ -10,6 +10,10 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     Page<Product> findAllByNameContainingIgnoreCaseOrderByIdAsc(Pageable pageable, String description);
     
+    Page<Product> findAllByUser_UsernameOrderByIdAsc(Pageable pageable, String username);
+
+    Page<Product> findAllByUser_UsernameAndNameContainingIgnoreCaseOrderByIdAsc(Pageable pageable, String name, String username);
+    
     default Product findByIdOrThrow(Integer id) {
         return findById(id).orElseThrow(() -> new EntityNotFoundException(Product.class, id));
     }
