@@ -29,3 +29,13 @@ services:
       - REALM_NAME=marketplace
     ports:
       - '9000:9000'
+  minio:
+    image: quay.io/minio/minio
+    restart: always
+    hostname: minio.localhost
+    command: server /data --console-address ":9001"
+    volumes:
+      - '/data'
+    ports:
+      - '9010:9000'
+      - '9011:9001'

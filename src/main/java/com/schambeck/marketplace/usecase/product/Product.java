@@ -57,6 +57,9 @@ public class Product {
 	@Column(name = "image")
 	private String image;
 
+	@Column(name = "object_id")
+	private String objectId;
+
 	@Version
 	@Column(name = "version")
 	private Integer version;

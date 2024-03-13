@@ -23,6 +23,7 @@ public class ProductWeb {
 	private String inventoryStatus;
 	private String rating;
 	private String image;
+	private String objectId;
 	private Integer version;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
