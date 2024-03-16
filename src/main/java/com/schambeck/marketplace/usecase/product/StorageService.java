@@ -4,6 +4,7 @@ import io.minio.*;
 import io.minio.errors.MinioException;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,12 +23,27 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class StorageService {
-    public static final String ACCESS_KEY = "";
-    public static final String SECRET_KEY = "";
-    public static final String BUCKET_NAME = "marketplace";
+    @Value("${minio.access.key}")
+    private String accessKey;
+
+    @Value("${minio.secret.key}")
+    private String secretKey;
+
+    @Value("${minio.bucket.name}")
+    private String bucketName;
+
+    @Value("${minio.endpoint}")
+    private String endpoint;
+
+    @Value("${minio.port}")
+    private Integer port;
+
+    @Value("${minio.secure}")
+    private Boolean secure;
+
     private Path rootLocation;
     private MinioClient minioClient;
-    
+
     @PostConstruct
     public void init() {
         try {
@@ -38,16 +54,16 @@ public class StorageService {
         }
         
         minioClient = MinioClient.builder()
-                .endpoint("127.0.0.1", 9010, false)
-                .credentials(ACCESS_KEY, SECRET_KEY)
+                .endpoint(endpoint, port, secure)
+                .credentials(accessKey, secretKey)
                 .build();
     }
     
     public String store(MultipartFile file) {
         try {
-            boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(BUCKET_NAME).build());
+            boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
             if (!found) {
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(BUCKET_NAME).build());
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
             } else {
                 log.info("Bucket 'marketplace' already exists.");
             }
@@ -64,11 +80,11 @@ public class StorageService {
             
             String objectId = UUID.randomUUID() + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf('.'));
             ObjectWriteResponse response = minioClient.uploadObject(UploadObjectArgs.builder()
-                    .bucket(BUCKET_NAME)
+                    .bucket(bucketName)
                     .object(objectId)
                     .filename(fileToUpload.getAbsolutePath())
                     .build());
-            log.info("'{}' is successfully uploaded as object '{}' to bucket '{}'", fileToUpload.getAbsolutePath(), fileToUpload.getName(), BUCKET_NAME);
+            log.info("'{}' is successfully uploaded as object '{}' to bucket '{}'", fileToUpload.getAbsolutePath(), fileToUpload.getName(), bucketName);
             return response.object();
         } catch (MinioException e) {
             log.error("Error occurred: ", e);
@@ -87,7 +103,7 @@ public class StorageService {
             String absolutePath = storageFile.getAbsolutePath();
             minioClient.downloadObject(
                     DownloadObjectArgs.builder()
-                            .bucket(BUCKET_NAME)
+                            .bucket(bucketName)
                             .object(objectId)
                             .filename(absolutePath)
                             .overwrite(true)
