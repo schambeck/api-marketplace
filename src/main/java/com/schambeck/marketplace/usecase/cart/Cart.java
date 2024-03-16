@@ -25,7 +25,7 @@ public class Cart {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = IDENTITY)
-	private int id;
+	private Integer id;
 
 	@ManyToOne(cascade = MERGE)
 	@JoinColumn(name = "user_id", referencedColumnName = "id")

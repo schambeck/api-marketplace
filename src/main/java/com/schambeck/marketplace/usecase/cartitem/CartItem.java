@@ -26,7 +26,7 @@ public class CartItem {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = IDENTITY)
-	private int id;
+	private Integer id;
 
 	@ManyToOne(cascade = MERGE)
 	@JoinColumn(name = "cart_id", referencedColumnName = "id")

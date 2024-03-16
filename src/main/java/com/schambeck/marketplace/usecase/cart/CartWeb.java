@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class CartWeb {
-	private int id;
+	private Integer id;
 	private UserWeb user;
 	private BigDecimal total;
 	private Integer version;

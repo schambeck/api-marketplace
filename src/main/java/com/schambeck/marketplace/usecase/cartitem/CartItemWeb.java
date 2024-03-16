@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class CartItemWeb {
-	private int id;
+	private Integer id;
 	private CartWeb cart;
 	private ProductWeb product;
 	private BigDecimal price;

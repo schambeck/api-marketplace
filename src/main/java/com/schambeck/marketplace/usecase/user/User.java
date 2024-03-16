@@ -25,7 +25,7 @@ public class User {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = IDENTITY)
-	private int id;
+	private Integer id;
 
 	@Column(name = "username")
 	private String username;

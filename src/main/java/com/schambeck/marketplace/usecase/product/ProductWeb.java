@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class ProductWeb {
-	private int id;
+	private Integer id;
 	private String name;
 	private String description;
 	private BigDecimal price;
