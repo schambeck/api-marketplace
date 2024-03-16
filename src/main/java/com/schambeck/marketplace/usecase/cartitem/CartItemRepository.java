@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
     Page<CartItem> findAllByOrderByIdAsc(Pageable pageable);
     
@@ -23,4 +25,6 @@ public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
     int countByCart_User_Username(String username);
     
     boolean existsByCart_User_UsernameAndProduct_Id(String username, Integer productId);
+    
+    List<CartItem> findAllByCart_IdOrderByIdDesc(Integer cartId);
 }
