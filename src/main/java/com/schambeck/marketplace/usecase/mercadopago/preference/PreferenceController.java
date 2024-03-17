@@ -2,7 +2,6 @@ package com.schambeck.marketplace.usecase.mercadopago.preference;
 
 import com.mercadopago.resources.preference.Preference;
 import com.schambeck.marketplace.security.AuthenticationService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +18,8 @@ class PreferenceController {
     private final CreatePreferenceService createService;
     
     @PostMapping
-    ResponseEntity<Preference> createPreference(Principal principal, HttpServletRequest request) {
+    ResponseEntity<Preference> createPreference(Principal principal) {
         String username = authenticationService.getLoggedUsername(principal);
-        request.getRequestURL().toString();
         Preference preference = createService.createPreference(username);
         return ResponseEntity.ok(preference);
     }
