@@ -10,15 +10,15 @@ import java.util.Map;
 @Service
 public class AuthenticationService {
     public String getLoggedUsername(Principal principal) {
-        return getTokenAttribute(principal, "preferred_username");
+        return getTokenAttribute(principal, "sub");
     }
     
     public String getEmail(Principal principal) {
-        return getTokenAttribute(principal, "email");
+        return getTokenAttribute(principal, "sub");
     }
     
     public String getName(Principal principal) {
-        return getTokenAttribute(principal, "name");
+        return getTokenAttribute(principal, "sub");
     }
     
     private static String getTokenAttribute(Principal principal, String attribute) {
