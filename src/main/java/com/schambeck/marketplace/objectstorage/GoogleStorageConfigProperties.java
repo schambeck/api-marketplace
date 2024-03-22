@@ -12,4 +12,5 @@ import org.springframework.context.annotation.Configuration;
 public class GoogleStorageConfigProperties {
     private String projectId;
     private String bucketName;
+    private String credentialsFile;
  }
