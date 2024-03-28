@@ -39,6 +39,20 @@
         {"propertyName": "category", "propertyType": "String", "columnType": "varchar(255)", "required": true},
         {"propertyName": "inventoryStatus", "propertyType": "String", "columnType": "varchar(255)", "required": true},
         {"propertyName": "rating", "propertyType": "Integer", "columnType": "integer", "required": true},
+        {"propertyName": "image", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "objectId", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "version", "propertyType": "Integer", "columnType": "integer", "required": true, "version": true}
+      ]
+    },
+    {
+      "name": "Image",
+      "resource": "images",
+      "fields": [
+        {"propertyName": "product", "propertyType": "Product", "subtype": "entity", "columnType": "integer", "manyToOneTable": "product", "required": true},
+        {"propertyName": "objectId", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "fileName", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "contentType", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "size", "propertyType": "Long", "columnType": "integer", "required": true},
         {"propertyName": "version", "propertyType": "Integer", "columnType": "integer", "required": true, "version": true}
       ]
     },

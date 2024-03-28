@@ -1,5 +1,6 @@
 package com.schambeck.marketplace.usecase.product;
 
+import com.schambeck.marketplace.usecase.shoppingcart.FileUploadResponse;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,8 +12,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 public abstract class StorageService {
@@ -37,9 +41,26 @@ public abstract class StorageService {
     
     protected abstract void downloadObject(String objectId, String destFilePath) throws IOException;
     
-    public String store(MultipartFile file) {
+    public FileUploadResponse store(MultipartFile file) {
         try {
             createBucket();
+            return storeImpl(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    public List<FileUploadResponse> store(MultipartFile[] files) {
+        try {
+            createBucket();
+            return Arrays.stream(files).map(this::storeImpl).collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    private FileUploadResponse storeImpl(MultipartFile file) {
+        try {
             Path destinationFile = rootLocation.resolve(Paths.get(Objects.requireNonNull(file.getOriginalFilename())))
                     .normalize()
                     .toAbsolutePath();
@@ -53,7 +74,7 @@ public abstract class StorageService {
             String objectId = UUID.randomUUID() + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf('.'));
             uploadObject(objectId, filePath);
             log.info("File {} uploaded to bucket {} as {}", filePath, getBucketName(), objectId);
-            return objectId;
+            return new FileUploadResponse(objectId, file.getOriginalFilename(), file.getContentType(), file.getSize());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

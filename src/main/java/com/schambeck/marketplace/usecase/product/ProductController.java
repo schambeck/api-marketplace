@@ -1,24 +1,13 @@
 package com.schambeck.marketplace.usecase.product;
 
 import com.schambeck.marketplace.security.AuthenticationService;
-import com.schambeck.marketplace.usecase.shoppingcart.FileUploadResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MimeType;
-import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.Principal;
 
 @RestController
@@ -28,7 +17,6 @@ public class ProductController {
     private static final ProductMapper mapper = ProductMapper.INSTANCE;
     private final ProductService service;
     private final AuthenticationService authenticationService;
-    private final StorageService storageService;
 
     @PostMapping
     public ResponseEntity<ProductWeb> create(@RequestBody ProductWeb web, Principal principal) {
@@ -63,20 +51,5 @@ public class ProductController {
     public ResponseEntity<Page<ProductWeb>> searchByUser(@PageableDefault Pageable pageable, @RequestParam(required = false) String search, Principal principal) {
         String username = authenticationService.getLoggedUsername(principal);
         return ResponseEntity.ok(service.searchByUser(pageable, search, username).map(mapper::toWeb));
-    }
-    
-    @PostMapping("upload")
-    public ResponseEntity<FileUploadResponse> uploadImage(@RequestParam("file") MultipartFile file) {
-        String objectId = storageService.store(file);
-        return ResponseEntity.ok(new FileUploadResponse(objectId));
-    }
-    
-    @GetMapping("download/{objectId}")
-    public @ResponseBody ResponseEntity<InputStreamResource> downloadImage(@PathVariable String objectId) throws IOException {
-        Path path = storageService.get(objectId);
-        String contentType = Files.probeContentType(path);
-        MimeType mimeType = MimeTypeUtils.parseMimeType(contentType);
-        InputStream in = new FileInputStream(path.toAbsolutePath().toString());
-        return ResponseEntity.ok().contentType(new MediaType(mimeType)).body(new InputStreamResource(in));
     }
 }

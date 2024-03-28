@@ -7,4 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FileUploadResponse {
 	private final String objectId;
+	private final String fileName;
+	private final String contentType;
+	private final long size;
 }
