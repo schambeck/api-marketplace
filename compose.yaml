@@ -6,26 +6,33 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/marketplace
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-      CUSTOM_CORS_ALLOWED_ORIGINS: https://${EXTERNAL_IP}:4443
+      CUSTOM_CORS_ALLOWED_ORIGINS: https://${EXTERNAL_IP}
       OKTA_OAUTH2_ISSUER: https://dev-lug9ug4n.us.auth0.com/
       OKTA_OAUTH2_AUDIENCE: api-marketplace-id
       MERCADO_PAGO_ACCESS_TOKEN: APP_USR-6414234097099226-031322-9babc62675f483ff2abcbe431bb7c975-98822096
-      OBJECT_STORAGE_GCS_PROJECT_ID: marketplace-415903
-      OBJECT_STORAGE_GCS_BUCKET_NAME: bucket-marketplace
-      SERVER_SSL_KEY_STORE_PASSWORD: 123456
-      SERVER_SSL_ENABLED: 'true'
-      SERVER_PORT: 8443
-    ports:
-      - '8443:8443'
-  postgres:
-    image: postgres:15-alpine
+      OBJECT_STORAGE_GCS_PROJECT_ID: prj-marketplace
+      OBJECT_STORAGE_GCS_BUCKET_NAME: bkt-marketplace
+      SERVER_PORT: 8081
+#    ports:
+#      - '8443:8443'
+  nginx:
+    image: nginx:latest
     restart: always
     ports:
-      - '5432:5432'
-    environment:
-      POSTGRES_DB: marketplace
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      - 8080:80
+      - 8443:443
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./zerossl/marketplace:/etc/nginx/cert
+#  postgres:
+#    image: postgres:15-alpine
+#    restart: always
+#    ports:
+#      - '5432:5432'
+#    environment:
+#      POSTGRES_DB: marketplace
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
 #  keycloak:
 #    image: kc-marketplace:latest
 #    restart: always
