@@ -1,0 +1,16 @@
+services:
+  keycloak:
+    image: srv-keycloak:latest
+    restart: always
+    command:
+      - start
+      - --import-realm
+      - --https-certificate-file=/opt/keycloak/certificate.crt
+      - --https-certificate-key-file=/opt/keycloak/private.key
+      - --hostname=srv-keycloak.servebeer.com
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - REALM_NAME=marketplace
+    ports:
+      - '8443:8443'
