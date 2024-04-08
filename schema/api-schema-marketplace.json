@@ -76,6 +76,21 @@
         {"propertyName": "total", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
         {"propertyName": "version", "propertyType": "Integer", "columnType": "integer", "required": true, "version": true}
       ]
+    },
+    {
+      "name": "Webhook",
+      "resource": "webhooks",
+      "fields": [
+        {"propertyName": "action", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "apiVersion", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "data", "propertyType": "JsonNode", "columnType": "jsonb", "required": true},
+        {"propertyName": "dateCreated", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "id", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "liveMode", "propertyType": "Boolean", "columnType": "boolean", "required": true},
+        {"propertyName": "type", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "userId", "propertyType": "Long", "columnType": "bigint", "required": true},
+        {"propertyName": "version", "propertyType": "Integer", "columnType": "integer", "required": true, "version": true}
+      ]
     }
   ]
 }
