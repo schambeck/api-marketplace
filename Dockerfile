@@ -1,14 +1,26 @@
-FROM eclipse-temurin:17-jre-alpine AS builder
-ARG JAR_FILE=*.jar
-COPY ${JAR_FILE} app.jar
-COPY classes/cert/srv-keycloak.servebeer.com.der srv-keycloak.servebeer.com.der
-RUN java -Djarmode=layertools -jar app.jar extract
+ARG APP=/app
+ARG TARGET=${APP}/target
 
-FROM eclipse-temurin:17-jre-alpine
-COPY --from=builder srv-keycloak.servebeer.com.der ./
-RUN keytool -noprompt -cacerts -storepass changeit -trustcacerts -import -alias srv-keycloak.servebeer.com -file srv-keycloak.servebeer.com.der
-COPY --from=builder dependencies/ ./
-COPY --from=builder snapshot-dependencies/ ./
-COPY --from=builder spring-boot-loader/ ./
-COPY --from=builder application/ ./
+FROM maven:3.9.5-eclipse-temurin-21-alpine AS build
+ARG APP
+WORKDIR ${APP}
+
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+COPY src src
+RUN mvn package -DskipTests
+ARG TARGET
+WORKDIR ${TARGET}
+COPY certbot/cert.pem .
+RUN java -Djarmode=layertools -jar api-marketplace*.jar extract
+
+FROM eclipse-temurin:21-jre-alpine
+ARG TARGET
+COPY --from=build ${TARGET}/dependencies/ ./
+COPY --from=build ${TARGET}/snapshot-dependencies/ ./
+COPY --from=build ${TARGET}/spring-boot-loader/ ./
+COPY --from=build ${TARGET}/application/ ./
+COPY --from=build ${TARGET}/cert.pem ./
+RUN keytool -import -alias gamebazaar.duckdns.org -storepass changeit -file cert.pem -noprompt -cacerts -trustcacerts
 ENTRYPOINT ["java", "org.springframework.boot.loader.launch.JarLauncher"]
