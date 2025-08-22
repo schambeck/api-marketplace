@@ -7,6 +7,8 @@ DOCKER_IMAGE = ${APP}:latest
 DOCKER_FOLDER = .
 DOCKER_CONF = ${DOCKER_FOLDER}/Dockerfile
 COMPOSE_CONF = ${DOCKER_FOLDER}/compose.yaml
+#REPO = schambeck
+REPO = southamerica-east1-docker.pkg.dev/prj-marketplace/repo/schambeck
 
 # maven
 
@@ -19,7 +21,7 @@ dist:
 	./mvnw clean package -DskipTests=true -Dmaven.plugin.validation=BRIEF
 
 run:
-	java -jar target/api-*.jar
+	java -jar target/api-*.jar --spring.profiles.active=tailscale
 
 check:
 	./mvnw clean test -Dmaven.plugin.validation=BRIEF
@@ -29,13 +31,16 @@ check:
 compose-down-up: compose-down compose-up
 
 compose-up:
-	docker-compose up -d
+	docker compose up -d
+
+compose-up-postgres:
+	docker compose up -d postgres
 
 compose-up-postgres-keycloak:
-	docker-compose up -d postgres keycloak
+	docker compose up -d postgres keycloak
 
 compose-down:
-	docker-compose down
+	docker compose down
 
 # archetype
 
@@ -69,7 +74,7 @@ dist-docker-build-push: dist docker-build docker-push
 docker-build-push: docker-build docker-push
 
 docker-build:
-	DOCKER_BUILDKIT=1 docker build -f ${DOCKER_CONF} -t ${DOCKER_IMAGE} --build-arg=JAR_FILE=${JAR} target
+	docker build -f ${DOCKER_CONF} -t ${DOCKER_IMAGE} .
 
 docker-run:
 	docker run -d \
@@ -79,17 +84,17 @@ docker-run:
 		${DOCKER_IMAGE}
 
 docker-tag:
-	docker tag ${APP} ${DOCKER_IMAGE}
+	docker tag ${APP} ${REPO}/${DOCKER_IMAGE}
 
 docker-push:
-	docker push ${DOCKER_IMAGE}
+	docker push ${REPO}/${DOCKER_IMAGE}
 
 docker-pull:
-	docker pull ${DOCKER_IMAGE}
+	docker pull ${REPO}/${DOCKER_IMAGE}
 
 # keycloak
 
-KC_APP = kc-marketplace
+KC_APP = srv-keycloak
 KC_DOCKER_IMAGE = ${KC_APP}:latest
 KC_DOCKERFILE = Dockerfile.kc
 
@@ -97,6 +102,12 @@ kc-docker-build-push: kc-docker-build kc-docker-push
 
 kc-docker-build:
 	docker build -f ${KC_DOCKERFILE} -t ${KC_DOCKER_IMAGE} .
+
+kc-compose-up:
+	docker compose -f compose-keycloak.yaml up -d
+
+kc-compose-down:
+	docker compose -f compose-keycloak.yaml down
 
 kc-docker-push:
 	docker push ${KC_DOCKER_IMAGE}

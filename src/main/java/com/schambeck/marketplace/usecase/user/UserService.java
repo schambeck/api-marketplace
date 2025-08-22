@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -43,5 +45,21 @@ public class UserService {
 
     public boolean existsByUsername(String username) {
         return repository.existsByUsername(username);
+    }
+
+    public User findByExternalIdOrThrow(String externalId) {
+        return repository.findByExternalIdOrThrow(externalId);
+    }
+    
+    public User findByUsername(String username) {
+        return repository.findByUsernameOrThrow(username);
+    }
+    
+    @Transactional
+    public void updateUser(Integer id, String publicKey) {
+        User user = repository.findByIdOrThrow(id);
+        user.setPublicKey(publicKey);
+        user.setPublicKeyModifiedAt(LocalDateTime.now());
+        repository.save(user);
     }
 }

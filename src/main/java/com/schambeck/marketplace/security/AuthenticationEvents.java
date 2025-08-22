@@ -25,6 +25,7 @@ public class AuthenticationEvents {
             String name = authenticationService.getName(authentication);
             log.info("Creating user {} with e-mail {}", username, email);
             userService.create(User.builder()
+                    .externalId(authentication.getName())
                     .username(username)
                     .email(email)
                     .fullName(name)

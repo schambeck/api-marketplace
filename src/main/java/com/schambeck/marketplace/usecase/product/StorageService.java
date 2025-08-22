@@ -88,7 +88,7 @@ public abstract class StorageService {
             storageFile.deleteOnExit();
             String destFilePath = storageFile.getAbsolutePath();
             downloadObject(objectId, destFilePath);
-            log.info("Downloaded object {} from bucket name {} to {}", objectId, getBucketName(), destFilePath);
+            log.debug("Downloaded object {} from bucket name {} to {}", objectId, getBucketName(), destFilePath);
             return file;
         } catch (IOException e) {
             throw new RuntimeException(e);

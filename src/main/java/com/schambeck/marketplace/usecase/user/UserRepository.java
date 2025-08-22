@@ -18,8 +18,14 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     
     Optional<User> findByUsername(String username);
     
+    Optional<User> findByExternalId(String externalId);
+    
     default User findByUsernameOrThrow(String username) {
         return findByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
+    }
+    
+    default User findByExternalIdOrThrow(String externalId) {
+        return findByExternalId(externalId).orElseThrow(() -> new UserNotFoundException(externalId));
     }
     
     boolean existsByUsername(String username);

@@ -6,11 +6,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.sql.Blob;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import static jakarta.persistence.CascadeType.MERGE;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Builder
@@ -18,6 +15,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Setter
 @Entity
 @Table(name = "user")
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
@@ -27,6 +25,9 @@ public class User {
 	@GeneratedValue(strategy = IDENTITY)
 	private Integer id;
 
+	@Column(name = "external_id")
+	private String externalId;
+
 	@Column(name = "username")
 	private String username;
 
@@ -35,6 +36,12 @@ public class User {
 
 	@Column(name = "full_name")
 	private String fullName;
+
+	@Column(name = "public_key")
+	private String publicKey;
+    
+    @Column(name = "public_key_modified_at")
+    private LocalDateTime publicKeyModifiedAt;
 
 	@Version
 	@Column(name = "version")

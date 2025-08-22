@@ -1,5 +1,6 @@
 package com.schambeck.marketplace.usecase.user;
 
+import com.schambeck.marketplace.security.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,12 +8,15 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("users")
 @RequiredArgsConstructor
 public class UserController {
     private static final UserMapper mapper = UserMapper.INSTANCE;
     private final UserService service;
+    private final AuthenticationService authenticationService;
 
     @PostMapping
     public ResponseEntity<UserWeb> create(@RequestBody UserWeb web) {
@@ -40,5 +44,11 @@ public class UserController {
     @GetMapping
     public ResponseEntity<Page<UserWeb>> search(@PageableDefault Pageable pageable, @RequestParam(required = false) String search) {
         return ResponseEntity.ok(service.search(pageable, search).map(mapper::toWeb));
+    }
+    
+    @GetMapping("queries/find-logged-user")
+    public ResponseEntity<UserWeb> get(Principal principal) {
+        String username = authenticationService.getLoggedUsername(principal);
+        return ResponseEntity.ok(mapper.toWeb(service.findByUsername(username)));
     }
 }

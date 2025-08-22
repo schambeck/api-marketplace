@@ -4,6 +4,7 @@ services:
     restart: always
     environment:
       SERVER_PORT: ${SERVER_PORT:-8080}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:postgresql://postgres:5432/marketplace}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-postgres}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-postgres}
@@ -39,7 +40,7 @@ services:
     image: quay.io/keycloak/keycloak:latest
     restart: always
     profiles:
-      - http
+      - local
     command:
       - start-dev
       - --import-realm
@@ -52,11 +53,11 @@ services:
       - ./realm.json:/opt/keycloak/data/import/realm.json
     ports:
       - '9000:9000'
-  keycloak-https:
+  keycloak-production:
     image: quay.io/keycloak/keycloak:latest
     restart: always
     profiles:
-      - https
+      - production
     command:
       - start
       - --import-realm
@@ -74,11 +75,11 @@ services:
       - ./realm-dev.json:/opt/keycloak/data/import/realm.json
     ports:
       - '9443:9443'
-  keycloak-https-local:
+  keycloak-tailscale:
     image: quay.io/keycloak/keycloak:latest
     restart: always
     profiles:
-      - https
+      - tailscale
     command:
       - start
       - --import-realm

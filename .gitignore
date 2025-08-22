@@ -2,3 +2,7 @@
 /.idea/
 /api-marketplace.iml
 /.mvn/wrapper/maven-wrapper.jar
+/nginx/
+/pgdata/
+/pgdata-sample/
+/resources/

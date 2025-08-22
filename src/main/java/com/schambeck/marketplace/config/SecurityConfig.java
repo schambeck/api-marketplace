@@ -1,6 +1,5 @@
 package com.schambeck.marketplace.config;
 
-import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
@@ -22,16 +21,17 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-@KeycloakConfiguration
 class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
+//                .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.ignoringRequestMatchers(""))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/swagger-resources", "/v3/api-docs/**", "/proxy/**").permitAll()
                         .requestMatchers(GET, "/catalog/**").permitAll()
+                        .requestMatchers(GET, "/oauth/**").permitAll()
                         .requestMatchers(GET, "/object-storage/**").permitAll()
                         .requestMatchers(POST, "/webhooks/**").permitAll()
                         .anyRequest().authenticated()

@@ -2,6 +2,6 @@ FROM quay.io/keycloak/keycloak:latest
 WORKDIR /opt/keycloak
 COPY realm.json data/import/realm.json
 COPY zerossl/keycloak/certificate.crt ./
-COPY zerossl/keycloak/private.pem ./
+COPY zerossl/keycloak/private.key ./
 RUN bin/kc.sh build
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]

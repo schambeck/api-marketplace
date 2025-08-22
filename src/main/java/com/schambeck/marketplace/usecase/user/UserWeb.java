@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,6 +14,8 @@ public class UserWeb {
 	private String username;
 	private String email;
 	private String fullName;
+    private String publicKey;
+    private LocalDateTime publicKeyModifiedAt;
 	private Integer version;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
