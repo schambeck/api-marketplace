@@ -1,5 +1,7 @@
 # PLAN-014 — Risco e revisão manual
 
+**Issue:** [#16](https://github.com/schambeck/api-marketplace/issues/16)
+
 **PRD:** [`PRD-014`](../prd/PRD-014-risco.md) · **Dependências:** PRD-005, PRD-006, PRD-007, PRD-009 e autorização operacional.
 
 ## Estado atual e alvo
@@ -21,4 +23,3 @@ Migration para políticas, sinais, avaliações e revisões. Testar hold, decis�
 ## Decisões e riscos
 
 Thresholds, sinais, retenção e bloqueio são políticas de negócio sensíveis. Não hardcodar scores no domínio; versionar configuração e exigir auditoria para alterações.
-

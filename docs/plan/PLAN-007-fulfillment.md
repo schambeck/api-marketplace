@@ -1,5 +1,7 @@
 # PLAN-007 — Fulfillment e operação
 
+**Issue:** [#9](https://github.com/schambeck/api-marketplace/issues/9)
+
 **PRD:** [`PRD-007`](../prd/PRD-007-fulfillment.md) · **Dependências:** PRD-004, PRD-005, PRD-006, PRD-014 e PRD-008.
 
 ## Estado atual e alvo
@@ -21,4 +23,3 @@ Migration para jobs, atribuições e eventos, com índices de fila e lease. Cria
 ## Aceite e decisões
 
 Testes de integração evidenciam fila com contexto, operações do operador, ausência de órfãos e exclusão mútua. SLA, canal e permissões de supplier/operador são decisões de produto; deixar adapters para execução automática/humana.
-

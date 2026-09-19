@@ -1,5 +1,7 @@
 # PLAN-013 — Reconciliação e settlement
 
+**Issue:** [#15](https://github.com/schambeck/api-marketplace/issues/15)
+
 **PRD:** [`PRD-013`](../prd/PRD-013-reconciliacao.md) · **Dependências:** PRD-005, PRD-006, PRD-008, PRD-010 e decisão de supplier/seller.
 
 ## Estado atual e alvo
@@ -21,4 +23,3 @@ Migration para runs/items/adjustments e índices de origem. Testar execução, d
 ## Decisões e riscos
 
 Sem política contábil e regras de taxa não se deve prometer settlement. O plano inicial pode entregar reconciliação operacional, deixando lançamentos financeiros formais atrás de decisão explícita.
-

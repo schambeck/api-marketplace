@@ -1,5 +1,7 @@
 # PLAN-005 — Pedido e lifecycle
 
+**Issue:** [#7](https://github.com/schambeck/api-marketplace/issues/7)
+
 **PRD:** [`PRD-005`](../prd/PRD-005-pedido-lifecycle.md) · **Dependências:** PRD-001, PRD-002 e base para PRD-004/006–014.
 
 ## Estado atual e alvo
@@ -25,4 +27,3 @@ Implementar agregado e transições; checkout idempotente; integração com pref
 ## Aceite e riscos
 
 Cada critério do PRD deve ter teste de integração. Decisões sobre pedido por checkout, taxas, numeração e estados mínimos precisam ser fechadas antes da migration; sem isso, implementar somente um esqueleto interno não exposto.
-

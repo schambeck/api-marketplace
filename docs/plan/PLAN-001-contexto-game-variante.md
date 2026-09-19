@@ -1,5 +1,7 @@
 # PLAN-001 — Contexto de game e variante
 
+**Issue:** [#3](https://github.com/schambeck/api-marketplace/issues/3)
+
 **PRD:** [`PRD-001`](../prd/PRD-001-contexto-game-variante.md) · **Dependências:** nenhuma de negócio; base para PRD-002, PRD-004, PRD-008 e PRD-015.
 
 ## Estado atual e alvo
@@ -35,4 +37,3 @@ Adicionar migration Flyway para tabela, índices de busca por game/platform/regi
 ## Riscos e decisões
 
 As decisões sobre campos obrigatórios, entidades controladas, publisher terms e preço/inventory próprio da variante bloqueiam o modelo final. Mitigação: manter valores extensíveis, versionar regras e não embutir termos externos em enums rígidos.
-

@@ -1,5 +1,7 @@
 # PLAN-016 — Reviews e reputação
 
+**Issue:** [#18](https://github.com/schambeck/api-marketplace/issues/18)
+
 **PRD:** [`PRD-016`](../prd/PRD-016-reviews-reputacao.md) · **Dependências:** PRD-005, PRD-008 e decisão de entrada no MVP.
 
 ## Estado atual e alvo
@@ -21,4 +23,3 @@ Migration para reviews, versões/moderação e agregados. Criar endpoints de cli
 ## Decisões e riscos
 
 MVP, objetos avaliáveis, janela, anonimização e moderação devem ser aprovados. Não expor comentários ocultos nem usar reputação como decisão operacional antes de política explícita.
-

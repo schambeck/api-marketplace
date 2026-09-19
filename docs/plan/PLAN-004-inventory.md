@@ -1,5 +1,7 @@
 # PLAN-004 — Reserva, alocação e consumo de inventory
 
+**Issue:** [#6](https://github.com/schambeck/api-marketplace/issues/6)
+
 **PRD:** [`PRD-004`](../prd/PRD-004-inventory.md) · **Dependências:** PRD-001, PRD-002 e PRD-003.
 
 ## Estado atual e alvo
@@ -30,4 +32,3 @@ Testes obrigatórios: duas reservas concorrentes, repetição da mesma operaçã
 ## Aceite e riscos
 
 Os critérios serão evidenciados por testes transacionais de integração. O risco maior é overselling por locking inadequado; a migration deve incluir constraints e o serviço deve rejeitar saldo insuficiente de forma determinística.
-

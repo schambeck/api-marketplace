@@ -1,5 +1,7 @@
 # PLAN-011 — Suporte e casos
 
+**Issue:** [#13](https://github.com/schambeck/api-marketplace/issues/13)
+
 **PRD:** [`PRD-011`](../prd/PRD-011-suporte.md) · **Dependências:** PRD-005, PRD-007, PRD-010 e autorização existente.
 
 ## Estado atual e alvo
@@ -20,4 +22,3 @@ Migration para casos, mensagens, atribuições, deadlines e vínculos. Testar cr
 ## Aceite e decisões
 
 Os critérios serão cobertos por contrato/API e testes de autorização. Canais, horário, integração e papéis precisam ser definidos antes de acoplar um provedor externo; o núcleo deve permanecer independente.
-

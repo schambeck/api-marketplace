@@ -1,5 +1,7 @@
 # PLAN-015 — Regras por game e publisher
 
+**Issue:** [#17](https://github.com/schambeck/api-marketplace/issues/17)
+
 **PRD:** [`PRD-015`](../prd/PRD-015-regras-game-publisher.md) · **Dependências:** PRD-001, PRD-002, PRD-007 e PRD-008.
 
 ## Estado atual e alvo
@@ -21,4 +23,3 @@ Migration para rulesets, versões, escopo e auditoria. Testar publicação incom
 ## Decisões e riscos
 
 Fonte oficial, frequência, autoridade e precedência de conflitos precisam de decisão. Regra aplicada deve ser imutável no pedido, mesmo que o ruleset atual mude.
-

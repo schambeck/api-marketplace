@@ -1,5 +1,7 @@
 # PLAN-009 — Falhas, timeout, parcial e cancelamento
 
+**Issue:** [#11](https://github.com/schambeck/api-marketplace/issues/11)
+
 **PRD:** [`PRD-009`](../prd/PRD-009-excecoes-cancelamento.md) · **Dependências:** PRD-004, PRD-005, PRD-006, PRD-007 e PRD-008.
 
 ## Estado atual e alvo
@@ -21,4 +23,3 @@ Migration para casos, deadlines, ações e idempotency keys. Testar expiração 
 ## Aceite e decisões
 
 Os critérios serão comprovados em testes de integração com clock controlado. Prazos, elegibilidade, parcial e mecanismo scheduler devem ser aprovados antes de expor ações irreversíveis.
-

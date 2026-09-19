@@ -1,5 +1,7 @@
 # PLAN-002 — Oferta e disponibilidade
 
+**Issue:** [#4](https://github.com/schambeck/api-marketplace/issues/4)
+
 **PRD:** [`PRD-002`](../prd/PRD-002-oferta-disponibilidade.md) · **Dependências:** PRD-001, PRD-003, PRD-004 e PRD-015.
 
 ## Estado atual e alvo
@@ -32,4 +34,3 @@ Testar publicação inválida, catálogo publicado, bloqueio de oferta indispon�
 ## Riscos e decisões
 
 O desenho definitivo depende de PRD-001/003/004 e da política de preço. Não reutilizar `inventoryStatus` como máquina de estados da oferta; qualquer compatibilidade temporária deve ser explicitamente marcada.
-

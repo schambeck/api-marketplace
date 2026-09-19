@@ -1,5 +1,7 @@
 # PLAN-008 — Instruções e evidência de entrega
 
+**Issue:** [#10](https://github.com/schambeck/api-marketplace/issues/10)
+
 **PRD:** [`PRD-008`](../prd/PRD-008-entrega-evidencia.md) · **Dependências:** PRD-001, PRD-004, PRD-007 e PRD-015.
 
 ## Estado atual e alvo
@@ -25,4 +27,3 @@ Testar instrução ausente/inválida, correção versionada, escopo de operador,
 ## Decisões e riscos
 
 Campos, consentimento, retenção e prova dependem de cada game/método. Não armazenar conteúdo sensível em logs nem permitir que uma URL de storage pública seja a evidência sem controle de acesso.
-

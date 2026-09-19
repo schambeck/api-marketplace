@@ -1,5 +1,7 @@
 # PLAN-006 — Confirmação de pagamento e webhook idempotente
 
+**Issue:** [#8](https://github.com/schambeck/api-marketplace/issues/8)
+
 **PRD:** [`PRD-006`](../prd/PRD-006-confirmacao-pagamento.md) · **Dependências:** PRD-005 e contrato do Mercado Pago.
 
 ## Estado atual e alvo
@@ -25,4 +27,3 @@ Testes de assinatura inválida, referência divergente, duplicata, reentrega con
 ## Decisões e riscos
 
 Assinatura, fonte de verdade, estados e retry dependem da documentação/credenciais de teste do Mercado Pago. A operação deve ser tolerante a reentrega e preparada para consulta de reconciliação.
-
