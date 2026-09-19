@@ -2,6 +2,14 @@
 
 API REST de um marketplace, com catálogo de produtos, usuários, carrinho de compras, imagens, pagamentos via Mercado Pago, armazenamento de objetos e integração OAuth2/JWT.
 
+## Visão do Negócio
+
+Este backend sustenta a operação de um marketplace desde a autenticação do usuário até a preparação do checkout. Ele mantém as contas locais, permite que vendedores publiquem produtos e imagens, oferece um catálogo público para clientes, administra o carrinho de compras e cria preferências de pagamento no Mercado Pago.
+
+Os principais atores são usuários autenticados — que podem atuar como clientes e vendedores —, visitantes do catálogo e o Mercado Pago, responsável pelo checkout externo e pela autorização da conta de pagamento. O fluxo principal é: o usuário autentica, consulta a oferta, adiciona produtos ao seu carrinho, vincula sua conta Mercado Pago quando necessário e solicita uma preferência de pagamento com os itens do carrinho. Webhooks e dados de pagamento podem ser recebidos e persistidos para consulta e auditoria.
+
+O escopo atual termina na criação da preferência e no registro dos dados recebidos. Não há implementação de pedido concluído, reserva ou baixa de estoque, expedição, entrega, estorno ou fechamento financeiro. Para os processos detalhados e suas regras, consulte [`docs/business/business-processes.md`](docs/business/business-processes.md).
+
 ## Tecnologias
 
 - Java 17 e Maven Wrapper;
