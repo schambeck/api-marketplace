@@ -19,6 +19,23 @@ As referências abaixo usam o caminho do arquivo e a linha inicial do trecho rel
 
 ## 3. Visão geral do sistema
 
+```mermaid
+flowchart
+    auth[JWT / Keycloak] --> user[User local]
+    user --> catalog[Catálogo]
+    catalog --> product[Product + imagens]
+    user --> cart[Cart + CartItem]
+    catalog --> cart
+    cart --> pref[Preferência Mercado Pago]
+    pref --> checkout[Checkout externo]
+    checkout -. retorno/webhook .-> payment[Payment / Webhook persistidos]
+    payment -. lacuna atual .-> order[Pedido, estoque e fulfillment]
+    classDef implemented fill:#d8f3dc,stroke:#2d6a4f,color:#1b4332
+    classDef gap fill:#fff3bf,stroke:#b08900,color:#5f4700
+    class auth,user,catalog,product,cart,pref,checkout,payment implemented
+    class order gap
+```
+
 ```text
 Identidade JWT/Keycloak
         ↓ autenticação bem-sucedida
@@ -191,6 +208,22 @@ As transições de expiração, uso único e renovação não estão implementad
 As operações do carrinho e CRUDs usam transações locais Spring, mas a criação de preferência e a persistência de Payment/Webhook não formam transação distribuída. Não há outbox, saga, compensação ou retry de negócio.
 
 ## 12. Happy path ponta a ponta
+
+```mermaid
+sequenceDiagram
+    actor Cliente
+    participant API as Marketplace API
+    participant MP as Mercado Pago
+    Cliente->>API: autentica e consulta catálogo
+    Cliente->>API: adiciona itens ao carrinho
+    Cliente->>API: solicita preferência
+    API->>MP: cria preferência com itens e referência do carrinho
+    MP-->>Cliente: checkout externo
+    Cliente->>MP: conclui pagamento
+    MP-->>API: retorno/webhook
+    Note over API: Hoje o fluxo termina no registro recebido;
+    Note over API: pedido, estoque e fulfillment ainda não avançam.
+```
 
 ```text
 Usuário autentica
@@ -365,6 +398,22 @@ Os critérios de cobertura, lifecycle, eventos esperados e decisões pendentes p
 | Reputation | Reviews e moderação | Parcial (`rating`) | Ausente como processo | Evolutivo | Adicionar BP-029 se validado |
 
 ## 21. Lifecycle e eventos esperados
+
+```mermaid
+stateDiagram-v2
+    [*] --> CREATED
+    CREATED --> PAYMENT_PENDING
+    PAYMENT_PENDING --> PAID
+    PAYMENT_PENDING --> REJECTED
+    PAID --> FULFILLING
+    FULFILLING --> DELIVERED
+    DELIVERED --> COMPLETED
+    CREATED --> CANCELLED
+    PAYMENT_PENDING --> EXPIRED
+    FULFILLING --> PARTIALLY_DELIVERED
+    PAID --> REFUNDED
+    PAID --> DISPUTED
+```
 
 ### 21.1 Pedido, pagamento e fulfillment
 

@@ -1,5 +1,16 @@
 # BP-011 — Publicar e administrar disponibilidade da oferta
 
+```mermaid
+stateDiagram-v2
+    [*] --> DRAFT
+    DRAFT --> PUBLISHED: validar contexto e preço
+    PUBLISHED --> PAUSED: pausar
+    PUBLISHED --> OUT_OF_STOCK: sem disponibilidade
+    PAUSED --> PUBLISHED: reativar
+    OUT_OF_STOCK --> PUBLISHED: reposição
+    PUBLISHED --> RETIRED: retirar
+```
+
 **Classificação:** [PARCIALMENTE MODELADO]
 
 **Objetivo:** transformar um produto catalogado em uma oferta vendável, com preço, quantidade, contexto, disponibilidade e método de entrega vigentes.

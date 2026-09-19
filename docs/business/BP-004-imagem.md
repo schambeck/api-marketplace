@@ -1,5 +1,15 @@
 # BP-004 — Armazenar e associar imagem
 
+```mermaid
+flowchart LR
+    A[Upload arquivo] --> B[Gerar UUID e enviar ao storage]
+    B --> C[Retornar objectId]
+    C --> D[POST /images]
+    D --> E[Resolver Product]
+    E --> F[Persistir vínculo Image]
+    B -. falha no vínculo .-> G[Objeto órfão possível]
+```
+
 **Situação:** Implementado parcialmente
 
 **Objetivo:** armazenar arquivo em GCS/MinIO e associar metadados a um produto.

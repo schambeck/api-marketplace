@@ -1,5 +1,18 @@
 # BP-006 — Criar preferência de pagamento
 
+```mermaid
+sequenceDiagram
+    actor Cliente
+    participant API
+    participant MP as Mercado Pago
+    Cliente->>API: solicita preferência
+    API->>API: carregar carrinho e public key
+    API->>MP: PreferenceRequest em BRL
+    MP-->>API: preferência externa
+    API-->>Cliente: devolver preferência
+    Note over API: Carrinho permanece inalterado
+```
+
 **Situação:** Implementado
 
 **Objetivo:** transformar o carrinho atual em uma sessão de checkout do Mercado Pago.

@@ -1,5 +1,16 @@
 # BP-015 — Confirmar pagamento e processar webhook idempotentemente
 
+```mermaid
+flowchart TD
+    A[Webhook / consulta gateway] --> B[Validar assinatura e payload]
+    B --> C{Evento já processado?}
+    C -- sim --> D[Responder sem duplicar efeito]
+    C -- não --> E[Localizar pedido e validar transição]
+    E --> F[Atualizar Payment / Order]
+    F --> G[Disparar reserva e fulfillment]
+    E -. inválido .-> H[Registrar falha para retry]
+```
+
 **Classificação:** [PARCIALMENTE MODELADO]
 
 **Objetivo:** transformar uma notificação/consulta confiável do gateway em decisão de pagamento aplicável ao pedido.

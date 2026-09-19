@@ -1,5 +1,17 @@
 # BP-003 — Publicar e manter produto
 
+```mermaid
+flowchart TD
+    A[CRUD /products] --> B[Resolver usuário autenticado]
+    B --> C{Operação}
+    C -- criar --> D[Persistir Product]
+    C -- atualizar --> E[Carregar e copiar campos]
+    C -- remover --> F[Excluir Product]
+    E --> G[Salvar alterações]
+    D --> H[Catálogo atualizado]
+    G --> H
+```
+
 **Situação:** Implementado
 
 **Objetivo:** criar, editar, consultar e remover produtos associados a um usuário.

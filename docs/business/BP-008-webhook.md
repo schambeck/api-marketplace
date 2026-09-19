@@ -1,5 +1,15 @@
 # BP-008 — Registrar webhook
 
+```mermaid
+flowchart TD
+    A[POST /webhooks público] --> B[Mapear payload]
+    B --> C[Persistir Webhook e JSON bruto]
+    C --> D[Disponível para consulta]
+    A --> E[POST /webhooks/location]
+    E --> F[Log + 204]
+    C -. sem processamento .-> G[Pagamento não avança]
+```
+
 **Situação:** Implementado como persistência
 
 **Objetivo:** aceitar e armazenar notificações externas para auditoria ou processamento posterior.

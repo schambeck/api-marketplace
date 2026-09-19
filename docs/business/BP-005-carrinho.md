@@ -1,5 +1,15 @@
 # BP-005 — Montar e manter carrinho
 
+```mermaid
+stateDiagram-v2
+    [*] --> Inexistente
+    Inexistente --> Aberto: adicionar item
+    Aberto --> Aberto: alterar quantidade
+    Aberto --> Aberto: adicionar/remover item
+    Aberto --> Inexistente: remover último item
+    note right of Aberto: total = soma dos subtotais
+```
+
 **Situação:** Implementado
 
 **Objetivo:** manter uma cesta por usuário, seus itens e o total calculado.

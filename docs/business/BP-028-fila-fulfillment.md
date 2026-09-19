@@ -1,5 +1,16 @@
 # BP-028 — Operar fila de fulfillment e escalonamento
 
+```mermaid
+flowchart TD
+    A[Fulfillment criado ou alterado] --> B[Priorizar fila]
+    B --> C[Atribuir operador/source]
+    C --> D[Executar e registrar]
+    D --> E{Concluído?}
+    E -- sim --> F[Encerrar]
+    E -- não --> G[Reatribuir ou escalar]
+    G --> B
+```
+
 **Classificação:** [FALTANTE — IMPORTANTE]
 
 **Objetivo:** coordenar trabalho humano quando a entrega não é totalmente automática.

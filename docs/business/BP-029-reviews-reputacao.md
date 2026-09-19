@@ -1,5 +1,16 @@
 # BP-029 — Coletar reviews e administrar reputação
 
+```mermaid
+flowchart TD
+    A[Pedido concluído / janela de avaliação] --> B[Verificar elegibilidade]
+    B --> C[Receber review]
+    C --> D[Moderar]
+    D --> E{Publicar?}
+    E -- sim --> F[Publicar e permitir resposta]
+    E -- não --> G[Ocultar e registrar motivo]
+    F --> H[Atualizar reputação]
+```
+
 **Classificação:** [FALTANTE — EVOLUTIVO]; **[A VALIDAR]**
 
 **Objetivo:** obter feedback de transações elegíveis, moderar e usar sinais de qualidade.

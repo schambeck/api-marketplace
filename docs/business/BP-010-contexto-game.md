@@ -1,5 +1,13 @@
 # BP-010 — Configurar contexto de game, plataforma, região e variante
 
+```mermaid
+flowchart LR
+    A[Game / plataforma / região / variante] --> B[Validar combinação]
+    B -- válida --> C[Associar atributos e método de entrega]
+    C --> D[Contexto ACTIVE]
+    B -- incompatível --> E[Revisão / rejeição]
+```
+
 **Classificação:** [FALTANTE — ESSENCIAL]
 
 **Objetivo:** determinar o contexto no qual um item ou serviço pode ser vendido e entregue.

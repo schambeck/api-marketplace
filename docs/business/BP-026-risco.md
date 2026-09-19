@@ -1,5 +1,16 @@
 # BP-026 — Avaliar risco e executar revisão manual
 
+```mermaid
+flowchart TD
+    A[Sinal de risco] --> B[Preservar contexto e evidências]
+    B --> C[Revisar automaticamente ou manualmente]
+    C --> D{Decisão}
+    D -- allow --> E[Liberar pedido]
+    D -- hold --> F[Manter em análise]
+    D -- block --> G[Cancelar / restringir]
+    D -- escalate --> H[Escalar especialista]
+```
+
 **Classificação:** [FALTANTE — IMPORTANTE]; políticas **[A VALIDAR]**
 
 **Objetivo:** decidir se uma transação pode prosseguir, aguardar verificação ou deve ser bloqueada/revertida.

@@ -1,5 +1,14 @@
 # BP-012 — Definir modelo de supply e adquirir/register supply
 
+```mermaid
+flowchart TD
+    A[Necessidade de supply] --> B[Aprovar fonte]
+    B --> C[Registrar custo, capacidade e restrições]
+    C --> D[Confirmar disponibilidade]
+    D --> E[Associar à oferta]
+    B -- rejeitada --> F[Revisar ou buscar outra fonte]
+```
+
 **Classificação:** [FALTANTE — ESSENCIAL]; **[A VALIDAR — MODELO OPERACIONAL]**
 
 **Objetivo:** garantir origem, disponibilidade e responsabilidade pelo item/serviço vendido.

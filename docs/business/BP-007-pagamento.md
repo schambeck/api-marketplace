@@ -1,5 +1,14 @@
 # BP-007 — Registrar pagamento recebido
 
+```mermaid
+flowchart TD
+    A[CRUD /mercado-pago/payments] --> B[Converter externalReference]
+    B --> C[Localizar Cart]
+    C --> D[Persistir Payment]
+    D --> E[Consultar ou atualizar registro]
+    D -. não dispara .-> F[Pedido / estoque / fulfillment]
+```
+
 **Situação:** Implementado como persistência
 
 **Objetivo:** guardar dados de pagamento associados a um carrinho.

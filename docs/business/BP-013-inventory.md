@@ -1,5 +1,16 @@
 # BP-013 — Reservar, alocar e consumir inventory
 
+```mermaid
+stateDiagram-v2
+    [*] --> AVAILABLE
+    AVAILABLE --> RESERVED: pedido aprovado
+    RESERVED --> ALLOCATED: fonte definida
+    ALLOCATED --> CONSUMED: entrega confirmada
+    RESERVED --> RELEASED: cancelamento
+    RESERVED --> EXPIRED: timeout
+    RELEASED --> AVAILABLE
+```
+
 **Classificação:** [FALTANTE — ESSENCIAL]
 
 **Objetivo:** impedir overselling e vincular supply disponível a um pedido/fulfillment.

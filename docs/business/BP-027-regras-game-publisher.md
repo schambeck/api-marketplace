@@ -1,5 +1,13 @@
 # BP-027 — Administrar regras por game/publisher e restrições
 
+```mermaid
+flowchart LR
+    A[Regra por game/publisher] --> B[Configurar contexto e restrições]
+    B --> C[Validar oferta e instruções]
+    C -- permitido --> D[Disponibilizar para venda]
+    C -- proibido --> E[Bloquear ou encaminhar revisão]
+```
+
 **Classificação:** [FALTANTE — IMPORTANTE]; **[A VALIDAR — GAME/PUBLISHER TERMS]**
 
 **Objetivo:** manter as regras operacionais que tornam uma oferta tecnicamente e comercialmente permitida.

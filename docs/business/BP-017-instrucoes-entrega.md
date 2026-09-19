@@ -1,5 +1,15 @@
 # BP-017 — Coletar e validar instruções de entrega
 
+```mermaid
+flowchart TD
+    A[Checkout / início do fulfillment] --> B[Determinar campos por contexto]
+    B --> C[Coletar instruções]
+    C --> D{Dados válidos?}
+    D -- não --> E[Solicitar correção]
+    D -- sim --> F[Proteger e versionar instruções]
+    F --> G[Disponibilizar ao operador]
+```
+
 **Classificação:** [FALTANTE — ESSENCIAL]
 
 **Objetivo:** obter os dados necessários para executar a entrega sem tratar campos específicos de um game como universais.

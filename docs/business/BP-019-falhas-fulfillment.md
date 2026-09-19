@@ -1,5 +1,15 @@
 # BP-019 — Tratar falha, timeout e fulfillment parcial
 
+```mermaid
+flowchart TD
+    A[Falha, timeout ou entrega parcial] --> B{Próxima ação}
+    B -- retry --> C[Reexecutar]
+    B -- reschedule --> D[Agendar nova tentativa]
+    B -- trocar source --> E[Reatribuir fulfillment]
+    B -- cancel/refund --> F[Cancelar e reconciliar]
+    B -- revisão --> G[Escalar para operador]
+```
+
 **Classificação:** [FALTANTE — IMPORTANTE]; **[A VALIDAR]** se quantidades parciais serão permitidas.
 
 **Objetivo:** decidir o próximo passo quando a entrega não ocorre, demora ou ocorre apenas parcialmente.

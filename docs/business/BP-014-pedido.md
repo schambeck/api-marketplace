@@ -1,5 +1,19 @@
 # BP-014 — Criar e administrar pedido a partir do checkout
 
+```mermaid
+stateDiagram-v2
+    [*] --> CREATED
+    CREATED --> PAYMENT_PENDING: congelar checkout
+    PAYMENT_PENDING --> PAID: pagamento aprovado
+    PAYMENT_PENDING --> REJECTED: pagamento recusado
+    PAID --> FULFILLING
+    FULFILLING --> DELIVERED
+    DELIVERED --> COMPLETED
+    CREATED --> CANCELLED
+    PAID --> REFUNDED
+    PAID --> DISPUTED
+```
+
 **Classificação:** [FALTANTE — ESSENCIAL]
 
 **Objetivo:** criar o registro comercial que representa a intenção de compra e coordena pagamento, fulfillment, entrega e pós-venda.

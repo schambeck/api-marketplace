@@ -1,5 +1,18 @@
 # BP-023 — Operar suporte pré-venda, venda e pós-venda
 
+```mermaid
+stateDiagram-v2
+    [*] --> OPEN
+    OPEN --> CLASSIFIED
+    CLASSIFIED --> ASSIGNED
+    ASSIGNED --> IN_PROGRESS
+    IN_PROGRESS --> WAITING
+    WAITING --> IN_PROGRESS
+    IN_PROGRESS --> RESOLVED
+    RESOLVED --> CLOSED
+    CLOSED --> OPEN: reabertura
+```
+
 **Classificação:** [FALTANTE — IMPORTANTE]
 
 **Objetivo:** receber, classificar, atribuir, resolver e encerrar problemas de cliente ou operação.

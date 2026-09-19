@@ -1,5 +1,17 @@
 # BP-002 — Consultar catálogo
 
+```mermaid
+flowchart LR
+    A[GET /catalog] --> B{Busca por texto?}
+    B -- sim --> C[Filtrar por nome]
+    B -- não --> D[Listar por id]
+    C --> E[Paginar ProductWeb]
+    D --> E
+    F[GET /catalog/id] --> G{Produto existe?}
+    G -- sim --> H[Retornar ProductWeb]
+    G -- não --> I[404]
+```
+
 **Situação:** Implementado
 
 **Objetivo:** permitir consulta pública da oferta cadastrada.

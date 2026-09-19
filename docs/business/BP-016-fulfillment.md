@@ -1,5 +1,15 @@
 # BP-016 — Criar e executar fulfillment
 
+```mermaid
+stateDiagram-v2
+    [*] --> PENDING
+    PENDING --> ASSIGNED: atribuir fonte/operador
+    ASSIGNED --> IN_PROGRESS: iniciar entrega
+    IN_PROGRESS --> DELIVERED: sucesso
+    IN_PROGRESS --> FAILED: erro ou timeout
+    FAILED --> ASSIGNED: retry / reatribuição
+```
+
 **Classificação:** [FALTANTE — ESSENCIAL]
 
 **Objetivo:** converter um pedido pago e alocado em uma entrega executável.

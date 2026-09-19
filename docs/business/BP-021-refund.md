@@ -1,5 +1,15 @@
 # BP-021 — Solicitar, decidir e executar refund
 
+```mermaid
+flowchart TD
+    A[Solicitação / falha / cancelamento] --> B[Avaliar elegibilidade]
+    B --> C{Aprovar?}
+    C -- não --> D[Rejeitar e registrar motivo]
+    C -- sim --> E[Executar refund no gateway]
+    E --> F[Atualizar pedido e payment]
+    F --> G[Reconciliar e notificar]
+```
+
 **Classificação:** [FALTANTE — IMPORTANTE]
 
 **Objetivo:** tratar devolução integral ou parcial após cancelamento, falha, disputa ou inelegibilidade.

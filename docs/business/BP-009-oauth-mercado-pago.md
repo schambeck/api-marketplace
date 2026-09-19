@@ -1,5 +1,20 @@
 # BP-009 — Autorizar Mercado Pago para o usuário
 
+```mermaid
+sequenceDiagram
+    actor Usuário
+    participant API
+    participant MP as Mercado Pago
+    Usuário->>API: /oauth/start-flow
+    API->>API: criar request e state
+    API-->>Usuário: URL de autorização
+    Usuário->>MP: autorizar
+    MP-->>API: callback com code
+    API->>MP: trocar code por tokens
+    MP-->>API: access/refresh token + public key
+    API->>API: salvar credenciais e atualizar User
+```
+
 **Situação:** Implementado com lacunas de segurança e validade
 
 **Objetivo:** obter credenciais Mercado Pago e public key para o checkout.

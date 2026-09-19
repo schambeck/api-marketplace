@@ -1,5 +1,15 @@
 # BP-001 — Provisionar usuário no primeiro login
 
+```mermaid
+flowchart TD
+    A[AuthenticationSuccessEvent] --> B[Extrair claims JWT]
+    B --> C{Username já existe?}
+    C -- não --> D[Persistir User]
+    C -- sim --> E[Manter cadastro atual]
+    D --> F[Conta local disponível]
+    E --> F
+```
+
 **Situação:** Implementado
 
 **Objetivo:** criar a conta local necessária para relacionar produtos, carrinho e credenciais ao usuário autenticado.

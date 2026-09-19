@@ -1,5 +1,15 @@
 # BP-024 — Comunicar eventos relevantes ao cliente e operador
 
+```mermaid
+flowchart LR
+    A[Evento de lifecycle] --> B[Selecionar destinatário e canal]
+    B --> C[Aplicar preferência e deduplicação]
+    C --> D[Enviar mensagem]
+    D --> E{Entregue?}
+    E -- sim --> F[Registrar sucesso]
+    E -- não --> G[Registrar falha e retry]
+```
+
 **Classificação:** [FALTANTE — IMPORTANTE]
 
 **Objetivo:** informar mudanças que exigem ação ou definem expectativa, sem confundir canal de comunicação com processo de negócio.

@@ -1,5 +1,15 @@
 # BP-025 — Reconciliar pagamentos, entregas, inventory e valores devidos
 
+```mermaid
+flowchart TD
+    A[Fechamento, callback ou divergência] --> B[Comparar fontes]
+    B --> C{Diferença encontrada?}
+    C -- não --> D[Fechar reconciliação]
+    C -- sim --> E[Registrar e investigar]
+    E --> F[Ajustar / abrir caso]
+    F --> D
+```
+
 **Classificação:** [FALTANTE — IMPORTANTE]
 
 **Objetivo:** comparar o esperado com o efetivamente confirmado e corrigir divergências.

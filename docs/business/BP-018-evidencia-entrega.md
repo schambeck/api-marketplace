@@ -1,5 +1,14 @@
 # BP-018 — Registrar tentativa, evidência e confirmação de entrega
 
+```mermaid
+flowchart LR
+    A[Iniciar tentativa] --> B[Registrar método, horário e quantidade]
+    B --> C[Anexar evidência permitida]
+    C --> D{Cliente confirma?}
+    D -- sim --> E[Entrega confirmada]
+    D -- não --> F[Contestável / suporte]
+```
+
 **Classificação:** [FALTANTE — IMPORTANTE]
 
 **Objetivo:** provar o que foi tentado e entregue, permitindo confirmação, suporte e disputa.
