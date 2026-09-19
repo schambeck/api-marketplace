@@ -1,0 +1,11 @@
+version: 2.1
+orbs:
+  maven: circleci/maven@2.2.0
+workflows:
+  maven-pipeline:
+    jobs:
+      - maven/test:
+          executor:
+            name: maven/default
+            tag: '17.0'
+          maven_command: mvn clean verify
