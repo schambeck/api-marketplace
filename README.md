@@ -1,3 +1,201 @@
 # api-marketplace
 
-## Marketplace Service App
+API REST de um marketplace, com catálogo de produtos, usuários, carrinho de compras, imagens, pagamentos via Mercado Pago, armazenamento de objetos e integração OAuth2/JWT.
+
+## Tecnologias
+
+- Java 17 e Maven Wrapper;
+- Spring Boot 3.4.1, Spring Web, Spring Data JPA e Spring Security Resource Server;
+- PostgreSQL e Flyway;
+- Keycloak para emissão e validação de tokens JWT;
+- OpenFeign, MapStruct e Lombok;
+- Google Cloud Storage e MinIO para armazenamento de objetos;
+- Mercado Pago para pagamentos;
+- Docker e Docker Compose;
+- Springdoc OpenAPI/Swagger UI.
+
+## Pré-requisitos
+
+Para o desenvolvimento local, instale:
+
+- JDK 17;
+- Docker e Docker Compose, caso os serviços de infraestrutura sejam executados em contêineres;
+- PostgreSQL acessível na porta `5432`, com banco `marketplace`;
+- Git.
+
+O `Dockerfile` usa Maven 3.9.5 e Java 21 para construir e executar a imagem. Isso é separado do fluxo local e do CI, que usam Java 17.
+
+## Configuração local
+
+O perfil padrão usa HTTP na porta `8080` e espera o PostgreSQL em `localhost:5432`. Os valores locais padrão são:
+
+```text
+Banco: marketplace
+Usuário: postgres
+Senha: postgres
+Keycloak: http://localhost:9000/realms/marketplace
+```
+
+Não coloque credenciais reais no repositório. Sobrescreva as propriedades por variáveis de ambiente ou argumentos de execução quando necessário. As principais propriedades configuráveis incluem:
+
+| Variável | Finalidade |
+| --- | --- |
+| `SPRING_PROFILES_ACTIVE` | Seleciona o perfil Spring ativo. |
+| `SERVER_PORT` | Porta HTTP/HTTPS da aplicação. |
+| `SPRING_DATASOURCE_URL` | URL JDBC do PostgreSQL. |
+| `SPRING_DATASOURCE_USERNAME` / `SPRING_DATASOURCE_PASSWORD` | Acesso ao banco. |
+| `AUTH_URI` | Issuer do Keycloak usado para validar JWTs. |
+| `CUSTOM_FRONTEND_URL` | URL principal do frontend. |
+| `CUSTOM_CORS_ALLOWED_ORIGINS` | Origens permitidas pelo CORS. |
+| `MERCADO_PAGO_REDIRECT_URI` | URL de retorno do fluxo OAuth do Mercado Pago. |
+| `MERCADO_PAGO_ACCESS_TOKEN` | Token de acesso do Mercado Pago. |
+| `OBJECT_STORAGE_GCS_PROJECT_ID` / `OBJECT_STORAGE_GCS_BUCKET_NAME` | Projeto e bucket do Google Cloud Storage. |
+| `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` / `MINIO_BUCKET` | Configuração do MinIO no Compose. |
+
+O arquivo `application.properties` contém os padrões locais. `application-dev.properties` e `application-tailscale.properties` habilitam HTTPS na porta `8443` e configuram endpoints externos específicos; use-os somente no ambiente correspondente.
+
+## Banco, Keycloak e execução
+
+Para iniciar somente o PostgreSQL definido no Compose:
+
+```bash
+make compose-up-postgres
+```
+
+Para iniciar PostgreSQL e Keycloak local:
+
+```bash
+make compose-up-postgres-keycloak
+```
+
+O Keycloak local importa o realm de `realm.json` e fica disponível na porta `9000`. A aplicação usa o realm `marketplace` por padrão.
+
+Para baixar dependências, compilar e executar as verificações Maven:
+
+```bash
+./mvnw dependency:go-offline
+make check
+```
+
+`make check` executa `./mvnw clean test -Dmaven.plugin.validation=BRIEF`. O projeto possui a dependência de testes do Spring Boot, mas não há testes automatizados versionados em `src/test` no estado atual.
+
+Para gerar o artefato sem executar testes:
+
+```bash
+make dist
+```
+
+Para empacotar e executar o JAR com o perfil `tailscale`:
+
+```bash
+make dist-run
+```
+
+O comando `make run` executa o JAR existente em `target/` com esse mesmo perfil. Para interromper os serviços do Compose:
+
+```bash
+make compose-down
+```
+
+## Docker Compose
+
+O `compose.yaml` define os serviços da aplicação (`web`), Nginx, PostgreSQL, Keycloak e MinIO. O serviço `web` usa a imagem `api-marketplace:latest` por padrão e pode ser sobrescrito com `WEB_IMAGE`.
+
+Para subir os serviços padrão:
+
+```bash
+make compose-up
+```
+
+Os perfis opcionais do Compose são:
+
+- `local`: Keycloak em HTTP na porta `9000`;
+- `production`: Keycloak em HTTPS na porta `9443`;
+- `tailscale`: Keycloak em HTTPS na porta `9443` com o hostname configurado no Compose.
+
+O PostgreSQL é exposto na porta `5432`. O MinIO usa as portas `9010` (API) e `9011` (console). A persistência do PostgreSQL fica em `db/data` e a do MinIO no volume `minio_data`.
+
+Antes de usar MinIO ou ambientes externos, forneça as variáveis e credenciais necessárias por um mecanismo seguro. Não commite esses valores.
+
+## Documentação da API
+
+Com a aplicação em execução, a documentação pode ser acessada em:
+
+```text
+http://localhost:8080/swagger-ui.html
+http://localhost:8080/v3/api-docs
+```
+
+Em um perfil HTTPS, substitua o protocolo e a porta conforme a configuração ativa, normalmente `https://localhost:8443`.
+
+Os principais grupos de endpoints são:
+
+- `/catalog`: leitura pública do catálogo;
+- `/products`, `/users`, `/carts`, `/cart-items` e `/shopping-cart`: recursos autenticados de marketplace;
+- `/images` e `/object-storage`: imagens e objetos armazenados;
+- `/mercado-pago/payments` e `/mercado-pago/preferences`: pagamentos e preferências;
+- `/oauth` e `/oauth-tokens`: fluxos OAuth;
+- `/webhooks`: recebimento de webhooks.
+
+## Autenticação e rotas públicas
+
+A aplicação funciona como um OAuth2 Resource Server e valida tokens JWT emitidos pelo Keycloak. O issuer pode ser alterado pela variável `AUTH_URI`.
+
+São liberados sem autenticação:
+
+- Swagger UI, recursos Swagger e `/v3/api-docs/**`;
+- requisições `GET` para `/catalog/**`;
+- requisições `GET` para `/oauth/**`;
+- requisições `GET` para `/object-storage/**`;
+- requisições `POST` para `/webhooks/**`.
+
+As demais rotas exigem autenticação. O CORS é controlado por `custom.cors.allowed-origins`; novas origens devem ser avaliadas como mudança de segurança.
+
+## Arquitetura
+
+O ponto de entrada é `com.schambeck.marketplace.MarketplaceApplication`.
+
+- `config`: segurança HTTP, CORS, Jackson e tratamento de exceções;
+- `security`: integração com atributos do JWT e eventos de autenticação;
+- `usecase`: controllers, serviços, repositories, entidades e mapeadores organizados por caso de uso;
+- `objectstorage`: Google Cloud Storage, MinIO e upload/download de objetos;
+- `webhook`: recebimento e persistência de webhooks;
+- `exception` e `filter`: exceções de domínio e filtros de requisição.
+
+Os controllers delegam regras aos serviços transacionais, que usam repositories Spring Data JPA para persistência. As representações HTTP são separadas das entidades persistidas por objetos `*Web` e mapeadores MapStruct quando aplicável.
+
+## Migrations do banco
+
+As migrations Flyway ficam em `src/main/resources/db/migration/` e são executadas automaticamente pela aplicação. A sequência atual cria:
+
+1. usuários;
+2. produtos;
+3. carrinhos e itens de carrinho;
+4. pagamentos;
+5. imagens;
+6. webhooks;
+7. tabelas de autorização OAuth;
+8. tokens OAuth.
+
+Para alterações de schema, crie uma nova migration com o próximo número (`V11__descricao.sql`, por exemplo). Não edite migrations já aplicadas e mantenha entidades, repositories, mapeadores, contratos HTTP e `schema/api-schema-marketplace.json` sincronizados quando a mudança atravessar essas camadas.
+
+## Desenvolvimento e validação
+
+Ao alterar um fluxo:
+
+1. revise o controller, serviço, repository, entidade/DTO e configuração relacionada;
+2. preserve os contratos HTTP e as regras de autenticação existentes;
+3. execute `make check`;
+4. execute `make dist` quando a alteração afetar o artefato empacotável;
+5. valide manualmente os endpoints afetados com PostgreSQL e Keycloak disponíveis;
+6. confira `git diff` e `git status` antes de criar o commit.
+
+Não adicione credenciais, tokens, certificados, dumps ou arquivos de ambiente ao Git.
+
+## Encerrando o ambiente
+
+Para parar e remover os contêineres criados pelo Compose:
+
+```bash
+make compose-down
+```
