@@ -74,147 +74,51 @@ Não há entradas automáticas identificadas: nenhuma classe com scheduler, job,
 
 | ID | Processo | Situação |
 |---|---|---|
-| BP-001 | Provisionar usuário no primeiro login | Implementado |
-| BP-002 | Consultar catálogo | Implementado |
-| BP-003 | Publicar e manter produto | Implementado |
-| BP-004 | Armazenar e associar imagem | Implementado parcialmente |
-| BP-005 | Montar e manter carrinho | Implementado |
-| BP-006 | Criar preferência de pagamento | Implementado |
-| BP-007 | Registrar pagamento recebido | Implementado como persistência |
-| BP-008 | Registrar webhook | Implementado como persistência |
-| BP-009 | Autorizar Mercado Pago para o usuário | Implementado com lacunas de segurança/validade |
-| BP-010 | Configurar contexto de game, plataforma, região e variante | Ausente — essencial |
-| BP-011 | Publicar e administrar disponibilidade da oferta | Parcialmente modelado |
-| BP-012 | Definir modelo de supply e adquirir/register supply | Ausente — essencial; modelo a validar |
-| BP-013 | Reservar, alocar e consumir inventory | Ausente — essencial |
-| BP-014 | Criar e administrar pedido a partir do checkout | Ausente — essencial |
-| BP-015 | Confirmar pagamento e processar webhook idempotentemente | Parcialmente modelado |
-| BP-016 | Criar e executar fulfillment | Ausente — essencial |
-| BP-017 | Coletar e validar instruções de entrega | Ausente — essencial |
-| BP-018 | Registrar tentativa, evidência e confirmação de entrega | Ausente — importante |
-| BP-019 | Tratar falha, timeout e fulfillment parcial | Ausente — importante |
-| BP-020 | Expirar e cancelar carrinho, pedido ou reserva | Ausente — importante |
-| BP-021 | Solicitar, decidir e executar refund | Ausente — importante |
-| BP-022 | Tratar disputa e chargeback | Ausente — importante |
-| BP-023 | Operar suporte pré-venda, venda e pós-venda | Ausente — importante |
-| BP-024 | Comunicar eventos relevantes ao cliente e operador | Ausente — importante |
-| BP-025 | Reconciliar pagamentos, entregas, inventory e valores devidos | Ausente — importante |
-| BP-026 | Avaliar risco e executar revisão manual | Ausente — importante; políticas a validar |
-| BP-027 | Administrar regras por game/publisher e restrições | Ausente — importante; validação externa |
-| BP-028 | Operar fila de fulfillment e escalonamento | Ausente — importante |
-| BP-029 | Coletar reviews e administrar reputação | Ausente — evolutivo; a validar |
+| BP-001 | [Provisionar usuário no primeiro login](processes/BP-001-provisionar-usuario.md) | Implementado |
+| BP-002 | [Consultar catálogo](processes/BP-002-consultar-catalogo.md) | Implementado |
+| BP-003 | [Publicar e manter produto](processes/BP-003-publicar-produto.md) | Implementado |
+| BP-004 | [Armazenar e associar imagem](processes/BP-004-imagem.md) | Implementado parcialmente |
+| BP-005 | [Montar e manter carrinho](processes/BP-005-carrinho.md) | Implementado |
+| BP-006 | [Criar preferência de pagamento](processes/BP-006-preferencia-pagamento.md) | Implementado |
+| BP-007 | [Registrar pagamento recebido](processes/BP-007-pagamento.md) | Implementado como persistência |
+| BP-008 | [Registrar webhook](processes/BP-008-webhook.md) | Implementado como persistência |
+| BP-009 | [Autorizar Mercado Pago para o usuário](processes/BP-009-oauth-mercado-pago.md) | Implementado com lacunas de segurança/validade |
+| BP-010 | [Configurar contexto de game, plataforma, região e variante](processes/BP-010-contexto-game.md) | Ausente — essencial |
+| BP-011 | [Publicar e administrar disponibilidade da oferta](processes/BP-011-oferta-disponibilidade.md) | Parcialmente modelado |
+| BP-012 | [Definir modelo de supply e adquirir/register supply](processes/BP-012-supply.md) | Ausente — essencial; modelo a validar |
+| BP-013 | [Reservar, alocar e consumir inventory](processes/BP-013-inventory.md) | Ausente — essencial |
+| BP-014 | [Criar e administrar pedido a partir do checkout](processes/BP-014-pedido.md) | Ausente — essencial |
+| BP-015 | [Confirmar pagamento e processar webhook idempotentemente](processes/BP-015-confirmacao-pagamento.md) | Parcialmente modelado |
+| BP-016 | [Criar e executar fulfillment](processes/BP-016-fulfillment.md) | Ausente — essencial |
+| BP-017 | [Coletar e validar instruções de entrega](processes/BP-017-instrucoes-entrega.md) | Ausente — essencial |
+| BP-018 | [Registrar tentativa, evidência e confirmação de entrega](processes/BP-018-evidencia-entrega.md) | Ausente — importante |
+| BP-019 | [Tratar falha, timeout e fulfillment parcial](processes/BP-019-falhas-fulfillment.md) | Ausente — importante |
+| BP-020 | [Expirar e cancelar carrinho, pedido ou reserva](processes/BP-020-cancelamento.md) | Ausente — importante |
+| BP-021 | [Solicitar, decidir e executar refund](processes/BP-021-refund.md) | Ausente — importante |
+| BP-022 | [Tratar disputa e chargeback](processes/BP-022-disputa-chargeback.md) | Ausente — importante |
+| BP-023 | [Operar suporte pré-venda, venda e pós-venda](processes/BP-023-suporte.md) | Ausente — importante |
+| BP-024 | [Comunicar eventos relevantes ao cliente e operador](processes/BP-024-comunicacao.md) | Ausente — importante |
+| BP-025 | [Reconciliar pagamentos, entregas, inventory e valores devidos](processes/BP-025-reconciliacao.md) | Ausente — importante |
+| BP-026 | [Avaliar risco e executar revisão manual](processes/BP-026-risco.md) | Ausente — importante; políticas a validar |
+| BP-027 | [Administrar regras por game/publisher e restrições](processes/BP-027-regras-game-publisher.md) | Ausente — importante; validação externa |
+| BP-028 | [Operar fila de fulfillment e escalonamento](processes/BP-028-fila-fulfillment.md) | Ausente — importante |
+| BP-029 | [Coletar reviews e administrar reputação](processes/BP-029-reviews-reputacao.md) | Ausente — evolutivo; a validar |
 
 ## 8. Fluxos detalhados
 
-### BP-001 — Provisionar usuário no primeiro login
+Os fluxos detalhados de cada processo foram separados em documentos individuais para facilitar manutenção e consulta:
 
-**Objetivo:** criar a representação local necessária para relacionar produtos, carrinho e credenciais ao usuário autenticado.
+- [BP-001 — Provisionar usuário no primeiro login](processes/BP-001-provisionar-usuario.md)
+- [BP-002 — Consultar catálogo](processes/BP-002-consultar-catalogo.md)
+- [BP-003 — Publicar e manter produto](processes/BP-003-publicar-produto.md)
+- [BP-004 — Armazenar e associar imagem](processes/BP-004-imagem.md)
+- [BP-005 — Montar e manter carrinho](processes/BP-005-carrinho.md)
+- [BP-006 — Criar preferência de pagamento](processes/BP-006-preferencia-pagamento.md)
+- [BP-007 — Registrar pagamento recebido](processes/BP-007-pagamento.md)
+- [BP-008 — Registrar webhook](processes/BP-008-webhook.md)
+- [BP-009 — Autorizar Mercado Pago para o usuário](processes/BP-009-oauth-mercado-pago.md)
 
-**Gatilho:** evento `AuthenticationSuccessEvent` após autenticação JWT.
-
-**Fluxo:** o sistema extrai username, e-mail, nome e identificador externo; verifica se já existe username; se não existir, grava `User` com esses dados (`AuthenticationEvents.java:19-33`). Se já existir, não atualiza automaticamente o cadastro.
-
-**Regras e decisões:** username é a chave de existência usada pelo listener; o identificador externo vem de `authentication.getName()`; criação duplicada é evitada apenas pela verificação de existência, apoiada pelo índice único de username (`V1__create_user.sql`).
-
-**Estado alterado:** `User` passa de inexistente para persistido. Não há estados de bloqueio, ativação ou desativação.
-
-**Resultado:** conta local disponível para os demais processos. Falhas de claim obrigatório podem interromper a criação (`AuthenticationService.java:25-31`).
-
-### BP-002 — Consultar catálogo
-
-**Objetivo:** permitir que qualquer visitante consulte a oferta publicada.
-
-**Gatilho:** `GET /catalog` ou `GET /catalog/{id}`.
-
-**Fluxo:** recebe paginação e busca opcional; sem texto, lista produtos por id ascendente; com texto, filtra por nome; por id, exige produto existente. A rota é pública (`CatalogController.java:14-28`, `ProductService.java:42-59`, `SecurityConfig.java:33`).
-
-**Regras:** a pesquisa é case-insensitive; a paginação é preservada; produto inexistente gera erro de entidade não encontrada. O processo não valida `inventoryStatus` e não impede a visualização de produtos marcados como `OUTOFSTOCK`.
-
-**Resultado:** representação `ProductWeb`; nenhuma mudança de estado.
-
-### BP-003 — Publicar e manter produto
-
-**Objetivo:** permitir ao usuário criar e administrar uma oferta.
-
-**Gatilho:** CRUD autenticado de `/products`.
-
-**Fluxo principal:** recebe dados do produto; no caminho associado ao usuário, resolve o username autenticado e grava a relação `Product.user`; para atualização, carrega a entidade existente, copia campos e salva; para remoção, exclui pelo id. Há consultas gerais e consultas filtradas por vendedor (`ProductService.java:17-59`).
-
-**Dados de negócio:** nome, descrição, preço, quantidade, categoria, `inventoryStatus`, rating, imagem e `objectId` (`Product.java:20-65`). A migration exige esses campos como não nulos (`V2__create_product.sql`).
-
-**Estados observados:** `inventoryStatus` contém valores como `INSTOCK`, `LOWSTOCK` e `OUTOFSTOCK` nos dados iniciais, mas não existe enum nem transição calculada no serviço. Portanto, o backend armazena/exibe o status; não implementa a política de estoque.
-
-**Resultado:** produto persistido, atualizado, consultado ou removido. Não há reserva, decremento de quantidade, avaliação ou autorização explícita por proprietário no serviço analisado.
-
-### BP-004 — Armazenar e associar imagem
-
-**Objetivo:** transportar um arquivo para GCS ou MinIO e associar seus metadados a um produto.
-
-**Fluxo de arquivo:** upload simples ou múltiplo em `/object-storage`; o serviço cria o bucket se necessário, copia o arquivo para temporário, gera `UUID + extensão`, envia ao bucket e devolve id, nome original, tipo e tamanho (`StorageService.java:44-77`). Download recebe o id, baixa para arquivo temporário e devolve o stream (`StorageService.java:83-92`). GET de object storage é público (`SecurityConfig.java:35`).
-
-**Fluxo de vínculo:** `/images` cria/edita/remove `Image`; o mapper resolve o produto pelo id (`ImageMapper.java:15-27`) e a entidade guarda `objectId`, nome, tipo e tamanho (`Image.java:20-60`).
-
-**Limites:** upload e vínculo são processos separados; não há transação compensatória caso o upload ocorra e o vínculo falhe, nem remoção automática do objeto quando a imagem é excluída. A seleção GCS/MinIO depende de configuração.
-
-### BP-005 — Montar e manter carrinho
-
-**Objetivo:** manter os itens selecionados pelo usuário e o total monetário atual.
-
-**Adicionar item:** recebe produto e quantidade, carrega o produto, calcula `preço × quantidade` com escala 2 e `HALF_UP`, cria ou reutiliza o carrinho único do usuário, soma o total e grava `CartItem` com preço congelado no momento da inclusão (`CreateShoppingCartItemService.java:30-37`, `60-70`). A unicidade de carrinho por usuário é reforçada pelo índice `idx_cart_user_id` (`V3__create_cart.sql`).
-
-**Adicionar se ausente:** verifica se já existe item do mesmo produto para aquele usuário; se existir, retorna `created=false` sem alterar quantidade; caso contrário, executa a inclusão (`CreateShoppingCartItemService.java:40-46`).
-
-**Alterar quantidade:** recarrega o item, recalcula seu total usando o preço armazenado, substitui no total do carrinho e salva (`UpdateShoppingCartItemService.java:21-34`).
-
-**Remover item:** exclui o item; se restarem itens, subtrai seu total do carrinho; se não restar nenhum, exclui o carrinho (`RemoveShoppingCartItemService.java:18-29`).
-
-**Consultar:** lista itens do usuário e conta itens; consultas administrativas também existem em `/cart-items`, `/carts` e `/shopping-cart`.
-
-**Regras explícitas:** um carrinho por usuário; total é soma dos subtotais; subtotal é preço do item multiplicado pela quantidade; inclusão condicional não duplica produto. Não foram encontradas validações de quantidade positiva, estoque disponível, preço vigente, proprietário do item na atualização/remoção ou congelamento transacional do catálogo.
-
-**Ciclo de vida:** `inexistente → aberto/com itens → aberto/com itens alterados → inexistente` quando o último item é removido. Não há estado `checked-out`, `paid`, `cancelled` ou `expired` para `Cart`.
-
-### BP-006 — Criar preferência de pagamento
-
-**Objetivo:** transformar o carrinho atual em uma sessão de checkout Mercado Pago.
-
-**Pré-condições:** usuário autenticado, carrinho existente, chave pública do usuário preenchida e itens localizados. A ausência do carrinho ou da chave interrompe o processo (`CreatePreferenceService.java:51-54`).
-
-**Fluxo:** carrega carrinho por username; converte cada item para título, descrição, imagem, categoria, quantidade, moeda BRL e preço unitário; cria `PreferenceRequest` com `externalReference = cart.id`, taxa de marketplace de `0.03`, retorno automático e a mesma URL para sucesso, falha e pendência; envia à API Mercado Pago com chave de idempotência aleatória (`CreatePreferenceService.java:51-83`).
-
-**Integrações:** SDK `PreferenceClient` do Mercado Pago. Exceções da API são registradas e convertidas em `RuntimeException` (`CreatePreferenceService.java:55-60`).
-
-**Resultado:** preferência externa devolvida ao cliente. O carrinho não muda de estado, não é esvaziado e não é marcado como pago.
-
-### BP-007 — Registrar pagamento recebido
-
-**Objetivo:** persistir dados de pagamento associados a um carrinho.
-
-**Gatilho atual:** chamada autenticada ao CRUD `/mercado-pago/payments`; não há evidência de que o webhook invoque este serviço.
-
-**Fluxo:** ao criar, converte `externalReference` para inteiro, localiza o carrinho pelo id e salva `Payment`; atualização copia os campos para o pagamento existente; consulta permite filtrar por texto no status (`PaymentService.java:17-45`). A tabela guarda ids do pagamento, status, referência externa, merchant order e detalhe JSON (`Payment.java:20-62`, `V5__create_payment.sql`).
-
-**Estados:** `status` é texto livre. Não há enum, máquina de estados, validação de transição, idempotência por `paymentId` ou regra que vincule status a um avanço do carrinho.
-
-**Resultado:** registro persistido. O processo não confirma pedido, não baixa estoque, não dispara evento e não liquida/reembolsa.
-
-### BP-008 — Registrar webhook
-
-**Objetivo:** aceitar e armazenar notificações externas para posterior consulta/auditoria.
-
-**Fluxo:** POST `/webhooks` é público, mapeia o payload para `Webhook` e salva action, versão, data, id externo, modo live, tipo, usuário e JSON bruto (`WebhookController.java:21-24`, `Webhook.java:20-72`). POST `/webhooks/location` apenas registra no log e responde 204 (`WebhookController.java:27-30`).
-
-**Conclusão:** existe recepção/persistência de webhook, mas não processamento de negócio. Não há consumidor que atualize `Payment`, `Cart` ou `Product` após o webhook.
-
-### BP-009 — Autorizar Mercado Pago para o usuário
-
-**Objetivo:** obter credenciais Mercado Pago e a public key necessárias para o checkout.
-
-**Fluxo principal:** usuário autenticado chama `/oauth/start-flow`; o sistema localiza o usuário por external id, grava request com client id, redirect URI e state UUID, guarda o state em campo da instância do controller e devolve URL de autorização. No callback com `code`, recupera o request pelo state, grava authorization code, chama Mercado Pago com `authorization_code`, salva access/refresh token, public key e escopo e copia a public key para `User`; depois redireciona ao frontend (`OAuthController.java:38-58`, `OAuthService.java:40-95`).
-
-**Estados persistidos:** request OAuth; authorization code com `used=false`; token com `expiresAt` preenchido com o instante atual. Não há consumo/invalidação do code, checagem de expiração, refresh, revogação ou uso de `expiresIn` no cálculo de validade (`OAuthService.java:57-86`).
-
-**Risco/lacuna:** o state é mantido em atributo singleton do controller, não por sessão/usuário, e o callback recebe somente `code`; a correlação concorrente e a validação de state/redirect URI devem ser revisadas antes de considerar o processo robusto.
+Os processos BP-010 a BP-029 também possuem documentos individuais em [`docs/business/processes/`](processes/README.md); suas descrições de análise e lacunas permanecem nas seções posteriores deste documento.
 
 ## 9. Regras de negócio catalogadas
 
@@ -413,301 +317,30 @@ Reconciliation and settlement
 
 ## 19. Processos adicionados e expandidos
 
-Os processos abaixo são capacidades de negócio, não afirmações de implementação. Cada um tem objetivo, ator, gatilho, resultado e evidência suficiente para ser incorporado ao modelo esperado.
-
-### BP-010 — Configurar contexto de game, plataforma, região e variante
-
-**Classificação:** [FALTANTE — ESSENCIAL]
-
-**Objetivo:** determinar o contexto no qual um item ou serviço pode ser vendido e entregue.
-
-**Atores:** administrador de catálogo, operador e cliente; game/publisher como restrição externa.
-
-**Trigger:** onboarding ou alteração de game, plataforma, região, servidor, categoria, tipo de produto ou variante.
-
-**Fluxo e resultado:** cadastrar o contexto válido; associar atributos obrigatórios, métodos de entrega e restrições; publicar somente combinações válidas. O resultado é uma definição de produto/variante que pode ser precificada e ofertada.
-
-**Estados/eventos:** `DRAFT → ACTIVE → INACTIVE`; `GameContextConfigured`.
-
-**Exception paths:** combinação incompatível, contexto descontinuado, regra do publisher não confirmada.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** `Product` possui campos genéricos, sem modelar game/platform/server ou dados de entrega. **[EVIDÊNCIA EXTERNA]** páginas públicas da MMOExp organizam catálogo por games, produtos, plataformas e tipos de serviço ([home](https://www.mmoexp.com/), [delivery times](https://www.mmoexp.com/About/how-long-will-it-take-to-receive-my-order-after-payment.html)). **[A VALIDAR]** quais games, plataformas e campos serão suportados.
-
-### BP-011 — Publicar e administrar disponibilidade da oferta
-
-**Classificação:** [PARCIALMENTE MODELADO]
-
-**Objetivo:** transformar um produto catalogado em uma oferta vendável, com preço, quantidade, contexto, disponibilidade e método de entrega vigentes.
-
-**Atores:** administrador, operador, fornecedor/seller se aplicável.
-
-**Trigger:** criação, alteração, indisponibilidade ou reposição de supply.
-
-**Fluxo e resultado:** validar produto e contexto; determinar preço e disponibilidade; publicar, ocultar, pausar ou reativar a oferta. A oferta não deve ser confundida com o `Product` genérico.
-
-**Estados/eventos:** `DRAFT → PUBLISHED → PAUSED/OUT_OF_STOCK → PUBLISHED/RETIRED`; `OfferPublished`, `AvailabilityChanged`.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** BP-003 publica produto e armazena `inventoryStatus`, mas não calcula disponibilidade nem impede venda. **[INFERIDO]** o domínio precisa separar “o que existe no catálogo” de “o que pode ser comprado agora”.
-
-### BP-012 — Definir modelo de supply e adquirir/register supply
-
-**Classificação:** [FALTANTE — ESSENCIAL]; **[A VALIDAR — MODELO OPERACIONAL]**
-
-**Objetivo:** garantir origem, disponibilidade e responsabilidade pelo item/serviço vendido.
-
-**Atores:** administrador, operador, supplier, seller ou parceiro, conforme modelo escolhido.
-
-**Trigger:** necessidade de reposição, novo produto, contratação de supplier ou venda com aquisição on-demand.
-
-**Fluxo e resultado:** aprovar fonte; registrar custo, capacidade, restrições e status; confirmar recebimento ou disponibilidade; associar a uma oferta. No modelo marketplace, incluir onboarding, aprovação, SLA, suspensão e settlement de seller.
-
-**Exception paths:** source indisponível, qualidade insuficiente, supplier não aprovado, divergência de quantidade ou custo.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** não há supplier, seller, sourcing, custo ou settlement. **[EVIDÊNCIA EXTERNA]** a MMOExp declara inventory management, supply control e direct-sales fulfillment ([About MMOEXP](https://www.mmoexp.com/About.html)).
-
-### BP-013 — Reservar, alocar e consumir inventory
-
-**Classificação:** [FALTANTE — ESSENCIAL]
-
-**Objetivo:** impedir overselling e vincular supply disponível a um pedido/fulfillment.
-
-**Atores:** plataforma, operador, inventory service e supplier/seller quando aplicável.
-
-**Trigger:** pedido pago/aprovado ou decisão de iniciar fulfillment.
-
-**Fluxo:** verificar disponibilidade; reservar; alocar uma fonte; expirar ou liberar reserva quando necessário; consumir após entrega confirmada; reconciliar saldo.
-
-**Estados/eventos:** `AVAILABLE → RESERVED → ALLOCATED → CONSUMED`, com `RELEASED` e `EXPIRED`; `InventoryReserved`, `InventoryReleased`, `InventoryConsumed`.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** `Product.quantity` e `inventoryStatus` são apenas dados editáveis, sem transição, reserva ou baixa. **[EVIDÊNCIA EXTERNA]** a referência descreve stock lock, allocation e decremento em tempo real para contas ([produto Steam](https://www.mmoexp.com/Account/Steam/169425005.html)).
-
-### BP-014 — Criar e administrar pedido a partir do checkout
-
-**Classificação:** [FALTANTE — ESSENCIAL]
-
-**Objetivo:** criar o registro comercial que representa a intenção de compra e coordena pagamento, fulfillment, entrega e pós-venda.
-
-**Atores:** cliente, plataforma, operador e payment provider.
-
-**Trigger:** confirmação final do checkout.
-
-**Fluxo:** congelar linhas, preço, contexto, dados de entrega e termos; criar pedido; associar carrinho/preference; encaminhar para pagamento e risco; impedir que `Cart` seja a referência definitiva da venda.
-
-**Estados:** `CREATED → PAYMENT_PENDING → PAID/REJECTED → FULFILLING → DELIVERED → COMPLETED`, com `CANCELLED`, `EXPIRED`, `REFUNDED`, `DISPUTED` e `PARTIALLY_DELIVERED` quando aplicável.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** o fluxo atual termina na preference e usa `Cart.id` como `externalReference`; não existe entidade/processo de pedido.
-
-### BP-015 — Confirmar pagamento e processar webhook idempotentemente
-
-**Classificação:** [PARCIALMENTE MODELADO]
-
-**Objetivo:** transformar uma notificação/consulta confiável do gateway em decisão de pagamento aplicável ao pedido.
-
-**Atores:** Mercado Pago, plataforma e operador de pagamentos.
-
-**Trigger:** webhook, consulta de status, retry ou reconciliação.
-
-**Fluxo:** autenticar/validar notificação; localizar pedido por referência segura; deduplicar evento; validar transição; atualizar payment/order; disparar reserva/fulfillment; registrar falhas para retry.
-
-**Exception paths:** webhook duplicado, fora de ordem, inválido, assinatura ausente, payment inexistente ou status incompatível.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** BP-008 apenas persiste JSON e BP-007 persiste `Payment`; não há confirmação, idempotência ou avanço do pedido. **[A VALIDAR]** contrato de assinatura e eventos efetivamente disponíveis no Mercado Pago.
-
-### BP-016 — Criar e executar fulfillment
-
-**Classificação:** [FALTANTE — ESSENCIAL]
-
-**Objetivo:** converter um pedido pago e alocado em uma entrega executável.
-
-**Atores:** plataforma, operador, supplier/seller e cliente.
-
-**Trigger:** pagamento aprovado, risco liberado e supply alocado.
-
-**Fluxo:** criar fulfillment; atribuir fonte/operador; preparar entrega conforme game e produto; iniciar tentativa; registrar progresso; concluir ou encaminhar exceção.
-
-**Estados/eventos:** `PENDING → ASSIGNED → IN_PROGRESS → DELIVERED/FAILED`; `FulfillmentCreated`, `FulfillmentStarted`, `FulfillmentCompleted`.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** não há fulfillment, assignment, fila ou entrega. **[EVIDÊNCIA EXTERNA]** a referência pública descreve order, pay, allocation e delivery como etapas distintas ([produto Steam](https://www.mmoexp.com/Account/Steam/169425005.html)).
-
-### BP-017 — Coletar e validar instruções de entrega
-
-**Classificação:** [FALTANTE — ESSENCIAL]
-
-**Objetivo:** obter os dados necessários para executar a entrega sem tratar campos específicos de um game como universais.
-
-**Atores:** cliente, plataforma e operador.
-
-**Trigger:** checkout ou início de fulfillment.
-
-**Fluxo:** determinar campos por game × produto × plataforma × servidor × método; coletar e validar; solicitar correção; proteger acesso operacional e registrar versão usada na entrega.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** não existem dados de character, nickname, server, region, platform ou instruções. **[EVIDÊNCIA EXTERNA]** a MMOExp informa delivery por mail/face-to-face e tempos dependentes de produto e contexto ([FAQ](https://www.mmoexp.com/About/regular-questions-about-using.html), [delivery times](https://www.mmoexp.com/About/how-long-will-it-take-to-receive-my-order-after-payment.html)). **[A VALIDAR — GAME/PUBLISHER TERMS]** campos e métodos permitidos.
-
-### BP-018 — Registrar tentativa, evidência e confirmação de entrega
-
-**Classificação:** [FALTANTE — IMPORTANTE]
-
-**Objetivo:** provar o que foi tentado e entregue, permitindo confirmação, suporte e disputa.
-
-**Atores:** operador/supplier/seller, cliente e plataforma.
-
-**Trigger:** início, sucesso, falha ou contestação de uma tentativa.
-
-**Fluxo:** registrar tentativa, quantidade, horário, método, referência externa e evidência permitida; associar ao pedido/fulfillment; obter confirmação ou marcar como contestável.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** não há delivery attempt, proof of delivery ou confirmação. **[EVIDÊNCIA EXTERNA]** a referência declara que cada etapa é registrada e que o handover é arquivado ([produto Steam](https://www.mmoexp.com/Account/Steam/169425005.html)).
-
-### BP-019 — Tratar falha, timeout e fulfillment parcial
-
-**Classificação:** [FALTANTE — IMPORTANTE]; **[A VALIDAR]** se quantidades parciais serão permitidas.
-
-**Objetivo:** decidir o próximo passo quando a entrega não ocorre, demora ou ocorre apenas parcialmente.
-
-**Atores:** operador, cliente, supplier/seller, suporte e plataforma.
-
-**Trigger:** erro de entrega, timeout, falta de estoque, manutenção do game, informação incorreta ou entrega parcial.
-
-**Decisões:** retry, reschedule, pedir ação do cliente, trocar source/método, completar saldo remanescente, cancelar, refund ou revisão manual.
-
-**Evidência:** **[EVIDÊNCIA EXTERNA]** a política pública da MMOExp trata atraso por informação incorreta, falta de stock e refund; seus tempos também variam por produto ([refund policy](https://www.mmoexp.com/Refund.html), [delivery times](https://www.mmoexp.com/About/how-long-will-it-take-to-receive-my-order-after-payment.html)). Não se importam os prazos ou políticas da referência.
-
-### BP-020 — Expirar e cancelar carrinho, pedido ou reserva
-
-**Classificação:** [FALTANTE — IMPORTANTE]
-
-**Objetivo:** encerrar com segurança fluxos que não prosseguem e liberar recursos.
-
-**Atores:** cliente, plataforma e operador automático.
-
-**Trigger:** prazo, abandono, falha de pagamento, solicitação do cliente, falta de supply ou timeout de fulfillment.
-
-**Fluxo:** detectar condição; decidir elegibilidade; alterar estado; liberar reserva; cancelar tarefas; notificar; encaminhar refund quando o pagamento já ocorreu.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** não há estados de expiração/cancelamento nem scheduler, job ou release de inventory.
-
-### BP-021 — Solicitar, decidir e executar refund
-
-**Classificação:** [FALTANTE — IMPORTANTE]
-
-**Objetivo:** tratar devolução integral ou parcial após cancelamento, falha, disputa ou inelegibilidade.
-
-**Atores:** cliente, suporte, operador financeiro, payment provider e plataforma.
-
-**Trigger:** solicitação, falha de entrega, cancelamento, decisão de disputa ou chargeback.
-
-**Fluxo:** receber solicitação; avaliar elegibilidade; aprovar/rejeitar; executar refund no gateway; atualizar pedido/payment; reconciliar; notificar.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** não há refund. **[EVIDÊNCIA EXTERNA]** a política da MMOExp distingue refund antes da conclusão, falha em prazo, pedido concluído e correção de dados ([Refund Policy](https://www.mmoexp.com/Refund.html)). Prazos e critérios locais permanecem **[A VALIDAR]**.
-
-### BP-022 — Tratar disputa e chargeback
-
-**Classificação:** [FALTANTE — IMPORTANTE]
-
-**Objetivo:** investigar reclamações e reversões iniciadas pelo cliente ou pelo provedor financeiro, preservando evidência e impacto financeiro.
-
-**Atores:** cliente, suporte, risco, financeiro, payment provider e supplier/seller.
-
-**Trigger:** dispute, chargeback, contestação de entrega ou alerta do gateway.
-
-**Fluxo:** abrir caso; congelar decisões conflitantes; coletar order/payment/delivery evidence; decidir reject/retry/partial refund/full refund/escalation; responder ao gateway; reconciliar impacto e risco do cliente/source.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** não há dispute, chargeback, evidência ou case management. **[A VALIDAR]** prazos, direitos, responsabilidade e política de risco.
-
-### BP-023 — Operar suporte pré-venda, venda e pós-venda
-
-**Classificação:** [FALTANTE — IMPORTANTE]
-
-**Objetivo:** receber, classificar, atribuir, resolver e encerrar problemas de cliente ou operação.
-
-**Atores:** cliente, agente de suporte, operador, financeiro e risco.
-
-**Trigger:** pergunta, pedido em atraso, payment issue, delivery failure, refund, dispute ou account issue.
-
-**Estados:** `OPEN → CLASSIFIED → ASSIGNED → WAITING/IN_PROGRESS → RESOLVED → CLOSED`, com reabertura quando necessário.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** não há ticket, fila ou SLA documentado. **[EVIDÊNCIA EXTERNA]** a MMOExp expõe suporte pré, durante e pós-venda e atendimento contínuo ([Contact](https://www.mmoexp.com/Contact.html), [Help Center](https://www.mmoexp.com/About/help.html)). Canais e SLA locais são **[A VALIDAR]**.
-
-### BP-024 — Comunicar eventos relevantes ao cliente e operador
-
-**Classificação:** [FALTANTE — IMPORTANTE]
-
-**Objetivo:** informar mudanças que exigem ação ou definem expectativa, sem confundir canal de comunicação com processo de negócio.
-
-**Atores:** plataforma, cliente, operador, supplier/seller e suporte.
-
-**Trigger:** criação/pagamento do pedido, ação necessária, início/falha/conclusão de entrega, refund, disputa ou expiração.
-
-**Resultado:** mensagem entregue ou registrada como falha, com preferência/canal e deduplicação suficientes para não gerar instruções conflitantes.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** não há eventos de domínio nem notificações de lifecycle; o webhook é apenas persistido.
-
-### BP-025 — Reconciliar pagamentos, entregas, inventory e valores devidos
-
-**Classificação:** [FALTANTE — IMPORTANTE]
-
-**Objetivo:** comparar o esperado com o efetivamente confirmado e corrigir divergências.
-
-**Atores:** financeiro, operador, plataforma, payment provider e supplier/seller se aplicável.
-
-**Trigger:** fechamento periódico, callback, refund, chargeback, divergência manual ou falha de integração.
-
-**Fluxos:** orders × gateway; orders × deliveries; inventory × deliveries; refunds × gateway; supplier activity × payable. Registrar diferença, investigar, ajustar e fechar o caso.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** não há ledger, reconciliation, settlement ou payout. **[A VALIDAR]** se o modelo terá supplier/seller payable e qual nível contábil é necessário.
-
-### BP-026 — Avaliar risco e executar revisão manual
-
-**Classificação:** [FALTANTE — IMPORTANTE]; políticas **[A VALIDAR]**
-
-**Objetivo:** decidir se uma transação pode prosseguir, aguardar verificação ou deve ser bloqueada/revertida.
-
-**Atores:** risk operator, payment provider, suporte e plataforma.
-
-**Trigger:** pedido de alto risco, padrão suspeito, inconsistência de conta, abuso de cupom/refund ou chargeback.
-
-**Fluxo:** sinalizar; preservar contexto; revisar; decidir allow/hold/block; registrar motivo e evidências; liberar, cancelar ou escalar.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** não há revisão manual ou política antifraude. **[EVIDÊNCIA EXTERNA]** a referência descreve payment risk control e verificação adicional para alguns pedidos ([produto Steam](https://www.mmoexp.com/Account/Steam/169425005.html), [FAQ](https://www.mmoexp.com/About/regular-questions-about-using.html)). Não se inferem thresholds ou regras específicas.
-
-### BP-027 — Administrar regras por game/publisher e restrições
-
-**Classificação:** [FALTANTE — IMPORTANTE]; **[A VALIDAR — GAME/PUBLISHER TERMS]**
-
-**Objetivo:** manter as regras operacionais que tornam uma oferta tecnicamente e comercialmente permitida.
-
-**Atores:** administrador, compliance, operador e publisher como fonte externa.
-
-**Abrangência:** métodos de entrega, campos de account, quantidade, regiões, servidores, períodos de manutenção, restrições de conta e uso de dados. Regras devem ser configuráveis por contexto, não embutidas como universalidade.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** não há configuração por game e o catálogo possui atributos genéricos. **[EVIDÊNCIA EXTERNA]** a MMOExp informa variação de método, produto e tempo por game ([FAQ](https://www.mmoexp.com/About/regular-questions-about-using.html)). Possibilidade técnica não equivale a permissão operacional.
-
-### BP-028 — Operar fila de fulfillment e escalonamento
-
-**Classificação:** [FALTANTE — IMPORTANTE]
-
-**Objetivo:** coordenar trabalho humano quando a entrega não é totalmente automática.
-
-**Atores:** operador, supervisor, suporte e supplier/seller.
-
-**Trigger:** fulfillment criado, prioridade alterada, timeout, falha, cliente aguardando ou necessidade de evidência.
-
-**Fluxo:** priorizar; atribuir; executar; registrar; reatribuir; escalar; encerrar. O resultado é responsabilidade operacional clara para cada fulfillment aberto.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** não há work queue, assignment, scheduler ou operador documentado. **[EVIDÊNCIA EXTERNA]** a referência declara equipe global de serviço e delivery support ([About MMOEXP](https://www.mmoexp.com/About.html)).
-
-### BP-029 — Coletar reviews e administrar reputação
-
-**Classificação:** [FALTANTE — EVOLUTIVO]; **[A VALIDAR]**
-
-**Objetivo:** obter feedback de transações elegíveis, moderar e usar sinais de qualidade.
-
-**Atores:** cliente, plataforma, moderador e operador.
-
-**Trigger:** pedido concluído, janela de avaliação ou denúncia.
-
-**Fluxo:** determinar elegibilidade; receber; moderar; publicar/ocultar; responder; associar ao produto/serviço sem permitir abuso.
-
-**Evidência:** **[EVIDÊNCIA INTERNA]** `Product.rating` existe como campo, mas não há processo de review. **[EVIDÊNCIA EXTERNA]** a MMOExp publica reviews verificadas e respostas da equipe ([Reviews](https://www.mmoexp.com/reviews.html)). O campo isolado não prova que esse processo seja requisito imediato.
+Os processos adicionados e expandidos foram separados em documentos individuais para facilitar manutenção e consulta:
+
+- [BP-010 — Contexto de game, plataforma, região e variante](processes/BP-010-contexto-game.md)
+- [BP-011 — Oferta e disponibilidade](processes/BP-011-oferta-disponibilidade.md)
+- [BP-012 — Supply e aquisição](processes/BP-012-supply.md)
+- [BP-013 — Reserva, alocação e consumo de inventory](processes/BP-013-inventory.md)
+- [BP-014 — Pedido e lifecycle](processes/BP-014-pedido.md)
+- [BP-015 — Confirmação de pagamento](processes/BP-015-confirmacao-pagamento.md)
+- [BP-016 — Fulfillment](processes/BP-016-fulfillment.md)
+- [BP-017 — Instruções de entrega](processes/BP-017-instrucoes-entrega.md)
+- [BP-018 — Evidência e confirmação de entrega](processes/BP-018-evidencia-entrega.md)
+- [BP-019 — Falhas, timeout e fulfillment parcial](processes/BP-019-falhas-fulfillment.md)
+- [BP-020 — Expiração e cancelamento](processes/BP-020-cancelamento.md)
+- [BP-021 — Refund](processes/BP-021-refund.md)
+- [BP-022 — Disputa e chargeback](processes/BP-022-disputa-chargeback.md)
+- [BP-023 — Suporte](processes/BP-023-suporte.md)
+- [BP-024 — Comunicação de eventos](processes/BP-024-comunicacao.md)
+- [BP-025 — Reconciliação](processes/BP-025-reconciliacao.md)
+- [BP-026 — Risco e revisão manual](processes/BP-026-risco.md)
+- [BP-027 — Regras por game/publisher](processes/BP-027-regras-game-publisher.md)
+- [BP-028 — Operação da fila de fulfillment](processes/BP-028-fila-fulfillment.md)
+- [BP-029 — Reviews e reputação](processes/BP-029-reviews-reputacao.md)
+
+Os critérios de cobertura, lifecycle, eventos esperados e decisões pendentes permanecem nas seções seguintes deste documento.
 
 ## 20. Matriz de completude e rastreabilidade de gaps
 

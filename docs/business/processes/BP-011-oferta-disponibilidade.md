@@ -1,0 +1,17 @@
+# BP-011 — Publicar e administrar disponibilidade da oferta
+
+**Classificação:** [PARCIALMENTE MODELADO]
+
+**Objetivo:** transformar um produto catalogado em uma oferta vendável, com preço, quantidade, contexto, disponibilidade e método de entrega vigentes.
+
+**Atores:** administrador, operador, fornecedor/seller se aplicável.
+
+**Trigger:** criação, alteração, indisponibilidade ou reposição de supply.
+
+**Fluxo e resultado:** validar produto e contexto; determinar preço e disponibilidade; publicar, ocultar, pausar ou reativar a oferta. A oferta não deve ser confundida com o `Product` genérico.
+
+**Estados/eventos:** `DRAFT → PUBLISHED → PAUSED/OUT_OF_STOCK → PUBLISHED/RETIRED`; `OfferPublished`, `AvailabilityChanged`.
+
+**Evidência:** **[EVIDÊNCIA INTERNA]** BP-003 publica produto e armazena `inventoryStatus`, mas não calcula disponibilidade nem impede venda. **[INFERIDO]** o domínio precisa separar “o que existe no catálogo” de “o que pode ser comprado agora”.
+
+**PRD relacionado:** [PRD-002](../../prd/PRD-002-oferta-disponibilidade.md).
