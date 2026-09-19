@@ -74,51 +74,51 @@ Não há entradas automáticas identificadas: nenhuma classe com scheduler, job,
 
 | ID | Processo | Situação |
 |---|---|---|
-| BP-001 | [Provisionar usuário no primeiro login](processes/BP-001-provisionar-usuario.md) | Implementado |
-| BP-002 | [Consultar catálogo](processes/BP-002-consultar-catalogo.md) | Implementado |
-| BP-003 | [Publicar e manter produto](processes/BP-003-publicar-produto.md) | Implementado |
-| BP-004 | [Armazenar e associar imagem](processes/BP-004-imagem.md) | Implementado parcialmente |
-| BP-005 | [Montar e manter carrinho](processes/BP-005-carrinho.md) | Implementado |
-| BP-006 | [Criar preferência de pagamento](processes/BP-006-preferencia-pagamento.md) | Implementado |
-| BP-007 | [Registrar pagamento recebido](processes/BP-007-pagamento.md) | Implementado como persistência |
-| BP-008 | [Registrar webhook](processes/BP-008-webhook.md) | Implementado como persistência |
-| BP-009 | [Autorizar Mercado Pago para o usuário](processes/BP-009-oauth-mercado-pago.md) | Implementado com lacunas de segurança/validade |
-| BP-010 | [Configurar contexto de game, plataforma, região e variante](processes/BP-010-contexto-game.md) | Ausente — essencial |
-| BP-011 | [Publicar e administrar disponibilidade da oferta](processes/BP-011-oferta-disponibilidade.md) | Parcialmente modelado |
-| BP-012 | [Definir modelo de supply e adquirir/register supply](processes/BP-012-supply.md) | Ausente — essencial; modelo a validar |
-| BP-013 | [Reservar, alocar e consumir inventory](processes/BP-013-inventory.md) | Ausente — essencial |
-| BP-014 | [Criar e administrar pedido a partir do checkout](processes/BP-014-pedido.md) | Ausente — essencial |
-| BP-015 | [Confirmar pagamento e processar webhook idempotentemente](processes/BP-015-confirmacao-pagamento.md) | Parcialmente modelado |
-| BP-016 | [Criar e executar fulfillment](processes/BP-016-fulfillment.md) | Ausente — essencial |
-| BP-017 | [Coletar e validar instruções de entrega](processes/BP-017-instrucoes-entrega.md) | Ausente — essencial |
-| BP-018 | [Registrar tentativa, evidência e confirmação de entrega](processes/BP-018-evidencia-entrega.md) | Ausente — importante |
-| BP-019 | [Tratar falha, timeout e fulfillment parcial](processes/BP-019-falhas-fulfillment.md) | Ausente — importante |
-| BP-020 | [Expirar e cancelar carrinho, pedido ou reserva](processes/BP-020-cancelamento.md) | Ausente — importante |
-| BP-021 | [Solicitar, decidir e executar refund](processes/BP-021-refund.md) | Ausente — importante |
-| BP-022 | [Tratar disputa e chargeback](processes/BP-022-disputa-chargeback.md) | Ausente — importante |
-| BP-023 | [Operar suporte pré-venda, venda e pós-venda](processes/BP-023-suporte.md) | Ausente — importante |
-| BP-024 | [Comunicar eventos relevantes ao cliente e operador](processes/BP-024-comunicacao.md) | Ausente — importante |
-| BP-025 | [Reconciliar pagamentos, entregas, inventory e valores devidos](processes/BP-025-reconciliacao.md) | Ausente — importante |
-| BP-026 | [Avaliar risco e executar revisão manual](processes/BP-026-risco.md) | Ausente — importante; políticas a validar |
-| BP-027 | [Administrar regras por game/publisher e restrições](processes/BP-027-regras-game-publisher.md) | Ausente — importante; validação externa |
-| BP-028 | [Operar fila de fulfillment e escalonamento](processes/BP-028-fila-fulfillment.md) | Ausente — importante |
-| BP-029 | [Coletar reviews e administrar reputação](processes/BP-029-reviews-reputacao.md) | Ausente — evolutivo; a validar |
+| BP-001 | [Provisionar usuário no primeiro login](BP-001-provisionar-usuario.md) | Implementado |
+| BP-002 | [Consultar catálogo](BP-002-consultar-catalogo.md) | Implementado |
+| BP-003 | [Publicar e manter produto](BP-003-publicar-produto.md) | Implementado |
+| BP-004 | [Armazenar e associar imagem](BP-004-imagem.md) | Implementado parcialmente |
+| BP-005 | [Montar e manter carrinho](BP-005-carrinho.md) | Implementado |
+| BP-006 | [Criar preferência de pagamento](BP-006-preferencia-pagamento.md) | Implementado |
+| BP-007 | [Registrar pagamento recebido](BP-007-pagamento.md) | Implementado como persistência |
+| BP-008 | [Registrar webhook](BP-008-webhook.md) | Implementado como persistência |
+| BP-009 | [Autorizar Mercado Pago para o usuário](BP-009-oauth-mercado-pago.md) | Implementado com lacunas de segurança/validade |
+| BP-010 | [Configurar contexto de game, plataforma, região e variante](BP-010-contexto-game.md) | Ausente — essencial |
+| BP-011 | [Publicar e administrar disponibilidade da oferta](BP-011-oferta-disponibilidade.md) | Parcialmente modelado |
+| BP-012 | [Definir modelo de supply e adquirir/register supply](BP-012-supply.md) | Ausente — essencial; modelo a validar |
+| BP-013 | [Reservar, alocar e consumir inventory](BP-013-inventory.md) | Ausente — essencial |
+| BP-014 | [Criar e administrar pedido a partir do checkout](BP-014-pedido.md) | Ausente — essencial |
+| BP-015 | [Confirmar pagamento e processar webhook idempotentemente](BP-015-confirmacao-pagamento.md) | Parcialmente modelado |
+| BP-016 | [Criar e executar fulfillment](BP-016-fulfillment.md) | Ausente — essencial |
+| BP-017 | [Coletar e validar instruções de entrega](BP-017-instrucoes-entrega.md) | Ausente — essencial |
+| BP-018 | [Registrar tentativa, evidência e confirmação de entrega](BP-018-evidencia-entrega.md) | Ausente — importante |
+| BP-019 | [Tratar falha, timeout e fulfillment parcial](BP-019-falhas-fulfillment.md) | Ausente — importante |
+| BP-020 | [Expirar e cancelar carrinho, pedido ou reserva](BP-020-cancelamento.md) | Ausente — importante |
+| BP-021 | [Solicitar, decidir e executar refund](BP-021-refund.md) | Ausente — importante |
+| BP-022 | [Tratar disputa e chargeback](BP-022-disputa-chargeback.md) | Ausente — importante |
+| BP-023 | [Operar suporte pré-venda, venda e pós-venda](BP-023-suporte.md) | Ausente — importante |
+| BP-024 | [Comunicar eventos relevantes ao cliente e operador](BP-024-comunicacao.md) | Ausente — importante |
+| BP-025 | [Reconciliar pagamentos, entregas, inventory e valores devidos](BP-025-reconciliacao.md) | Ausente — importante |
+| BP-026 | [Avaliar risco e executar revisão manual](BP-026-risco.md) | Ausente — importante; políticas a validar |
+| BP-027 | [Administrar regras por game/publisher e restrições](BP-027-regras-game-publisher.md) | Ausente — importante; validação externa |
+| BP-028 | [Operar fila de fulfillment e escalonamento](BP-028-fila-fulfillment.md) | Ausente — importante |
+| BP-029 | [Coletar reviews e administrar reputação](BP-029-reviews-reputacao.md) | Ausente — evolutivo; a validar |
 
 ## 8. Fluxos detalhados
 
 Os fluxos detalhados de cada processo foram separados em documentos individuais para facilitar manutenção e consulta:
 
-- [BP-001 — Provisionar usuário no primeiro login](processes/BP-001-provisionar-usuario.md)
-- [BP-002 — Consultar catálogo](processes/BP-002-consultar-catalogo.md)
-- [BP-003 — Publicar e manter produto](processes/BP-003-publicar-produto.md)
-- [BP-004 — Armazenar e associar imagem](processes/BP-004-imagem.md)
-- [BP-005 — Montar e manter carrinho](processes/BP-005-carrinho.md)
-- [BP-006 — Criar preferência de pagamento](processes/BP-006-preferencia-pagamento.md)
-- [BP-007 — Registrar pagamento recebido](processes/BP-007-pagamento.md)
-- [BP-008 — Registrar webhook](processes/BP-008-webhook.md)
-- [BP-009 — Autorizar Mercado Pago para o usuário](processes/BP-009-oauth-mercado-pago.md)
+- [BP-001 — Provisionar usuário no primeiro login](BP-001-provisionar-usuario.md)
+- [BP-002 — Consultar catálogo](BP-002-consultar-catalogo.md)
+- [BP-003 — Publicar e manter produto](BP-003-publicar-produto.md)
+- [BP-004 — Armazenar e associar imagem](BP-004-imagem.md)
+- [BP-005 — Montar e manter carrinho](BP-005-carrinho.md)
+- [BP-006 — Criar preferência de pagamento](BP-006-preferencia-pagamento.md)
+- [BP-007 — Registrar pagamento recebido](BP-007-pagamento.md)
+- [BP-008 — Registrar webhook](BP-008-webhook.md)
+- [BP-009 — Autorizar Mercado Pago para o usuário](BP-009-oauth-mercado-pago.md)
 
-Os processos BP-010 a BP-029 também possuem documentos individuais em [`docs/business/processes/`](processes/README.md); suas descrições de análise e lacunas permanecem nas seções posteriores deste documento.
+Os processos BP-010 a BP-029 também possuem documentos individuais em [`docs/business/`](README.md); suas descrições de análise e lacunas permanecem nas seções posteriores deste documento.
 
 ## 9. Regras de negócio catalogadas
 
@@ -319,26 +319,26 @@ Reconciliation and settlement
 
 Os processos adicionados e expandidos foram separados em documentos individuais para facilitar manutenção e consulta:
 
-- [BP-010 — Contexto de game, plataforma, região e variante](processes/BP-010-contexto-game.md)
-- [BP-011 — Oferta e disponibilidade](processes/BP-011-oferta-disponibilidade.md)
-- [BP-012 — Supply e aquisição](processes/BP-012-supply.md)
-- [BP-013 — Reserva, alocação e consumo de inventory](processes/BP-013-inventory.md)
-- [BP-014 — Pedido e lifecycle](processes/BP-014-pedido.md)
-- [BP-015 — Confirmação de pagamento](processes/BP-015-confirmacao-pagamento.md)
-- [BP-016 — Fulfillment](processes/BP-016-fulfillment.md)
-- [BP-017 — Instruções de entrega](processes/BP-017-instrucoes-entrega.md)
-- [BP-018 — Evidência e confirmação de entrega](processes/BP-018-evidencia-entrega.md)
-- [BP-019 — Falhas, timeout e fulfillment parcial](processes/BP-019-falhas-fulfillment.md)
-- [BP-020 — Expiração e cancelamento](processes/BP-020-cancelamento.md)
-- [BP-021 — Refund](processes/BP-021-refund.md)
-- [BP-022 — Disputa e chargeback](processes/BP-022-disputa-chargeback.md)
-- [BP-023 — Suporte](processes/BP-023-suporte.md)
-- [BP-024 — Comunicação de eventos](processes/BP-024-comunicacao.md)
-- [BP-025 — Reconciliação](processes/BP-025-reconciliacao.md)
-- [BP-026 — Risco e revisão manual](processes/BP-026-risco.md)
-- [BP-027 — Regras por game/publisher](processes/BP-027-regras-game-publisher.md)
-- [BP-028 — Operação da fila de fulfillment](processes/BP-028-fila-fulfillment.md)
-- [BP-029 — Reviews e reputação](processes/BP-029-reviews-reputacao.md)
+- [BP-010 — Contexto de game, plataforma, região e variante](BP-010-contexto-game.md)
+- [BP-011 — Oferta e disponibilidade](BP-011-oferta-disponibilidade.md)
+- [BP-012 — Supply e aquisição](BP-012-supply.md)
+- [BP-013 — Reserva, alocação e consumo de inventory](BP-013-inventory.md)
+- [BP-014 — Pedido e lifecycle](BP-014-pedido.md)
+- [BP-015 — Confirmação de pagamento](BP-015-confirmacao-pagamento.md)
+- [BP-016 — Fulfillment](BP-016-fulfillment.md)
+- [BP-017 — Instruções de entrega](BP-017-instrucoes-entrega.md)
+- [BP-018 — Evidência e confirmação de entrega](BP-018-evidencia-entrega.md)
+- [BP-019 — Falhas, timeout e fulfillment parcial](BP-019-falhas-fulfillment.md)
+- [BP-020 — Expiração e cancelamento](BP-020-cancelamento.md)
+- [BP-021 — Refund](BP-021-refund.md)
+- [BP-022 — Disputa e chargeback](BP-022-disputa-chargeback.md)
+- [BP-023 — Suporte](BP-023-suporte.md)
+- [BP-024 — Comunicação de eventos](BP-024-comunicacao.md)
+- [BP-025 — Reconciliação](BP-025-reconciliacao.md)
+- [BP-026 — Risco e revisão manual](BP-026-risco.md)
+- [BP-027 — Regras por game/publisher](BP-027-regras-game-publisher.md)
+- [BP-028 — Operação da fila de fulfillment](BP-028-fila-fulfillment.md)
+- [BP-029 — Reviews e reputação](BP-029-reviews-reputacao.md)
 
 Os critérios de cobertura, lifecycle, eventos esperados e decisões pendentes permanecem nas seções seguintes deste documento.
 
