@@ -1,5 +1,7 @@
 # api-marketplace
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/schambeck/api-marketplace/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/schambeck/api-marketplace/tree/main)
+
 API REST de um marketplace, com catálogo de produtos, usuários, carrinho de compras, imagens, pagamentos via Mercado Pago, armazenamento de objetos e integração OAuth2/JWT.
 
 ## Visão do Negócio
