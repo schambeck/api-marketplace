@@ -6,11 +6,18 @@ jobs:
       - image: cimg/openjdk:21.0
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v1-maven-{{ checksum "pom.xml" }}-{{ checksum ".mvn/wrapper/maven-wrapper.properties" }}
       - setup_remote_docker:
           version: docker24
       - run:
           name: Run Maven verification
           command: ./mvnw clean verify
+      - save_cache:
+          key: v1-maven-{{ checksum "pom.xml" }}-{{ checksum ".mvn/wrapper/maven-wrapper.properties" }}
+          paths:
+            - ~/.m2/repository
 
 workflows:
   maven-pipeline:
