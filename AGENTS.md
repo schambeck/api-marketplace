@@ -2,7 +2,7 @@
 
 ## Visão geral
 
-`api-marketplace` é uma API REST em Java 17 baseada em Spring Boot 3.4.1. O serviço usa Spring Web, Spring Data JPA/Hibernate, Spring Security como resource server OAuth2/JWT, OpenFeign, Flyway e PostgreSQL. Há integrações com Keycloak, Mercado Pago, Google Cloud Storage e MinIO.
+`api-marketplace` é uma API REST em Java 21 baseada em Spring Boot 3.4.1. O serviço usa Spring Web, Spring Data JPA/Hibernate, Spring Security como resource server OAuth2/JWT, OpenFeign, Flyway e PostgreSQL. Há integrações com Keycloak, Mercado Pago, Google Cloud Storage e MinIO.
 
 O ponto de entrada é `com.schambeck.marketplace.MarketplaceApplication`. O README atual só identifica o projeto e não contém um procedimento adicional de operação; para comandos e ambientes, use o `Makefile`, o `pom.xml`, os arquivos `application*.properties` e o `compose.yaml` como fonte de verdade.
 
@@ -29,7 +29,7 @@ Não há código de testes em `src/test` no estado atual do repositório.
 
 Pré-requisitos observados no projeto:
 
-- JDK 17 para desenvolvimento e CI. O Dockerfile usa runtime/build Java 21, portanto valide mudanças de imagem separadamente do fluxo local/CI.
+- JDK 21 para desenvolvimento, CI e Docker.
 - Maven Wrapper (`./mvnw`); a versão configurada no wrapper é Maven 3.9.2.
 - Docker e Docker Compose para PostgreSQL, Keycloak, MinIO e execução containerizada.
 - PostgreSQL acessível em `localhost:5432`, banco `marketplace`, ou os valores equivalentes fornecidos por variáveis.
@@ -104,7 +104,7 @@ Antes de finalizar uma alteração Java, execute ao menos:
 ./mvnw clean test -Dmaven.plugin.validation=BRIEF
 ```
 
-Para validar o artefato empacotável, execute também `./mvnw clean package` ou `make dist`. O workflow de CI usa `mvn -B package --file pom.xml` em JDK 17.
+Para validar o artefato empacotável, execute também `./mvnw clean package` ou `make dist`. O workflow de CI usa `mvn -B package --file pom.xml` em JDK 21.
 
 ## Convenções de código
 
@@ -119,7 +119,7 @@ Para validar o artefato empacotável, execute também `./mvnw clean package` ou 
 
 Controllers recebem requisições e delegam a serviços; serviços coordenam regras e transações; repositories acessam JPA/PostgreSQL. A aplicação habilita JPA auditing e OpenFeign em `MarketplaceApplication`.
 
-Dependências externas relevantes no `pom.xml`: Spring Boot Web/Data JPA/Security, Spring Cloud OpenFeign, Flyway, PostgreSQL, Lombok, MapStruct, Google Cloud Storage, MinIO, SDK Java do Mercado Pago e Springdoc OpenAPI. Alterações de versões devem considerar a combinação Spring Boot 3.4.1, Spring Cloud 2024.0.0, Java 17 e os annotation processors de Lombok/MapStruct.
+Dependências externas relevantes no `pom.xml`: Spring Boot Web/Data JPA/Security, Spring Cloud OpenFeign, Flyway, PostgreSQL, Lombok, MapStruct, Google Cloud Storage, MinIO, SDK Java do Mercado Pago e Springdoc OpenAPI. Alterações de versões devem considerar a combinação Spring Boot 3.4.1, Spring Cloud 2024.0.0, Java 21 e os annotation processors de Lombok/MapStruct.
 
 ## Banco de dados e migrations
 

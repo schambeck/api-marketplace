@@ -12,7 +12,7 @@ O escopo atual termina na criação da preferência e no registro dos dados rece
 
 ## Tecnologias
 
-- Java 17 e Maven Wrapper;
+- Java 21 e Maven Wrapper;
 - Spring Boot 3.4.1, Spring Web, Spring Data JPA e Spring Security Resource Server;
 - PostgreSQL e Flyway;
 - Keycloak para emissão e validação de tokens JWT;
@@ -26,12 +26,12 @@ O escopo atual termina na criação da preferência e no registro dos dados rece
 
 Para o desenvolvimento local, instale:
 
-- JDK 17;
+- JDK 21;
 - Docker e Docker Compose, caso os serviços de infraestrutura sejam executados em contêineres;
 - PostgreSQL acessível na porta `5432`, com banco `marketplace`;
 - Git.
 
-O `Dockerfile` usa Maven 3.9.5 e Java 21 para construir e executar a imagem. Isso é separado do fluxo local e do CI, que usam Java 17.
+O projeto usa Java 21 no desenvolvimento local, no CI e na imagem Docker. O `Dockerfile` usa Maven 3.9.5 e Java 21 para construir e executar a imagem.
 
 ## Configuração local
 
