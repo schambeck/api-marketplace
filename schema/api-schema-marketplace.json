@@ -59,6 +59,21 @@
       ]
     },
     {
+      "name": "Offer",
+      "resource": "offers",
+      "fields": [
+        {"propertyName": "productId", "propertyType": "Integer", "columnType": "integer", "required": true},
+        {"propertyName": "gameContextId", "propertyType": "Integer", "columnType": "integer", "required": true},
+        {"propertyName": "contextVersion", "propertyType": "Integer", "columnType": "integer", "required": true},
+        {"propertyName": "price", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "deliveryMethod", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "availabilitySource", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "availabilityStatus", "propertyType": "OfferAvailabilityStatus", "columnType": "varchar(32)", "required": true},
+        {"propertyName": "status", "propertyType": "OfferStatus", "columnType": "varchar(32)", "required": true},
+        {"propertyName": "version", "propertyType": "Integer", "columnType": "integer", "required": true, "version": true}
+      ]
+    },
+    {
       "name": "Image",
       "resource": "images",
       "fields": [
@@ -85,6 +100,7 @@
       "fields": [
         {"propertyName": "cart", "propertyType": "Cart", "subtype": "entity", "columnType": "integer", "manyToOneTable": "cart", "required": true},
         {"propertyName": "product", "propertyType": "Product", "subtype": "entity", "columnType": "integer", "manyToOneTable": "product", "required": true},
+        {"propertyName": "offerId", "propertyType": "Integer", "columnType": "integer"},
         {"propertyName": "price", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
         {"propertyName": "quantity", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
         {"propertyName": "total", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},

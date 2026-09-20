@@ -18,6 +18,7 @@ public class CartItemWeb {
 	private Integer id;
 	private CartWeb cart;
 	private ProductWeb product;
+	private Integer offerId;
 	private BigDecimal price;
 	private BigDecimal quantity;
 	private BigDecimal total;
