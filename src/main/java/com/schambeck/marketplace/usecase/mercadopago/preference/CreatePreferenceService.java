@@ -12,6 +12,7 @@ import com.schambeck.marketplace.usecase.cart.Cart;
 import com.schambeck.marketplace.usecase.cart.CartRepository;
 import com.schambeck.marketplace.usecase.cartitem.CartItem;
 import com.schambeck.marketplace.usecase.cartitem.CartItemRepository;
+import com.schambeck.marketplace.usecase.offer.OfferService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +30,7 @@ class CreatePreferenceService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final CartPreferenceConverter preferenceConverter;
+    private final OfferService offerService;
     
 //    @Value("${mercado-pago.access-token}")
 //    private String accessToken;
@@ -51,6 +53,13 @@ class CreatePreferenceService {
         Cart cart = cartRepository.findByUser_UsernameOrThrow(username);
         Optional.ofNullable(cart.getUser().getPublicKey()).orElseThrow(() -> new RuntimeException("Public Key for user " + cart.getUser().getUsername() + " not found"));
         List<CartItem> items = cartItemRepository.findAllByCart_IdOrderByIdDesc(cart.getId());
+        items.forEach(item -> {
+            if (item.getOffer() == null) {
+                throw new com.schambeck.marketplace.exception.OfferValidationException(
+                        "Cart item " + item.getId() + " has no offer and cannot start checkout.");
+            }
+            offerService.validateForCheckout(item.getOffer().getId());
+        });
         List<PreferenceItemRequest> itemsRequest = preferenceConverter.createPreferenceItems(items);
         try {
             PreferenceRequest preferenceRequest = createPreferenceRequest(cart.getId(), itemsRequest);

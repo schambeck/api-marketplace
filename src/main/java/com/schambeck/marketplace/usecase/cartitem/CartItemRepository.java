@@ -25,6 +25,8 @@ public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
     int countByCart_User_Username(String username);
     
     boolean existsByCart_User_UsernameAndProduct_Id(String username, Integer productId);
+
+    boolean existsByCart_User_UsernameAndOffer_Id(String username, Integer offerId);
     
     List<CartItem> findAllByCart_IdOrderByIdDesc(Integer cartId);
 }

@@ -2,6 +2,7 @@ package com.schambeck.marketplace.usecase.cartitem;
 
 import com.schambeck.marketplace.usecase.cart.Cart;
 import com.schambeck.marketplace.usecase.product.Product;
+import com.schambeck.marketplace.usecase.offer.Offer;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -35,6 +36,10 @@ public class CartItem {
 	@ManyToOne(cascade = MERGE)
 	@JoinColumn(name = "product_id", referencedColumnName = "id")
 	private Product product;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "offer_id", referencedColumnName = "id")
+	private Offer offer;
 
 	@Column(name = "price")
 	private BigDecimal price;

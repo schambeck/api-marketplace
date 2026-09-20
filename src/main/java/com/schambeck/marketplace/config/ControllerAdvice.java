@@ -2,6 +2,7 @@ package com.schambeck.marketplace.config;
 
 import com.schambeck.marketplace.exception.EntityNotFoundException;
 import com.schambeck.marketplace.exception.GameContextValidationException;
+import com.schambeck.marketplace.exception.OfferValidationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,6 +24,13 @@ class ControllerAdvice {
 
     @ExceptionHandler(GameContextValidationException.class)
     ResponseEntity<Map<String, String>> handleGameContextValidationException(GameContextValidationException exception) {
+        Map<String, String> error = new HashMap<>();
+        error.put("message", exception.getMessage());
+        return ResponseEntity.status(BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(OfferValidationException.class)
+    ResponseEntity<Map<String, String>> handleOfferValidationException(OfferValidationException exception) {
         Map<String, String> error = new HashMap<>();
         error.put("message", exception.getMessage());
         return ResponseEntity.status(BAD_REQUEST).body(error);

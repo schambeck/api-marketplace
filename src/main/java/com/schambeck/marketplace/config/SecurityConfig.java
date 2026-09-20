@@ -43,6 +43,7 @@ class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/swagger-resources", "/v3/api-docs/**", "/proxy/**").permitAll()
                         .requestMatchers(GET, "/catalog/**").permitAll()
+                        .requestMatchers(GET, "/offers/**").permitAll()
                         .requestMatchers(GET, "/game-contexts/**").permitAll()
                         .requestMatchers(GET, "/oauth/**").permitAll()
                         .requestMatchers(GET, "/object-storage/**").permitAll()
