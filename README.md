@@ -1,6 +1,4 @@
-# api-marketplace
-
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/schambeck/api-marketplace/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/schambeck/api-marketplace/tree/main)
+# api-marketplace [![CircleCI](https://dl.circleci.com/status-badge/img/gh/schambeck/api-marketplace/tree/main.svg?style=svg&circle-token=CCIPRJ_Hkfe6do7qVVvtfH6zH7rmv_f4cf760637f0db63efdeeb5a26614711330c928f)](https://dl.circleci.com/status-badge/redirect/gh/schambeck/api-marketplace/tree/main)
 
 API REST de um marketplace, com catálogo de produtos, usuários, carrinho de compras, imagens, pagamentos via Mercado Pago, armazenamento de objetos e integração OAuth2/JWT.
 
