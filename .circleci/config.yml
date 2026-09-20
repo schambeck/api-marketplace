@@ -1,11 +1,18 @@
 version: 2.1
-orbs:
-  maven: circleci/maven@2.2.0
+
+jobs:
+  maven-test:
+    docker:
+      - image: cimg/openjdk:17.0
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: docker24
+      - run:
+          name: Run Maven verification
+          command: mvn clean verify
+
 workflows:
   maven-pipeline:
     jobs:
-      - maven/test:
-          executor:
-            name: maven/default
-            tag: '17.0'
-          maven_command: mvn clean verify
+      - maven-test
