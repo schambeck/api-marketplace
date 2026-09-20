@@ -21,7 +21,7 @@ O ponto de entrada é `com.schambeck.marketplace.MarketplaceApplication`. O READ
 - `realm*.json`: configurações/importações do realm do Keycloak.
 - `compose.yaml`: serviços de aplicação, Nginx, PostgreSQL, Keycloak e MinIO, com perfis `local`, `production` e `tailscale` para Keycloak.
 - `Dockerfile` e `Dockerfile.kc`: imagens da API e do Keycloak.
-- `.github/workflows/maven.yml`: CI para push/PR em `master`.
+- `.github/workflows/maven.yml`: CI para push/PR em `main`.
 
 Não há código de testes em `src/test` no estado atual do repositório.
 
@@ -154,7 +154,7 @@ Tenha cuidado especial com:
 
 ## Fluxo de contribuição
 
-O repositório está na branch `master`, com `origin/master`; o CI é acionado em push e pull request para `master`. O histórico usa mensagens curtas, por exemplo `Dev env`, `SSL` e `Mercado Pago Webhook`; não há política de commits mais detalhada registrada.
+O repositório está na branch `main`, com `origin/main`; o CI é acionado em push e pull request para `main`. O histórico usa mensagens curtas, por exemplo `Dev env`, `SSL` e `Mercado Pago Webhook`; não há política de commits mais detalhada registrada.
 
 Mantenha cada alteração focada, não reformate arquivos inteiros sem necessidade e não inclua certificados, dumps, tokens ou credenciais. Descreva no commit/PR as migrations, mudanças de contrato, variáveis novas e passos manuais necessários.
 
