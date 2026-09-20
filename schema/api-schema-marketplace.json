@@ -45,6 +45,20 @@
       ]
     },
     {
+      "name": "GameContext",
+      "resource": "game-contexts",
+      "fields": [
+        {"propertyName": "game", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "publisher", "propertyType": "String", "columnType": "varchar(255)"},
+        {"propertyName": "platform", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "region", "propertyType": "String", "columnType": "varchar(255)"},
+        {"propertyName": "server", "propertyType": "String", "columnType": "varchar(255)"},
+        {"propertyName": "variant", "propertyType": "String", "columnType": "varchar(255)"},
+        {"propertyName": "status", "propertyType": "GameContextStatus", "columnType": "varchar(32)", "required": true},
+        {"propertyName": "version", "propertyType": "Integer", "columnType": "integer", "required": true, "version": true}
+      ]
+    },
+    {
       "name": "Image",
       "resource": "images",
       "fields": [

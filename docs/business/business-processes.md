@@ -100,7 +100,7 @@ Não há entradas automáticas identificadas: nenhuma classe com scheduler, job,
 | BP-007 | [Registrar pagamento recebido](BP-007-pagamento.md) | Implementado como persistência |
 | BP-008 | [Registrar webhook](BP-008-webhook.md) | Implementado como persistência |
 | BP-009 | [Autorizar Mercado Pago para o usuário](BP-009-oauth-mercado-pago.md) | Implementado com lacunas de segurança/validade |
-| BP-010 | [Configurar contexto de game, plataforma, região e variante](BP-010-contexto-game.md) | Ausente — essencial |
+| BP-010 | [Configurar contexto de game, plataforma, região e variante](BP-010-contexto-game.md) | Parcialmente implementado — contexto e histórico; associação à oferta pendente |
 | BP-011 | [Publicar e administrar disponibilidade da oferta](BP-011-oferta-disponibilidade.md) | Parcialmente modelado |
 | BP-012 | [Definir modelo de supply e adquirir/register supply](BP-012-supply.md) | Ausente — essencial; modelo a validar |
 | BP-013 | [Reservar, alocar e consumir inventory](BP-013-inventory.md) | Ausente — essencial |
@@ -277,7 +277,7 @@ Lacunas prioritárias para validação do negócio:
 |---|---|---|---|---|---|
 | BP-001 | AuthenticationSuccessEvent | Criar se username ausente | `User` criado | Keycloak/JWT | Conta local |
 | BP-002 | GET catálogo | Busca opcional e paginação | Nenhum | Nenhuma | Produtos |
-| BP-003 | CRUD products | Resolver usuário no create associado | `Product` | Nenhuma | Oferta |
+| BP-003 | CRUD products | Resolver usuário no create associado | `Product` | Nenhuma | Produto catalogado |
 | BP-004 | Upload/CRUD images | Bucket/objeto e vínculo separados | Bucket + `Image` | GCS/MinIO | Metadados/arquivo |
 | BP-005 | Shopping cart | Carrinho único, total calculado | `Cart`, `CartItem` | Nenhuma | Carrinho atualizado |
 | BP-006 | POST preference | Exigir public key; enviar itens | Nenhuma local | Mercado Pago Preference API | Preference |
@@ -288,7 +288,9 @@ Lacunas prioritárias para validação do negócio:
 ## 16. Glossário
 
 - **User:** conta local vinculada ao subject/external id do JWT.
-- **Product:** oferta publicada por um usuário, contendo preço e atributos de estoque informados.
+- **Product:** item catalogado mantido por um usuário; preço e disponibilidade atuais ainda pertencem ao modelo legado e serão separados de `Offer` pelo PLAN-002.
+- **GameContext:** contexto versionado de game, publisher, plataforma, região, servidor e variante que pode ser referenciado por uma oferta.
+- **Offer:** unidade vendável associada a um `Product` e a um `GameContext`; prevista no PLAN-002 e ainda não implementada no baseline.
 - **Cart:** cesta única do usuário, com total agregado.
 - **CartItem:** linha da cesta com preço capturado, quantidade e subtotal.
 - **Preference:** sessão/solicitação de checkout criada no Mercado Pago.

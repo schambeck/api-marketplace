@@ -3,6 +3,8 @@
 **Rastreabilidade:** BP-010 · Catálogo · Essencial
 **Origem:** matriz de completude; seção 19 de `business-processes.md`.
 
+**Divisão de entrega:** este PRD define o `GameContext`; a materialização da `Offer`, sua associação ao contexto e a validação durante publicação são responsabilidade do [`PRD-002`](PRD-002-oferta-disponibilidade.md).
+
 ## Problema e objetivo
 
 O catálogo atual possui atributos genéricos e não determina em qual game, plataforma, região, servidor ou variante uma oferta é válida. O produto deve modelar esse contexto para evitar ofertas ambíguas e permitir regras de entrega específicas.

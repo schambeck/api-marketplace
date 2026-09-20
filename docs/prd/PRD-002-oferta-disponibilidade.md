@@ -1,7 +1,7 @@
 # PRD-002 — Oferta e disponibilidade
 
 **Rastreabilidade:** BP-003/BP-011 · Catálogo · Essencial
-**Origem:** matriz de completude; `Product` hoje mistura catálogo e disponibilidade.
+**Origem:** matriz de completude; `Product` hoje mistura catálogo e disponibilidade. **Dependência:** [`PRD-001`](PRD-001-contexto-game-variante.md) fornece o `GameContext` versionado usado na publicação.
 
 ## Problema e objetivo
 
