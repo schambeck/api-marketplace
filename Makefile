@@ -21,6 +21,9 @@ dist:
 	./mvnw clean package -DskipTests=true -Dmaven.plugin.validation=BRIEF
 
 run:
+	java -jar target/api-*.jar
+
+run-tailscale:
 	java -jar target/api-*.jar --spring.profiles.active=tailscale
 
 check:
