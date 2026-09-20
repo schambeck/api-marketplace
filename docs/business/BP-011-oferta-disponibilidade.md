@@ -5,9 +5,9 @@ stateDiagram-v2
     [*] --> DRAFT
     DRAFT --> PUBLISHED: validar contexto e preço
     PUBLISHED --> PAUSED: pausar
-    PUBLISHED --> OUT_OF_STOCK: sem disponibilidade
+    PUBLISHED --> PAUSED: sem disponibilidade
     PAUSED --> PUBLISHED: reativar
-    OUT_OF_STOCK --> PUBLISHED: reposição
+    PAUSED --> PUBLISHED: reposição
     PUBLISHED --> RETIRED: retirar
 ```
 
@@ -19,10 +19,10 @@ stateDiagram-v2
 
 **Trigger:** criação, alteração, indisponibilidade ou reposição de supply.
 
-**Fluxo e resultado:** validar produto e contexto; determinar preço e disponibilidade; publicar, ocultar, pausar ou reativar a oferta. A oferta não deve ser confundida com o `Product` genérico.
+**Fluxo e resultado:** validar produto e `GameContext` ativo; determinar preço, disponibilidade e método de entrega; publicar, pausar, reativar ou retirar a oferta. A oferta não deve ser confundida com o `Product` catalogado.
 
-**Estados/eventos:** `DRAFT → PUBLISHED → PAUSED/OUT_OF_STOCK → PUBLISHED/RETIRED`; `OfferPublished`, `AvailabilityChanged`.
+**Estados/eventos:** `DRAFT → PUBLISHED → PAUSED → PUBLISHED/RETIRED`; disponibilidade sem estoque é uma condição que impede publicação/checkout, não um estado adicional da oferta. Eventos: `OfferPublished`, `OfferPaused`, `OfferRetired`, `AvailabilityChanged`.
 
-**Evidência:** **[EVIDÊNCIA INTERNA]** BP-003 publica produto e armazena `inventoryStatus`, mas não calcula disponibilidade nem impede venda. **[INFERIDO]** o domínio precisa separar “o que existe no catálogo” de “o que pode ser comprado agora”.
+**Evidência:** **[EVIDÊNCIA INTERNA]** BP-003 publica produto e armazena `inventoryStatus`, mas ainda não possui `Offer`; o `GameContext` foi modelado separadamente e a publicação de oferta continua pendente do PLAN-002. **[INFERIDO]** o domínio precisa separar “o que existe no catálogo” de “o que pode ser comprado agora”.
 
 **PRD relacionado:** [PRD-002](../../prd/PRD-002-oferta-disponibilidade.md).
