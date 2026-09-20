@@ -92,7 +92,12 @@ public class OfferService {
     }
 
     public Page<Offer> searchPublished(Pageable pageable) {
-        return repository.findAllByStatus(OfferStatus.PUBLISHED, pageable);
+        return searchPublished(pageable, null);
+    }
+
+    public Page<Offer> searchPublished(Pageable pageable, String search) {
+        String normalizedSearch = search == null ? "" : search.trim();
+        return repository.findAllByStatusAndSearch(OfferStatus.PUBLISHED, normalizedSearch, pageable);
     }
 
     public Offer findPublishedById(Integer id) {

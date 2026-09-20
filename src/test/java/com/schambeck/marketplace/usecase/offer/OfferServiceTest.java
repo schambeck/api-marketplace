@@ -10,6 +10,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.math.BigDecimal;
 
@@ -96,6 +98,27 @@ class OfferServiceTest {
                 .isInstanceOf(OfferValidationException.class)
                 .hasMessageContaining("not published");
         verifyNoInteractions(gameContextService);
+    }
+
+    @Test
+    void normalizesSearchBeforeQueryingPublishedOffers() {
+        Page<Offer> page = Page.empty();
+        when(repository.findAllByStatusAndSearch(OfferStatus.PUBLISHED, "elden ring", PageRequest.of(0, 10)))
+                .thenReturn(page);
+
+        assertThat(service.searchPublished(PageRequest.of(0, 10), "  elden ring  ")).isSameAs(page);
+
+        verify(repository).findAllByStatusAndSearch(OfferStatus.PUBLISHED, "elden ring", PageRequest.of(0, 10));
+    }
+
+    @Test
+    void treatsBlankSearchAsNoFilter() {
+        Page<Offer> page = Page.empty();
+        PageRequest pageable = PageRequest.of(0, 10);
+        when(repository.findAllByStatusAndSearch(OfferStatus.PUBLISHED, "", pageable)).thenReturn(page);
+
+        assertThat(service.searchPublished(pageable, "   ")).isSameAs(page);
+        verify(repository).findAllByStatusAndSearch(OfferStatus.PUBLISHED, "", pageable);
     }
 
     private static Offer offer(OfferStatus status, OfferAvailabilityStatus availabilityStatus) {

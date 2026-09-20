@@ -33,8 +33,9 @@ public class OfferController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<OfferWeb>> search(@PageableDefault Pageable pageable) {
-        return ResponseEntity.ok(service.searchPublished(pageable).map(OfferMapper::toWeb));
+    public ResponseEntity<Page<OfferWeb>> search(@PageableDefault Pageable pageable,
+                                                 @RequestParam(required = false) String search) {
+        return ResponseEntity.ok(service.searchPublished(pageable, search).map(OfferMapper::toWeb));
     }
 
     @GetMapping("{id}")

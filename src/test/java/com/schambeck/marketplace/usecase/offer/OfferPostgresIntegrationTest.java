@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -156,6 +158,56 @@ class OfferPostgresIntegrationTest {
                 .isIn(OfferAvailabilityStatus.AVAILABLE, OfferAvailabilityStatus.UNAVAILABLE);
     }
 
+    @Test
+    void searchesPublishedOffersAcrossProductAndContextFields() {
+        Offer searchable = createPublishedOffer(
+                "Search Product Alpha",
+                "Search description unique",
+                "Search category unique",
+                "Search Game Unique",
+                "Search Publisher Unique",
+                "Search Platform Unique",
+                "Search Region Unique",
+                "Search Server Unique",
+                "Search Variant Unique");
+        Offer draft = createOffer(
+                "Draft-only search product", "Draft description", "Draft category", "Draft Game",
+                "Draft Publisher", "Draft Platform", "Draft Region", "Draft Server", "Draft Variant", false);
+
+        PageRequest pageable = PageRequest.of(0, 1);
+        Page<Offer> allPublished = service.searchPublished(PageRequest.of(0, 100));
+        assertThat(service.searchPublished(PageRequest.of(0, 100), "").getTotalElements())
+                .isEqualTo(allPublished.getTotalElements());
+        assertThat(service.searchPublished(PageRequest.of(0, 100), "   ").getTotalElements())
+                .isEqualTo(allPublished.getTotalElements());
+
+        assertSearchFindsOnly(searchable.getId(), "product alpha");
+        assertSearchFindsOnly(searchable.getId(), "GAME UNIQUE");
+        assertSearchFindsOnly(searchable.getId(), "platform unique");
+        assertSearchFindsOnly(searchable.getId(), "region unique");
+        assertSearchFindsOnly(searchable.getId(), "server unique");
+        assertSearchFindsOnly(searchable.getId(), "variant unique");
+        assertSearchFindsOnly(searchable.getId(), "publisher unique");
+        assertSearchFindsOnly(searchable.getId(), "description unique");
+        assertSearchFindsOnly(searchable.getId(), "category unique");
+
+        Page<Offer> paged = service.searchPublished(pageable, "search product alpha");
+        assertThat(paged.getTotalElements()).isEqualTo(1);
+        assertThat(paged.getNumber()).isZero();
+        assertThat(paged.getSize()).isEqualTo(1);
+        assertThat(paged.getContent()).extracting(Offer::getId).containsExactly(searchable.getId());
+
+        assertThat(service.searchPublished(PageRequest.of(0, 10), "does-not-exist")).isEmpty();
+        assertThat(service.searchPublished(PageRequest.of(0, 10), "draft-only search product")).isEmpty();
+        assertThat(draft.getStatus()).isEqualTo(OfferStatus.DRAFT);
+    }
+
+    private void assertSearchFindsOnly(Integer offerId, String search) {
+        Page<Offer> result = service.searchPublished(PageRequest.of(0, 10), search);
+        assertThat(result.getTotalElements()).isEqualTo(1);
+        assertThat(result.getContent()).extracting(Offer::getId).containsExactly(offerId);
+    }
+
     private void changeAvailabilityAfter(CountDownLatch start, Integer offerId,
                                          OfferAvailabilityStatus status, String actor) {
         try {
@@ -172,23 +224,38 @@ class OfferPostgresIntegrationTest {
     }
 
     private Offer createPublishedOffer() {
+        return createPublishedOffer("Concurrent coins", "Concurrent coins", "Digital", "Elden Ring", null,
+                "PC", "BR", null, null);
+    }
+
+    private Offer createPublishedOffer(String productName, String description, String category, String game,
+                                       String publisher, String platform, String region, String server, String variant) {
+        return createOffer(productName, description, category, game, publisher, platform, region, server, variant, true);
+    }
+
+    private Offer createOffer(String productName, String description, String category, String game,
+                              String publisher, String platform, String region, String server, String variant,
+                              boolean publish) {
         Product product = productRepository.save(Product.builder()
-                .name("Concurrent coins")
-                .description("Concurrent coins")
+                .name(productName)
+                .description(description)
                 .price(new BigDecimal("15.00"))
                 .quantity(new BigDecimal("10.00"))
                 .user(userRepository.findByIdOrThrow(1))
-                .category("Digital")
+                .category(category)
                 .inventoryStatus("INSTOCK")
                 .rating("5")
-                .image("concurrent-coins.jpg")
-                .objectId("concurrent-coins")
+                .image(productName + ".jpg")
+                .objectId(productName)
                 .version(0)
                 .build());
         GameContext context = contextRepository.save(GameContext.builder()
-                .game("Elden Ring")
-                .platform("PC")
-                .region("BR")
+                .game(game)
+                .publisher(publisher)
+                .platform(platform)
+                .region(region)
+                .server(server)
+                .variant(variant)
                 .status(com.schambeck.marketplace.usecase.gamecontext.GameContextStatus.ACTIVE)
                 .version(0)
                 .build());
@@ -200,7 +267,7 @@ class OfferPostgresIntegrationTest {
         request.setAvailabilitySource("SUPPLY");
         request.setAvailabilityStatus(OfferAvailabilityStatus.AVAILABLE);
         Offer offer = service.create(request);
-        return service.publish(offer.getId(), action("concurrent test publication", "integration-test"), "admin");
+        return publish ? service.publish(offer.getId(), action("concurrent test publication", "integration-test"), "admin") : offer;
     }
 
     private static OfferActionRequest action(String reason, String source) {

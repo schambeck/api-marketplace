@@ -32,8 +32,9 @@ public class CatalogController {
     }
 
     @GetMapping("offers")
-    public ResponseEntity<Page<OfferWeb>> searchOffers(@PageableDefault Pageable pageable) {
-        return ResponseEntity.ok(offerService.searchPublished(pageable).map(OfferMapper::toWeb));
+    public ResponseEntity<Page<OfferWeb>> searchOffers(@PageableDefault Pageable pageable,
+                                                       @RequestParam(required = false) String search) {
+        return ResponseEntity.ok(offerService.searchPublished(pageable, search).map(OfferMapper::toWeb));
     }
 
     @GetMapping("offers/{id}")
