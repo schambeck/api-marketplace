@@ -31,7 +31,7 @@ Para o desenvolvimento local, instale:
 - PostgreSQL acessível na porta `5432`, com banco `marketplace`;
 - Git.
 
-O projeto usa Java 21 no desenvolvimento local, no CI e na imagem Docker. O `Dockerfile` usa Maven 3.9.5 e Java 21 para construir e executar a imagem.
+O projeto usa Java 21 no desenvolvimento local, no CI e na imagem Docker. O Maven 3.9.16 e Java 21 são usados para construir e executar a imagem.
 
 ## Configuração local
 

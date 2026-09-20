@@ -30,7 +30,7 @@ Não há código de testes em `src/test` no estado atual do repositório.
 Pré-requisitos observados no projeto:
 
 - JDK 21 para desenvolvimento, CI e Docker.
-- Maven Wrapper (`./mvnw`); a versão configurada no wrapper é Maven 3.9.2.
+- Maven Wrapper (`./mvnw`); a versão configurada no wrapper é Maven 3.9.16.
 - Docker e Docker Compose para PostgreSQL, Keycloak, MinIO e execução containerizada.
 - PostgreSQL acessível em `localhost:5432`, banco `marketplace`, ou os valores equivalentes fornecidos por variáveis.
 
