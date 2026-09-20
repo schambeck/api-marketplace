@@ -57,5 +57,5 @@ O `PLAN-002` deve consumir o `GameContext` por uma referência obrigatória e ve
 
 - Testes unitários cobrem criação ativa com auditoria, rejeição de servidor sem região, transição de status, bloqueio de contextos inativos/descontinuados e referência versionada para publicação.
 - `GameContextPostgresIntegrationTest` usa Testcontainers PostgreSQL 17.3, executa as 11 migrations Flyway e prova a retenção do contexto descontinuado e dos snapshots em `game_context_history`.
-- `mvn clean test -Dmaven.plugin.validation=BRIEF` valida compilação, testes unitários e integração; o teste requer Docker disponível.
-- `mvn package -DskipTests` valida a geração do artefato; a aplicação de `V11__create_game_context.sql` requer PostgreSQL disponível.
+- `./mvnw clean test -Dmaven.plugin.validation=BRIEF` valida compilação, testes unitários e integração; o teste requer Docker disponível.
+- `./mvnw package -DskipTests` valida a geração do artefato; a aplicação de `V11__create_game_context.sql` requer PostgreSQL disponível.

@@ -53,10 +53,10 @@ create-archetype-from-project:
 		-Dmaven.plugin.validation=BRIEF
 
 install-archetype:
-	cd target/generated-sources/archetype && mvn clean install
+	cd target/generated-sources/archetype && ../../../mvnw clean install
 
 create-project-from-archetype:
-	mvn archetype:generate \
+	./mvnw archetype:generate \
 		-DgroupId=com.schambeck \
 		-DartifactId=api-marketplace \
 		-Dversion=1.0.0 \

@@ -10,7 +10,7 @@ jobs:
           version: docker24
       - run:
           name: Run Maven verification
-          command: mvn clean verify
+          command: ./mvnw clean verify
 
 workflows:
   maven-pipeline:

@@ -36,7 +36,7 @@ Reverter somente as alterações de versão no `pom.xml`, workflow e documentaç
 ## Resultado da validação
 
 - JDK local: Temurin 21.0.11.
-- `mvn clean test -Dmaven.plugin.validation=BRIEF`: aprovado; 8 testes, 0 falhas, 0 erros.
-- `mvn clean package -Dmaven.plugin.validation=BRIEF -DskipTests=false`: aprovado; JAR Spring Boot gerado em `target/api-marketplace-1.0.0.jar`.
+- `./mvnw clean test -Dmaven.plugin.validation=BRIEF`: aprovado; 8 testes, 0 falhas, 0 erros.
+- `./mvnw clean package -Dmaven.plugin.validation=BRIEF -DskipTests=false`: aprovado; JAR Spring Boot gerado em `target/api-marketplace-1.0.0.jar`.
 - Bytecode verificado com major version 65 (Java 21).
 - `./mvnw` não pôde ser usado porque o repositório não contém `.mvn/wrapper/maven-wrapper.jar`; a validação equivalente foi executada com Maven 3.9.16 instalado no ambiente.

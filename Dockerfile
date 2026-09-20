@@ -6,10 +6,12 @@ ARG APP
 WORKDIR ${APP}
 
 COPY pom.xml .
-RUN mvn dependency:go-offline
+COPY mvnw .
+COPY .mvn .mvn
+RUN chmod +x mvnw && ./mvnw dependency:go-offline
 
 COPY src src
-RUN mvn package -DskipTests
+RUN ./mvnw package -DskipTests
 ARG TARGET
 WORKDIR ${TARGET}
 COPY certbot/cert.pem .

@@ -104,7 +104,7 @@ Antes de finalizar uma alteração Java, execute ao menos:
 ./mvnw clean test -Dmaven.plugin.validation=BRIEF
 ```
 
-Para validar o artefato empacotável, execute também `./mvnw clean package` ou `make dist`. O workflow de CI usa `mvn -B package --file pom.xml` em JDK 21.
+Para validar o artefato empacotável, execute também `./mvnw clean package` ou `make dist`. O workflow de CI usa `./mvnw -B package --file pom.xml` em JDK 21.
 
 ## Convenções de código
 
