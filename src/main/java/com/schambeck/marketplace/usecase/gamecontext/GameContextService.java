@@ -135,6 +135,6 @@ public class GameContextService {
     }
 
     private static String normalizedFilter(String value) {
-        return notBlank(value) ? value.trim() : null;
+        return notBlank(value) ? value.trim() : "";
     }
 }
