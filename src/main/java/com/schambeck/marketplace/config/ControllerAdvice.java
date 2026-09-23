@@ -36,4 +36,11 @@ class ControllerAdvice {
         return ResponseEntity.status(BAD_REQUEST).body(error);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    ResponseEntity<Map<String, String>> handleIllegalArgumentException(IllegalArgumentException exception) {
+        Map<String, String> error = new HashMap<>();
+        error.put("message", exception.getMessage());
+        return ResponseEntity.status(BAD_REQUEST).body(error);
+    }
+
 }

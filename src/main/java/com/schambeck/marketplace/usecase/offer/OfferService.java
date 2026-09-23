@@ -100,6 +100,11 @@ public class OfferService {
         return repository.findAllByStatusAndSearch(OfferStatus.PUBLISHED, normalizedSearch, pageable);
     }
 
+    public Page<Offer> searchAdmin(Pageable pageable, OfferStatus status, String search) {
+        String normalizedSearch = search == null ? "" : search.trim();
+        return repository.searchAdmin(status, normalizedSearch, pageable);
+    }
+
     public Offer findPublishedById(Integer id) {
         Offer offer = repository.findByIdOrThrow(id);
         if (offer.getStatus() != OfferStatus.PUBLISHED) {
@@ -109,6 +114,10 @@ public class OfferService {
     }
 
     public Offer findById(Integer id) {
+        return repository.findByIdOrThrow(id);
+    }
+
+    public Offer findAdminById(Integer id) {
         return repository.findByIdOrThrow(id);
     }
 

@@ -159,6 +159,40 @@ class OfferPostgresIntegrationTest {
     }
 
     @Test
+    void searchesAdminOffersAcrossStatusesWithFilterAndPagination() {
+        Offer draft = createOffer("Admin State Draft", "Admin state", "Admin state category", "Admin State Game",
+                "Admin State Publisher", "Admin State Platform", "Admin State Region", "Admin State Server",
+                "Admin State Variant", false);
+        Offer published = createPublishedOffer("Admin State Published", "Admin state", "Admin state category", "Admin State Game",
+                "Admin State Publisher", "Admin State Platform", "Admin State Region", "Admin State Server",
+                "Admin State Variant");
+        Offer paused = createPublishedOffer("Admin State Paused", "Admin state", "Admin state category", "Admin State Game",
+                "Admin State Publisher", "Admin State Platform", "Admin State Region", "Admin State Server",
+                "Admin State Variant");
+        service.pause(paused.getId(), action("pause admin state offer", "integration-test"), "admin");
+        Offer retired = createOffer("Admin State Retired", "Admin state", "Admin state category", "Admin State Game",
+                "Admin State Publisher", "Admin State Platform", "Admin State Region", "Admin State Server",
+                "Admin State Variant", false);
+        service.retire(retired.getId(), action("retire admin state offer", "integration-test"), "admin");
+
+        Page<Offer> allStates = service.searchAdmin(PageRequest.of(0, 10), null, "admin state");
+        assertThat(allStates.getTotalElements()).isEqualTo(4);
+        assertThat(allStates.getContent()).extracting(Offer::getId)
+                .containsExactly(draft.getId(), published.getId(), paused.getId(), retired.getId());
+        assertThat(allStates.getContent()).extracting(Offer::getStatus)
+                .containsExactly(OfferStatus.DRAFT, OfferStatus.PUBLISHED, OfferStatus.PAUSED, OfferStatus.RETIRED);
+
+        Page<Offer> pausedOnly = service.searchAdmin(PageRequest.of(0, 10), OfferStatus.PAUSED, "ADMIN STATE");
+        assertThat(pausedOnly.getTotalElements()).isEqualTo(1);
+        assertThat(pausedOnly.getContent()).extracting(Offer::getId).containsExactly(paused.getId());
+
+        Page<Offer> secondPage = service.searchAdmin(PageRequest.of(1, 2), null, "admin state");
+        assertThat(secondPage.getTotalElements()).isEqualTo(4);
+        assertThat(secondPage.getContent()).extracting(Offer::getId)
+                .containsExactly(paused.getId(), retired.getId());
+    }
+
+    @Test
     void searchesPublishedOffersAcrossProductAndContextFields() {
         Offer searchable = createPublishedOffer(
                 "Search Product Alpha",
