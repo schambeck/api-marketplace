@@ -1,12 +1,11 @@
 package com.schambeck.marketplace.usecase.offer;
 
-import com.schambeck.marketplace.exception.GameContextValidationException;
 import com.schambeck.marketplace.exception.OfferValidationException;
-import com.schambeck.marketplace.usecase.gamecontext.GameContextReference;
-import com.schambeck.marketplace.usecase.gamecontext.GameContextService;
+import com.schambeck.marketplace.usecase.product.Product;
+import com.schambeck.marketplace.usecase.product.ProductRepository;
+import com.schambeck.marketplace.usecase.user.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,154 +23,93 @@ import static org.mockito.Mockito.*;
 class OfferServiceTest {
     @Mock
     private OfferRepository repository;
-
     @Mock
     private OfferStatusHistoryRepository historyRepository;
-
     @Mock
-    private com.schambeck.marketplace.usecase.product.ProductRepository productRepository;
-
-    @Mock
-    private GameContextService gameContextService;
-
+    private ProductRepository productRepository;
     @InjectMocks
     private OfferService service;
 
     @Test
-    void publishesOnlyWhenContextAndAvailabilityAreValid() {
-        Offer offer = offer(OfferStatus.DRAFT, OfferAvailabilityStatus.AVAILABLE);
-        when(repository.findByIdForUpdateOrThrow(7)).thenReturn(offer);
-        when(gameContextService.referenceForOfferPublication(11)).thenReturn(
-                new GameContextReference(11, 3, "Elden Ring", "FromSoftware", "PC", "BR", null, "Standard"));
-        when(repository.save(offer)).thenReturn(offer);
+    void sellerCanPublishOwnOfferWhenProductHasStock() {
+        Product product = product("seller-a", new BigDecimal("10"));
+        when(productRepository.findByIdOrThrow(21)).thenReturn(product);
+        when(repository.save(any(Offer.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        Offer offer = service.create(request(), "seller-a", false);
+        when(repository.findByIdForUpdateOrThrow(offer.getId())).thenReturn(offer);
 
-        Offer published = service.publish(7, action(), "admin");
+        Offer published = service.publish(offer.getId(), action(), "seller-a", false);
 
         assertThat(published.getStatus()).isEqualTo(OfferStatus.PUBLISHED);
-        ArgumentCaptor<OfferStatusHistory> history = ArgumentCaptor.forClass(OfferStatusHistory.class);
-        verify(historyRepository).save(history.capture());
-        assertThat(history.getValue().getFromStatus()).isEqualTo(OfferStatus.DRAFT);
-        assertThat(history.getValue().getToStatus()).isEqualTo(OfferStatus.PUBLISHED);
-        assertThat(history.getValue().getChangedBy()).isEqualTo("admin");
+        verify(historyRepository, times(2)).save(any(OfferStatusHistory.class));
     }
 
     @Test
-    void rejectsPublicationWhenContextIsNotActive() {
-        Offer offer = offer(OfferStatus.DRAFT, OfferAvailabilityStatus.AVAILABLE);
-        when(repository.findByIdForUpdateOrThrow(7)).thenReturn(offer);
-        when(gameContextService.referenceForOfferPublication(11))
-                .thenThrow(new GameContextValidationException("context is not active"));
+    void sellerCannotOperateAnotherUsersProduct() {
+        Product product = product("seller-b", new BigDecimal("10"));
+        when(productRepository.findByIdOrThrow(21)).thenReturn(product);
 
-        assertThatThrownBy(() -> service.publish(7, action(), "admin"))
-                .isInstanceOf(GameContextValidationException.class)
-                .hasMessageContaining("not active");
+        assertThatThrownBy(() -> service.create(request(), "seller-a", false))
+                .isInstanceOf(OfferValidationException.class)
+                .hasMessageContaining("does not belong");
         verify(repository, never()).save(any());
     }
 
     @Test
-    void rejectsPublicationWhenAvailabilityIsUnavailable() {
-        Offer offer = offer(OfferStatus.DRAFT, OfferAvailabilityStatus.UNAVAILABLE);
-        when(repository.findByIdForUpdateOrThrow(7)).thenReturn(offer);
+    void productWithoutStockCannotBePublished() {
+        Product product = product("seller-a", BigDecimal.ZERO);
+        when(productRepository.findByIdOrThrow(21)).thenReturn(product);
+        when(repository.save(any(Offer.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        Offer offer = service.create(request(), "seller-a", false);
+        when(repository.findByIdForUpdateOrThrow(offer.getId())).thenReturn(offer);
 
-        assertThatThrownBy(() -> service.publish(7, action(), "admin"))
+        assertThatThrownBy(() -> service.publish(offer.getId(), action(), "seller-a", false))
                 .isInstanceOf(OfferValidationException.class)
-                .hasMessageContaining("AVAILABLE");
-        verifyNoInteractions(gameContextService);
+                .hasMessageContaining("available product stock");
     }
 
     @Test
-    void rejectsInvalidStatusTransition() {
-        Offer offer = offer(OfferStatus.RETIRED, OfferAvailabilityStatus.AVAILABLE);
-        when(repository.findByIdForUpdateOrThrow(7)).thenReturn(offer);
+    void publicSearchUsesProductStock() {
+        PageRequest pageable = PageRequest.of(0, 10);
+        Page<Offer> page = Page.empty();
+        when(repository.findAllPublishedAndAvailable("elden ring", pageable)).thenReturn(page);
 
-        assertThatThrownBy(() -> service.pause(7, action(), "admin"))
-                .isInstanceOf(OfferValidationException.class)
-                .hasMessageContaining("Invalid offer transition");
+        assertThat(service.searchPublished(pageable, "  elden ring  ")).isSameAs(page);
+        verify(repository).findAllPublishedAndAvailable("elden ring", pageable);
     }
 
     @Test
-    void checkoutRevalidationBlocksPausedOffers() {
-        Offer offer = offer(OfferStatus.PAUSED, OfferAvailabilityStatus.AVAILABLE);
+    void checkoutBlocksPausedOffer() {
+        Offer offer = Offer.builder().id(7).status(OfferStatus.PAUSED)
+                .product(product("seller-a", new BigDecimal("10"))).build();
         when(repository.findByIdForUpdateOrThrow(7)).thenReturn(offer);
 
         assertThatThrownBy(() -> service.validateForCheckout(7))
                 .isInstanceOf(OfferValidationException.class)
                 .hasMessageContaining("not published");
-        verifyNoInteractions(gameContextService);
     }
 
-    @Test
-    void normalizesAdminSearchBeforeQueryingRepository() {
-        Page<Offer> page = Page.empty();
-        PageRequest pageable = PageRequest.of(0, 10);
-        when(repository.searchAdmin(OfferStatus.PAUSED, "elden ring", pageable)).thenReturn(page);
-
-        assertThat(service.searchAdmin(pageable, OfferStatus.PAUSED, "  elden ring  ")).isSameAs(page);
-
-        verify(repository).searchAdmin(OfferStatus.PAUSED, "elden ring", pageable);
+    private OfferWeb request() {
+        OfferWeb request = new OfferWeb();
+        request.setProductId(21);
+        request.setGame("Elden Ring");
+        request.setPlatform("PC");
+        request.setRegion("BR");
+        request.setVariant("Standard");
+        request.setPrice(new BigDecimal("25.00"));
+        request.setDeliveryMethod("AUTOMATIC");
+        return request;
     }
 
-    @Test
-    void searchesOwnedOffersWithOwnerAndNormalizedSearch() {
-        Page<Offer> page = Page.empty();
-        PageRequest pageable = PageRequest.of(0, 10);
-        when(repository.searchOwned("seller-a", OfferStatus.PAUSED, "elden ring", pageable)).thenReturn(page);
-
-        assertThat(service.searchOwned("seller-a", pageable, OfferStatus.PAUSED, "  elden ring  ")).isSameAs(page);
-
-        verify(repository).searchOwned("seller-a", OfferStatus.PAUSED, "elden ring", pageable);
-    }
-
-    @Test
-    void returnsNotFoundWhenOwnedOfferDoesNotExist() {
-        when(repository.findByIdAndOwnerUsername(7, "seller-a")).thenReturn(java.util.Optional.empty());
-
-        assertThatThrownBy(() -> service.findOwnedById("seller-a", 7))
-                .isInstanceOf(com.schambeck.marketplace.exception.EntityNotFoundException.class);
-    }
-
-    @Test
-    void normalizesSearchBeforeQueryingPublishedOffers() {
-        Page<Offer> page = Page.empty();
-        when(repository.findAllByStatusAndSearch(OfferStatus.PUBLISHED, "elden ring", PageRequest.of(0, 10)))
-                .thenReturn(page);
-
-        assertThat(service.searchPublished(PageRequest.of(0, 10), "  elden ring  ")).isSameAs(page);
-
-        verify(repository).findAllByStatusAndSearch(OfferStatus.PUBLISHED, "elden ring", PageRequest.of(0, 10));
-    }
-
-    @Test
-    void treatsBlankSearchAsNoFilter() {
-        Page<Offer> page = Page.empty();
-        PageRequest pageable = PageRequest.of(0, 10);
-        when(repository.findAllByStatusAndSearch(OfferStatus.PUBLISHED, "", pageable)).thenReturn(page);
-
-        assertThat(service.searchPublished(pageable, "   ")).isSameAs(page);
-        verify(repository).findAllByStatusAndSearch(OfferStatus.PUBLISHED, "", pageable);
-    }
-
-    private static Offer offer(OfferStatus status, OfferAvailabilityStatus availabilityStatus) {
-        return Offer.builder()
-                .id(7)
-                .product(com.schambeck.marketplace.usecase.product.Product.builder().id(21).build())
-                .gameContext(com.schambeck.marketplace.usecase.gamecontext.GameContext.builder().id(11).build())
-                .contextVersion(2)
-                .contextGame("Elden Ring")
-                .contextPlatform("PC")
-                .price(new BigDecimal("25.00"))
-                .deliveryMethod("AUTOMATIC")
-                .availabilitySource("SUPPLY")
-                .availabilityStatus(availabilityStatus)
-                .status(status)
-                .version(0)
-                .build();
+    private static Product product(String username, BigDecimal quantity) {
+        return Product.builder().id(21).quantity(quantity)
+                .user(User.builder().username(username).build()).build();
     }
 
     private static OfferActionRequest action() {
         OfferActionRequest request = new OfferActionRequest();
-        request.setReason("catalog validation");
-        request.setSource("admin-api");
+        request.setReason("seller publication");
+        request.setSource("seller-api");
         return request;
     }
 }

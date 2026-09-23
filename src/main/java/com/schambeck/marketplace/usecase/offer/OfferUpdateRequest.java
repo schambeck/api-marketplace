@@ -9,11 +9,12 @@ import java.math.BigDecimal;
 @Setter
 public class OfferUpdateRequest {
     private Integer productId;
-    private Integer gameContextId;
+    private String game;
+    private String platform;
+    private String region;
+    private String variant;
     private BigDecimal price;
     private String deliveryMethod;
-    private String availabilitySource;
-    private OfferAvailabilityStatus availabilityStatus;
     private String reason;
     private String source;
 }

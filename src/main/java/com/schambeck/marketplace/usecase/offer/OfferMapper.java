@@ -1,7 +1,5 @@
 package com.schambeck.marketplace.usecase.offer;
 
-import com.schambeck.marketplace.usecase.gamecontext.GameContextReference;
-
 public final class OfferMapper {
     private OfferMapper() {
     }
@@ -10,14 +8,12 @@ public final class OfferMapper {
         OfferWeb web = new OfferWeb();
         web.setId(offer.getId());
         web.setProductId(offer.getProduct().getId());
-        web.setGameContextId(offer.getGameContext().getId());
-        web.setContextVersion(offer.getContextVersion());
-        web.setContext(new GameContextReference(offer.getGameContext().getId(), offer.getContextVersion(),
-                offer.getContextGame(), offer.getContextPublisher(), offer.getContextPlatform(),
-                offer.getContextRegion(), offer.getContextServer(), offer.getContextVariant()));
+        web.setGame(offer.getContextGame());
+        web.setPlatform(offer.getContextPlatform());
+        web.setRegion(offer.getContextRegion());
+        web.setVariant(offer.getContextVariant());
         web.setPrice(offer.getPrice());
         web.setDeliveryMethod(offer.getDeliveryMethod());
-        web.setAvailabilitySource(offer.getAvailabilitySource());
         web.setAvailabilityStatus(offer.getAvailabilityStatus());
         web.setStatus(offer.getStatus());
         web.setVersion(offer.getVersion());
