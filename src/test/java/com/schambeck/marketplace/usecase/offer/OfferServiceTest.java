@@ -101,6 +101,17 @@ class OfferServiceTest {
     }
 
     @Test
+    void normalizesAdminSearchBeforeQueryingRepository() {
+        Page<Offer> page = Page.empty();
+        PageRequest pageable = PageRequest.of(0, 10);
+        when(repository.searchAdmin(OfferStatus.PAUSED, "elden ring", pageable)).thenReturn(page);
+
+        assertThat(service.searchAdmin(pageable, OfferStatus.PAUSED, "  elden ring  ")).isSameAs(page);
+
+        verify(repository).searchAdmin(OfferStatus.PAUSED, "elden ring", pageable);
+    }
+
+    @Test
     void normalizesSearchBeforeQueryingPublishedOffers() {
         Page<Offer> page = Page.empty();
         when(repository.findAllByStatusAndSearch(OfferStatus.PUBLISHED, "elden ring", PageRequest.of(0, 10)))
