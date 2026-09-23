@@ -1,8 +1,10 @@
 # PLAN-012 — Comunicação de eventos
 
+**Prioridade:** Futuro reduzido. Começar com notificações essenciais de pagamento, pedido e entrega; outbox, templates versionados e múltiplos canais ficam para depois.
+
 **Issue:** [#14](https://github.com/schambeck/api-marketplace/issues/14)
 
-**PRD:** [`PRD-012`](../prd/PRD-012-comunicacao.md) · **Dependências:** PRD-005, PRD-006, PRD-007, PRD-009 e PRD-010.
+**PRD:** [`PRD-012`](../../prd/PRD-012-comunicacao.md) · **Dependências:** PRD-005, PRD-006, PRD-007, PRD-009 e PRD-010.
 
 ## Estado atual e alvo
 

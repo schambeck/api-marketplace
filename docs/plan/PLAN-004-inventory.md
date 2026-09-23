@@ -1,8 +1,10 @@
 # PLAN-004 — Reserva, alocação e consumo de inventory
 
+**Prioridade:** MVP reduzido. Controlar o saldo do estoque pertencente diretamente ao seller.
+
 **Issue:** [#6](https://github.com/schambeck/api-marketplace/issues/6)
 
-**PRD:** [`PRD-004`](../prd/PRD-004-inventory.md) · **Dependências:** PRD-001, PRD-002 e PRD-003.
+**PRD:** [`PRD-004`](../prd/PRD-004-inventory.md) · **Dependências:** PRD-001 e PRD-002. O `PLAN-003` só passa a ser dependência quando houver múltiplas fontes.
 
 ## Estado atual e alvo
 
@@ -10,11 +12,11 @@
 
 ## Abordagem técnica
 
-- Definir granularidade (saldo, unidade ou código) e criar `InventoryItem`/`InventoryBalance` conforme a decisão.
-- Criar tabela de movimentos idempotentes e serviço transacional para reservar, alocar, consumir e liberar.
+- Definir granularidade do item (saldo, unidade ou código) e começar com `InventoryBalance` ou quantidade na oferta, conforme o tipo de item.
+- Criar serviço transacional mínimo para reservar, consumir e liberar estoque; alocação por fonte fica para o `PLAN-003`.
 - Usar locking pessimista ou atualização condicional por versão; selecionar estratégia após teste de concorrência PostgreSQL.
-- Tornar expiração observável via scheduler/job seguro, sem depender de alteração manual em `Product`.
-- Exigir reserva/alocação válida antes de criar fulfillment e consumir somente quantidade entregue.
+- Implementar expiração da reserva apenas quando o checkout exigir TTL; não depender de alteração manual em `Product`.
+- Exigir reserva válida antes da confirmação da venda e consumir somente a quantidade efetivamente entregue.
 
 ## Persistência e APIs
 
@@ -27,7 +29,7 @@ Adicionar migrations para saldo/unidades, reservas, alocações, movimentos e ch
 3. Integrar pedido/pagamento/fulfillment.
 4. Implementar expiração, release e consumo parcial.
 
-Testes obrigatórios: duas reservas concorrentes, repetição da mesma operação, expiração, pedido pago sem reserva, falha/cancelamento e entrega parcial.
+Testes obrigatórios no MVP: duas reservas concorrentes, repetição da mesma operação, saldo insuficiente, cancelamento e liberação. Expiração, entrega parcial e alocação por fonte entram posteriormente.
 
 ## Aceite e riscos
 

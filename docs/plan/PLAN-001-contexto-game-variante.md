@@ -1,8 +1,16 @@
 # PLAN-001 — Contexto de game e variante
 
+**Status:** Implementado no baseline; substituído para o MVP pelos planos corretivos [`PLAN-020`](PLAN-020-simplificacao-contexto-mvp.md) e [`PLAN-021`](PLAN-021-oferta-seller-mvp.md).
+
+**Prioridade original:** MVP reduzido.
+
 **Issue:** [#3](https://github.com/schambeck/api-marketplace/issues/3)
 
 **PRD:** [`PRD-001`](../prd/PRD-001-contexto-game-variante.md) · **Dependências:** nenhuma de negócio; base para PRD-002, PRD-004, PRD-008 e PRD-015.
+
+## Escopo do MVP
+
+O contexto deve identificar, de forma simples, o game, a plataforma e, quando aplicável, região, servidor e variante. Publisher, vocabulários controlados, regras externas e auditoria detalhada ficam para evolução posterior.
 
 ## Estado atual e alvo
 
@@ -10,7 +18,7 @@
 
 ## Abordagem técnica
 
-- Criar `game_context` com atributos normalizados, status (`ACTIVE`, `INACTIVE`, `DISCONTINUED`), versão, auditoria e restrições de compatibilidade.
+- Criar `game_context` com game, plataforma e atributos opcionais de região, servidor e variante, além de status básico (`ACTIVE`, `INACTIVE`, `DISCONTINUED`).
 - Criar `GameContextController`, `GameContextService`, repository, mapper e DTOs `GameContextWeb`; restringir mutações por papel.
 - Validar campos obrigatórios e combinações incompatíveis em serviço transacional, com erros de domínio acionáveis.
 - Definir o contexto como referência estável para ofertas e pedidos, sem apagar registros que possam ser referenciados historicamente.
@@ -25,7 +33,7 @@ Adicionar migration Flyway para tabela, índices de busca por game/platform/regi
 1. Resolver campos obrigatórios por game e vocabulário de entidades.
 2. Implementar entidade, migration, validação e consulta pública.
 3. Entregar ao `PLAN-002` o contrato de referência, status e validação de publicação do contexto.
-4. Adicionar histórico e bloqueio de novos usos para contexto descontinuado.
+4. Adiar histórico completo e bloqueio sofisticado de compatibilidade; no MVP, contextos inativos não podem receber novas ofertas.
 
 ## Validação e aceite
 
@@ -51,7 +59,7 @@ As decisões sobre campos obrigatórios, entidades controladas, publisher terms 
 
 ## Handoff para PLAN-002
 
-O `PLAN-002` deve consumir o `GameContext` por uma referência obrigatória e versionada, validar que o contexto está `ACTIVE` e preservar a referência/snapshot quando uma oferta ou pedido for criado. O `PLAN-001` não implementa `Offer`, catálogo, carrinho ou checkout.
+O `PLAN-002` deve consumir o `GameContext`, validar que o contexto está `ACTIVE` e preservar no pedido os dados essenciais usados na compra. Versionamento e snapshots históricos completos ficam para a evolução futura. O `PLAN-001` não implementa `Offer`, catálogo, carrinho ou checkout.
 
 ## Evidência de validação
 

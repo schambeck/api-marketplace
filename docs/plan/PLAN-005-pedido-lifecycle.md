@@ -1,5 +1,7 @@
 # PLAN-005 — Pedido e lifecycle
 
+**Prioridade:** MVP reduzido. Criar o agregado comercial mínimo entre carrinho, pagamento e entrega.
+
 **Issue:** [#7](https://github.com/schambeck/api-marketplace/issues/7)
 
 **PRD:** [`PRD-005`](../prd/PRD-005-pedido-lifecycle.md) · **Dependências:** PRD-001, PRD-002 e base para PRD-004/006–014.
@@ -10,11 +12,11 @@
 
 ## Abordagem técnica
 
-- Criar `Order`, `OrderItem`, snapshot de contexto/instruções e `OrderStateTransition`.
-- Definir estados e máquina de transição; mudanças passam por serviço único, com causa, ator e origem.
-- Implementar checkout idempotente por carrinho/checkout key, congelando preço, quantidade e dados do cliente.
+- Criar `Order` e `OrderItem` com snapshot de seller, oferta, preço e quantidade; instruções e transições detalhadas podem ser adicionadas depois.
+- Definir estados mínimos (`PENDING_PAYMENT`, `PAID`, `FULFILLING`, `COMPLETED`, `CANCELLED`); mudanças passam por serviço único.
+- Implementar checkout idempotente por carrinho/checkout key, congelando preço, quantidade e dados essenciais do cliente.
 - Migrar preference para referenciar `order.public_id`, mantendo `Cart` apenas como origem descartável.
-- Expor consulta do próprio pedido e APIs operacionais com autorização adequada.
+- Expor consulta do próprio pedido; APIs operacionais detalhadas ficam para a evolução do fulfillment.
 
 ## Persistência e contrato
 

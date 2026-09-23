@@ -1,8 +1,10 @@
 # PLAN-015 — Regras por game e publisher
 
+**Prioridade:** Futuro. No MVP, usar validações fixas e explícitas no contexto/oferta; rulesets versionados entram somente quando existirem regras divergentes por game ou publisher.
+
 **Issue:** [#17](https://github.com/schambeck/api-marketplace/issues/17)
 
-**PRD:** [`PRD-015`](../prd/PRD-015-regras-game-publisher.md) · **Dependências:** PRD-001, PRD-002, PRD-007 e PRD-008.
+**PRD:** [`PRD-015`](../../prd/PRD-015-regras-game-publisher.md) · **Dependências:** PRD-001, PRD-002, PRD-007 e PRD-008.
 
 ## Estado atual e alvo
 

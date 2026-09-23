@@ -1,8 +1,10 @@
 # PLAN-011 — Suporte e casos
 
+**Prioridade:** Futuro. No MVP, usar um canal simples de atendimento sem workflow completo de tickets e SLA.
+
 **Issue:** [#13](https://github.com/schambeck/api-marketplace/issues/13)
 
-**PRD:** [`PRD-011`](../prd/PRD-011-suporte.md) · **Dependências:** PRD-005, PRD-007, PRD-010 e autorização existente.
+**PRD:** [`PRD-011`](../../prd/PRD-011-suporte.md) · **Dependências:** PRD-005, PRD-007, PRD-010 e autorização existente.
 
 ## Estado atual e alvo
 

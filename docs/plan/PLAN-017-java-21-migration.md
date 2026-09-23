@@ -1,5 +1,7 @@
 # Plano: migração para Java 21
 
+**Status:** CONCLUÍDO no código.
+
 ## Estado atual e objetivo
 
 - O Dockerfile já usa Java 21.

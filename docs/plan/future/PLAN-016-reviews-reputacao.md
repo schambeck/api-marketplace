@@ -1,8 +1,10 @@
 # PLAN-016 — Reviews e reputação
 
+**Prioridade:** Futuro. Reviews não bloqueiam a primeira venda; devem entrar depois que pedidos concluídos e entrega estiverem estáveis.
+
 **Issue:** [#18](https://github.com/schambeck/api-marketplace/issues/18)
 
-**PRD:** [`PRD-016`](../prd/PRD-016-reviews-reputacao.md) · **Dependências:** PRD-005, PRD-008 e decisão de entrada no MVP.
+**PRD:** [`PRD-016`](../../prd/PRD-016-reviews-reputacao.md) · **Dependências:** PRD-005, PRD-008 e decisão de entrada no MVP.
 
 ## Estado atual e alvo
 

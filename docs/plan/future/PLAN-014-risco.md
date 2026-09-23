@@ -1,8 +1,10 @@
 # PLAN-014 — Risco e revisão manual
 
+**Prioridade:** Futuro condicionado a fraude, chargeback ou exigência de compliance. No MVP, manter somente validações básicas de pagamento e autorização.
+
 **Issue:** [#16](https://github.com/schambeck/api-marketplace/issues/16)
 
-**PRD:** [`PRD-014`](../prd/PRD-014-risco.md) · **Dependências:** PRD-005, PRD-006, PRD-007, PRD-009 e autorização operacional.
+**PRD:** [`PRD-014`](../../prd/PRD-014-risco.md) · **Dependências:** PRD-005, PRD-006, PRD-007, PRD-009 e autorização operacional.
 
 ## Estado atual e alvo
 

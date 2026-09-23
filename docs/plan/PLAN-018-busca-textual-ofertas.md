@@ -1,5 +1,9 @@
 # Plano: busca textual de ofertas publicadas
 
+**Status:** CONCLUÍDO no código.
+
+**Prioridade original:** Evolução pós-MVP. Implementar depois que publicação, disponibilidade e checkout estivessem estáveis.
+
 ## Objetivo
 
 Permitir busca textual paginada no catálogo público (`GET /catalog/offers?search=...`), mantendo apenas ofertas `PUBLISHED` e preservando as APIs e regras de criação/publicação existentes.

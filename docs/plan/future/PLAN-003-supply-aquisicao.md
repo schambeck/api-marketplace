@@ -1,8 +1,16 @@
 # PLAN-003 — Supply e aquisição
 
+**Prioridade:** Futuro condicionado ao modelo operacional.
+
+Para o MVP, o seller é o proprietário direto do estoque e a oferta aponta para ele. Este plano não deve bloquear publicação, reserva ou venda enquanto não existirem fornecedores distintos, aquisição sob demanda ou múltiplas fontes para a mesma oferta.
+
 **Issue:** [#5](https://github.com/schambeck/api-marketplace/issues/5)
 
-**PRD:** [`PRD-003`](../prd/PRD-003-supply-aquisicao.md) · **Dependências:** PRD-001 e decisão B2C/marketplace/híbrido.
+**PRD:** [`PRD-003`](../../prd/PRD-003-supply-aquisicao.md) · **Dependências:** PRD-001, decisão B2C/marketplace/híbrido e evidência de que seller direto não atende mais à operação.
+
+## Quando ativar este plano
+
+Ativar somente se surgirem pelo menos uma destas necessidades: fornecedor separado do seller, compra pela plataforma, dropshipping/aquisição sob demanda, múltiplas fontes para a mesma oferta, SLA operacional, comissão ou repasse dependente de supply.
 
 ## Estado atual e alvo
 

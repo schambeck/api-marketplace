@@ -1,8 +1,10 @@
 # PLAN-013 — Reconciliação e settlement
 
+**Prioridade:** Futuro condicionado a repasses e volume financeiro relevante. Não implementar settlement antes de definir comissão, moeda e responsabilidade financeira.
+
 **Issue:** [#15](https://github.com/schambeck/api-marketplace/issues/15)
 
-**PRD:** [`PRD-013`](../prd/PRD-013-reconciliacao.md) · **Dependências:** PRD-005, PRD-006, PRD-008, PRD-010 e decisão de supplier/seller.
+**PRD:** [`PRD-013`](../../prd/PRD-013-reconciliacao.md) · **Dependências:** PRD-005, PRD-006, PRD-008, PRD-010 e decisão de supplier/seller.
 
 ## Estado atual e alvo
 

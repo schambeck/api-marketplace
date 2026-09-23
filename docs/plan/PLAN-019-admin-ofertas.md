@@ -1,5 +1,9 @@
 # PLAN-019 — Consulta administrativa de ofertas
 
+**Status:** CONCLUÍDO no código; substituído para o fluxo do MVP pelo [`PLAN-022`](PLAN-022-consulta-ofertas-seller-mvp.md).
+
+**Prioridade original:** Evolução operacional. Útil para o painel administrativo, mas não bloqueia o fluxo comprador–seller do MVP.
+
 **PRD relacionado:** [`PRD-002`](../prd/PRD-002-oferta-disponibilidade.md)
 
 **Planos relacionados:** [`PLAN-002`](PLAN-002-oferta-disponibilidade.md) · [`PLAN-018`](PLAN-018-busca-textual-ofertas.md)

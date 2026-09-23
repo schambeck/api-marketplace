@@ -1,5 +1,7 @@
 # PLAN-009 — Falhas, timeout, parcial e cancelamento
 
+**Prioridade:** MVP reduzido. Cobrir cancelamento, falha e liberação do estoque.
+
 **Issue:** [#11](https://github.com/schambeck/api-marketplace/issues/11)
 
 **PRD:** [`PRD-009`](../prd/PRD-009-excecoes-cancelamento.md) · **Dependências:** PRD-004, PRD-005, PRD-006, PRD-007 e PRD-008.
@@ -10,10 +12,10 @@ Não há lifecycle de exceção nem liberação coordenada de reserva. O alvo é
 
 ## Abordagem técnica
 
-- Definir deadlines por etapa, motivo/origem e estados de ação (`RETRY`, `RESCHEDULE`, `CHANGE_SOURCE`, `CUSTOMER_ACTION`, `CANCEL`, `MANUAL_REVIEW`).
+- Definir motivos básicos e ações `RETRY`, `CANCEL` e `CUSTOMER_ACTION`.
 - Centralizar cancelamento para liberar saldo não consumido e solicitar refund quando aplicável.
-- Modelar entrega parcial com quantidade pendente e decisão explícita; impedir transição `COMPLETED` indevida.
-- Usar scheduler/outbox com chave idempotente para expirações e retries; registrar cada tentativa.
+- Adiar entrega parcial, troca de fonte, revisão manual e deadlines por etapa até haver operação que exija esses fluxos.
+- Usar idempotência para retries e expirações; scheduler/outbox completos ficam para evolução posterior.
 - Preservar evidências e histórico de pedido/fulfillment.
 
 ## Persistência e testes

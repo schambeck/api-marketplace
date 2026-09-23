@@ -1,8 +1,12 @@
 # PLAN-010 — Refund, disputa e chargeback
 
+**Prioridade:** Futuro, exceto refund básico.
+
+O cancelamento e o refund simples podem ser implementados junto do pedido/pagamento. Disputas, chargebacks, evidências e congelamento financeiro devem aguardar volume de vendas e política pós-venda definida.
+
 **Issue:** [#12](https://github.com/schambeck/api-marketplace/issues/12)
 
-**PRD:** [`PRD-010`](../prd/PRD-010-pos-venda-financeiro.md) · **Dependências:** PRD-005, PRD-006, PRD-008, PRD-009 e contrato do gateway.
+**PRD:** [`PRD-010`](../../prd/PRD-010-pos-venda-financeiro.md) · **Dependências:** PRD-005, PRD-006, PRD-008, PRD-009 e contrato do gateway.
 
 ## Estado atual e alvo
 

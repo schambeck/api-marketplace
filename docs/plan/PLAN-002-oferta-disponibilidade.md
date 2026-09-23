@@ -1,8 +1,12 @@
 # PLAN-002 — Oferta e disponibilidade
 
+**Status:** Implementado no baseline; substituído para o MVP pelo plano corretivo [`PLAN-021`](PLAN-021-oferta-seller-mvp.md), em conjunto com [`PLAN-020`](PLAN-020-simplificacao-contexto-mvp.md).
+
+**Prioridade original:** MVP. A oferta é a unidade vendável do seller.
+
 **Issue:** [#4](https://github.com/schambeck/api-marketplace/issues/4)
 
-**PRD:** [`PRD-002`](../prd/PRD-002-oferta-disponibilidade.md) · **Dependências:** PRD-001, PRD-003, PRD-004 e PRD-015. O `PLAN-001` fornece o agregado `GameContext`, seus estados e seu histórico.
+**PRD:** [`PRD-002`](../prd/PRD-002-oferta-disponibilidade.md) · **Dependências:** PRD-001 e estoque/reserva mínima do PRD-004. O `PLAN-001` fornece o agregado `GameContext`; supply externo e regras por publisher não bloqueiam o MVP.
 
 ## Estado atual e alvo
 
@@ -10,12 +14,12 @@
 
 ## Abordagem técnica
 
-- Criar `offer` e `offer_status_history`; status mínimo `DRAFT`, `PUBLISHED`, `PAUSED`, `RETIRED`.
+- Criar `offer` vinculada a um `Product` e diretamente ao seller/proprietário; status mínimo `DRAFT`, `PUBLISHED`, `PAUSED`, `RETIRED`.
 - Implementar `OfferController`, service, repository, mapper e regras de publicação; publicação exige contexto válido e `ACTIVE`, preço, entrega e disponibilidade.
-- Associar cada oferta a um `GameContext` por referência obrigatória e versionada; preservar snapshot da referência quando a oferta ou pedido precisar manter o contexto histórico.
+- Associar cada oferta a um `GameContext` ativo. A referência e o snapshot histórico completo podem ser simplificados no MVP e ampliados quando houver necessidade de preservar mudanças de catálogo.
 - Alterar catálogo, `CartItem` e `CartItemService` para referenciar oferta e capturar preço no momento da adição.
 - Revalidar oferta no checkout em transação e com locking/versão, evitando divergência entre catálogo e compra.
-- Registrar ator, motivo e origem em toda transição; pedidos futuros devem guardar snapshot, não reler oferta.
+- Registrar o ator e o motivo das transições principais; o pedido deve guardar preço e dados essenciais, sem depender da oferta atualizada.
 
 ## Persistência e contrato
 
@@ -37,6 +41,8 @@ Também testar que uma oferta não pode ser publicada sem `GameContext`, nem com
 ## Riscos e decisões
 
 O desenho definitivo depende de PRD-001/003/004 e da política de preço. Não reutilizar `inventoryStatus` como máquina de estados da oferta; qualquer compatibilidade temporária deve ser explicitamente marcada.
+
+O `PLAN-003` não é pré-requisito para este plano no modelo inicial: a própria relação seller–oferta representa a origem do estoque.
 
 ## Decisões de implementação desta etapa
 
