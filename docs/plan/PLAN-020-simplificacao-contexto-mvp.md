@@ -4,7 +4,7 @@
 
 **Prioridade:** MVP.
 
-**Status:** planejado; o repositório contém parte da implementação técnica, mas ainda não há evidência completa de migração, contrato e testes de aceite.
+**Status:** implementado no código e validado automaticamente; validação manual de endpoints com tokens e inventário de consumidores externos permanecem como atividades operacionais.
 
 **Dependências:** `PLAN-001` (baseline legado), `PLAN-002`/`PLAN-021` (oferta) e `PLAN-022` (consulta de ofertas do seller).
 

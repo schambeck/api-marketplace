@@ -74,6 +74,29 @@ class OfferPostgresIntegrationTest {
     }
 
     @Test
+    void v14KeepsLegacyColumnsNullableAndPausesLegacyOffers() {
+        assertThat(jdbcTemplate.queryForObject("""
+                select count(*)
+                from information_schema.columns
+                where table_name = 'offer'
+                  and column_name in ('game_context_id', 'context_version', 'availability_source')
+                  and is_nullable = 'YES'
+                """, Integer.class)).isEqualTo(3);
+        assertThat(jdbcTemplate.queryForObject("""
+                select count(*)
+                from offer
+                where availability_source = 'LEGACY_PRODUCT_MIGRATION'
+                  and status = 'PUBLISHED'
+                """, Integer.class)).isZero();
+        assertThat(jdbcTemplate.queryForObject("""
+                select count(*)
+                from offer_status_history
+                where source = 'PLAN-021_MIGRATION'
+                  and to_status = 'PAUSED'
+                """, Integer.class)).isGreaterThan(0);
+    }
+
+    @Test
     void blocksSellerFromUsingAnotherUsersProduct() {
         User owner = userRepository.findByIdOrThrow(1);
         User other = userRepository.findByIdOrThrow(2);
