@@ -69,6 +69,35 @@ class OfferServiceTest {
     }
 
     @Test
+    void sellerCanCreateOfferWithOnlyRequiredContextFields() {
+        Product product = product("seller-a", new BigDecimal("10"));
+        when(productRepository.findByIdOrThrow(21)).thenReturn(product);
+        when(repository.save(any(Offer.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        OfferWeb request = request();
+        request.setRegion(null);
+        request.setVariant(null);
+
+        Offer offer = service.create(request, "seller-a", false);
+
+        assertThat(offer.getContextGame()).isEqualTo("Elden Ring");
+        assertThat(offer.getContextPlatform()).isEqualTo("PC");
+        assertThat(offer.getContextRegion()).isNull();
+        assertThat(offer.getContextVariant()).isNull();
+    }
+
+    @Test
+    void offerWithoutGameOrPlatformIsRejectedBeforePersistence() {
+        OfferWeb request = request();
+        request.setGame(" ");
+
+        assertThatThrownBy(() -> service.create(request, "seller-a", false))
+                .isInstanceOf(OfferValidationException.class)
+                .hasMessageContaining("game and platform are required");
+        verify(repository, never()).save(any());
+    }
+
+    @Test
     void publicSearchUsesProductStock() {
         PageRequest pageable = PageRequest.of(0, 10);
         Page<Offer> page = Page.empty();
