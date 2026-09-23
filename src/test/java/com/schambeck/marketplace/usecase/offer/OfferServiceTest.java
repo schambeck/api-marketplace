@@ -112,6 +112,25 @@ class OfferServiceTest {
     }
 
     @Test
+    void searchesOwnedOffersWithOwnerAndNormalizedSearch() {
+        Page<Offer> page = Page.empty();
+        PageRequest pageable = PageRequest.of(0, 10);
+        when(repository.searchOwned("seller-a", OfferStatus.PAUSED, "elden ring", pageable)).thenReturn(page);
+
+        assertThat(service.searchOwned("seller-a", pageable, OfferStatus.PAUSED, "  elden ring  ")).isSameAs(page);
+
+        verify(repository).searchOwned("seller-a", OfferStatus.PAUSED, "elden ring", pageable);
+    }
+
+    @Test
+    void returnsNotFoundWhenOwnedOfferDoesNotExist() {
+        when(repository.findByIdAndOwnerUsername(7, "seller-a")).thenReturn(java.util.Optional.empty());
+
+        assertThatThrownBy(() -> service.findOwnedById("seller-a", 7))
+                .isInstanceOf(com.schambeck.marketplace.exception.EntityNotFoundException.class);
+    }
+
+    @Test
     void normalizesSearchBeforeQueryingPublishedOffers() {
         Page<Offer> page = Page.empty();
         when(repository.findAllByStatusAndSearch(OfferStatus.PUBLISHED, "elden ring", PageRequest.of(0, 10)))

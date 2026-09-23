@@ -193,6 +193,25 @@ class OfferPostgresIntegrationTest {
     }
 
     @Test
+    void searchesAndLoadsOnlyOffersOwnedByAuthenticatedSeller() {
+        Offer sellerOneOffer = createOfferForUser(1, "Seller One Offer", "Seller One Game", false);
+        Offer sellerTwoOffer = createOfferForUser(2, "Seller Two Offer", "Seller Two Game", false);
+
+        Page<Offer> sellerOneOffers = service.searchOwned(
+                "mschambeck@gmail.com", PageRequest.of(0, 10), null, "seller");
+        assertThat(sellerOneOffers.getContent()).extracting(Offer::getId).containsExactly(sellerOneOffer.getId());
+
+        Page<Offer> sellerTwoOffers = service.searchOwned(
+                "lupin@gmail.com", PageRequest.of(0, 10), OfferStatus.DRAFT, null);
+        assertThat(sellerTwoOffers.getContent()).extracting(Offer::getId).containsExactly(sellerTwoOffer.getId());
+
+        assertThatThrownBy(() -> service.findOwnedById("mschambeck@gmail.com", sellerTwoOffer.getId()))
+                .isInstanceOf(com.schambeck.marketplace.exception.EntityNotFoundException.class);
+        assertThat(service.findOwnedById("lupin@gmail.com", sellerTwoOffer.getId()).getId())
+                .isEqualTo(sellerTwoOffer.getId());
+    }
+
+    @Test
     void searchesPublishedOffersAcrossProductAndContextFields() {
         Offer searchable = createPublishedOffer(
                 "Search Product Alpha",
@@ -270,12 +289,24 @@ class OfferPostgresIntegrationTest {
     private Offer createOffer(String productName, String description, String category, String game,
                               String publisher, String platform, String region, String server, String variant,
                               boolean publish) {
+        return createOfferForUser(1, productName, description, category, game, publisher, platform, region, server,
+                variant, publish);
+    }
+
+    private Offer createOfferForUser(int userId, String productName, String game, boolean publish) {
+        return createOfferForUser(userId, productName, productName, "Digital", game, null, "PC", "BR", null, null,
+                publish);
+    }
+
+    private Offer createOfferForUser(int userId, String productName, String description, String category, String game,
+                                     String publisher, String platform, String region, String server, String variant,
+                                     boolean publish) {
         Product product = productRepository.save(Product.builder()
                 .name(productName)
                 .description(description)
                 .price(new BigDecimal("15.00"))
                 .quantity(new BigDecimal("10.00"))
-                .user(userRepository.findByIdOrThrow(1))
+                .user(userRepository.findByIdOrThrow(userId))
                 .category(category)
                 .inventoryStatus("INSTOCK")
                 .rating("5")
