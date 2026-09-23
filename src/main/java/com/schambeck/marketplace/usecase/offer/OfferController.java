@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -20,16 +21,16 @@ public class OfferController {
     private final AuthenticationService authenticationService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<OfferWeb> create(@RequestBody OfferWeb web, Principal principal) {
-        return ResponseEntity.ok(OfferMapper.toWeb(service.create(web, username(principal))));
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<OfferWeb> create(@RequestBody OfferWeb web, Principal principal, Authentication authentication) {
+        return ResponseEntity.ok(OfferMapper.toWeb(service.create(web, username(principal), isAdmin(authentication))));
     }
 
     @PutMapping("{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<OfferWeb> updateDraft(@PathVariable Integer id, @RequestBody OfferUpdateRequest request,
-                                                 Principal principal) {
-        return ResponseEntity.ok(OfferMapper.toWeb(service.updateDraft(id, request, username(principal))));
+                                                 Principal principal, Authentication authentication) {
+        return ResponseEntity.ok(OfferMapper.toWeb(service.updateDraft(id, request, username(principal), isAdmin(authentication))));
     }
 
     @GetMapping
@@ -44,42 +45,47 @@ public class OfferController {
     }
 
     @GetMapping("{id}/history")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<OfferStatusHistory>> history(@PathVariable Integer id) {
-        return ResponseEntity.ok(service.history(id));
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<OfferStatusHistory>> history(@PathVariable Integer id, Principal principal, Authentication authentication) {
+        return ResponseEntity.ok(service.history(id, username(principal), isAdmin(authentication)));
     }
 
     @PostMapping("{id}/publish")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<OfferWeb> publish(@PathVariable Integer id, @RequestBody OfferActionRequest request, Principal principal) {
-        return ResponseEntity.ok(OfferMapper.toWeb(service.publish(id, request, username(principal))));
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<OfferWeb> publish(@PathVariable Integer id, @RequestBody OfferActionRequest request, Principal principal, Authentication authentication) {
+        return ResponseEntity.ok(OfferMapper.toWeb(service.publish(id, request, username(principal), isAdmin(authentication))));
     }
 
     @PostMapping("{id}/pause")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<OfferWeb> pause(@PathVariable Integer id, @RequestBody OfferActionRequest request, Principal principal) {
-        return ResponseEntity.ok(OfferMapper.toWeb(service.pause(id, request, username(principal))));
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<OfferWeb> pause(@PathVariable Integer id, @RequestBody OfferActionRequest request, Principal principal, Authentication authentication) {
+        return ResponseEntity.ok(OfferMapper.toWeb(service.pause(id, request, username(principal), isAdmin(authentication))));
     }
 
     @PostMapping("{id}/reactivate")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<OfferWeb> reactivate(@PathVariable Integer id, @RequestBody OfferActionRequest request, Principal principal) {
-        return ResponseEntity.ok(OfferMapper.toWeb(service.reactivate(id, request, username(principal))));
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<OfferWeb> reactivate(@PathVariable Integer id, @RequestBody OfferActionRequest request, Principal principal, Authentication authentication) {
+        return ResponseEntity.ok(OfferMapper.toWeb(service.reactivate(id, request, username(principal), isAdmin(authentication))));
     }
 
     @PostMapping("{id}/retire")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<OfferWeb> retire(@PathVariable Integer id, @RequestBody OfferActionRequest request, Principal principal) {
-        return ResponseEntity.ok(OfferMapper.toWeb(service.retire(id, request, username(principal))));
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<OfferWeb> retire(@PathVariable Integer id, @RequestBody OfferActionRequest request, Principal principal, Authentication authentication) {
+        return ResponseEntity.ok(OfferMapper.toWeb(service.retire(id, request, username(principal), isAdmin(authentication))));
     }
 
     @PostMapping("{id}/availability")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<OfferWeb> availability(@PathVariable Integer id, @RequestBody OfferAvailabilityRequest request, Principal principal) {
-        return ResponseEntity.ok(OfferMapper.toWeb(service.changeAvailability(id, request, username(principal))));
+    public ResponseEntity<OfferWeb> availability(@PathVariable Integer id, @RequestBody OfferAvailabilityRequest request, Principal principal, Authentication authentication) {
+        return ResponseEntity.ok(OfferMapper.toWeb(service.changeAvailability(id, request, username(principal), isAdmin(authentication))));
     }
 
     private String username(Principal principal) {
         return authenticationService.getLoggedUsername(principal);
+    }
+
+    private boolean isAdmin(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
     }
 }

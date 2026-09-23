@@ -7,7 +7,6 @@ import com.schambeck.marketplace.usecase.cartitem.CartItemRepository;
 import com.schambeck.marketplace.usecase.cartitem.CreateShoppingCartItemRequest;
 import com.schambeck.marketplace.exception.OfferValidationException;
 import com.schambeck.marketplace.usecase.offer.Offer;
-import com.schambeck.marketplace.usecase.offer.OfferAvailabilityStatus;
 import com.schambeck.marketplace.usecase.offer.OfferRepository;
 import com.schambeck.marketplace.usecase.offer.OfferService;
 import com.schambeck.marketplace.usecase.offer.OfferStatus;
@@ -61,8 +60,8 @@ public class CreateShoppingCartItemService {
         if (request.getOfferId() != null) {
             return offerRepository.findByIdOrThrow(request.getOfferId());
         }
-        return offerRepository.findFirstByProduct_IdAndStatusAndAvailabilityStatusOrderByIdAsc(
-                        request.getProductId(), OfferStatus.PUBLISHED, OfferAvailabilityStatus.AVAILABLE)
+        return offerRepository.findFirstByProduct_IdAndStatusOrderByIdAsc(
+                        request.getProductId(), OfferStatus.PUBLISHED)
                 .orElseThrow(() -> new OfferValidationException("No published available offer exists for product " + request.getProductId() + "."));
     }
 

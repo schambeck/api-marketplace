@@ -2,9 +2,6 @@ package com.schambeck.marketplace.usecase.offer;
 
 import com.schambeck.marketplace.exception.EntityNotFoundException;
 import com.schambeck.marketplace.exception.OfferValidationException;
-import com.schambeck.marketplace.usecase.gamecontext.GameContext;
-import com.schambeck.marketplace.usecase.gamecontext.GameContextReference;
-import com.schambeck.marketplace.usecase.gamecontext.GameContextService;
 import com.schambeck.marketplace.usecase.product.Product;
 import com.schambeck.marketplace.usecase.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,95 +21,70 @@ public class OfferService {
     private final OfferRepository repository;
     private final OfferStatusHistoryRepository historyRepository;
     private final ProductRepository productRepository;
-    private final GameContextService gameContextService;
 
     @Transactional
-    public Offer create(OfferWeb web) {
-        return create(web, null);
-    }
-
-    @Transactional
-    public Offer create(OfferWeb web, String actor) {
+    public Offer create(OfferWeb web, String actor, boolean admin) {
         validateFields(web);
         Product product = productRepository.findByIdOrThrow(web.getProductId());
-        GameContext context = gameContextService.findById(web.getGameContextId());
+        authorizeProduct(product, actor, admin);
         Offer offer = Offer.builder()
                 .product(product)
-                .gameContext(context)
-                .contextVersion(context.getVersion())
-                .contextGame(context.getGame())
-                .contextPublisher(context.getPublisher())
-                .contextPlatform(context.getPlatform())
-                .contextRegion(context.getRegion())
-                .contextServer(context.getServer())
-                .contextVariant(context.getVariant())
+                .contextGame(web.getGame().trim())
+                .contextPlatform(web.getPlatform().trim())
+                .contextRegion(trimToNull(web.getRegion()))
+                .contextVariant(trimToNull(web.getVariant()))
                 .price(web.getPrice())
                 .deliveryMethod(web.getDeliveryMethod().trim())
-                .availabilitySource(web.getAvailabilitySource().trim())
-                .availabilityStatus(web.getAvailabilityStatus())
+                .availabilityStatus(availabilityFor(product))
                 .status(OfferStatus.DRAFT)
                 .version(0)
                 .build();
         Offer saved = repository.save(offer);
-        recordHistory(saved, null, OfferStatus.DRAFT, "created", "api", actor);
+        recordHistory(saved, null, OfferStatus.DRAFT, "created", admin ? "admin" : "seller", actor);
         return saved;
     }
 
     @Transactional
-    public Offer updateDraft(Integer id, OfferUpdateRequest request, String actor) {
-        if (request == null || request.getProductId() == null || request.getGameContextId() == null) {
-            throw new OfferValidationException("productId and gameContextId are required.");
+    public Offer updateDraft(Integer id, OfferUpdateRequest request, String actor, boolean admin) {
+        if (request == null || request.getProductId() == null) {
+            throw new OfferValidationException("productId is required.");
         }
-        if (isBlank(request.getReason()) || isBlank(request.getSource())) {
-            throw new OfferValidationException("reason and source are required for offer changes.");
-        }
+        requireAudit(request.getReason(), request.getSource());
         Offer offer = repository.findByIdForUpdateOrThrow(id);
+        authorizeOffer(offer, actor, admin);
         if (offer.getStatus() != OfferStatus.DRAFT) {
             throw new OfferValidationException("Only a DRAFT offer can be changed.");
         }
-        validateFields(request.getProductId(), request.getGameContextId(), request.getPrice(),
-                request.getDeliveryMethod(), request.getAvailabilitySource(), request.getAvailabilityStatus());
+        validateFields(request.getProductId(), request.getGame(), request.getPlatform(), request.getPrice(), request.getDeliveryMethod());
         Product product = productRepository.findByIdOrThrow(request.getProductId());
-        GameContext context = gameContextService.findById(request.getGameContextId());
+        authorizeProduct(product, actor, admin);
         offer.setProduct(product);
-        offer.setGameContext(context);
-        offer.setContextVersion(context.getVersion());
-        offer.setContextGame(context.getGame());
-        offer.setContextPublisher(context.getPublisher());
-        offer.setContextPlatform(context.getPlatform());
-        offer.setContextRegion(context.getRegion());
-        offer.setContextServer(context.getServer());
-        offer.setContextVariant(context.getVariant());
+        offer.setContextGame(request.getGame().trim());
+        offer.setContextPlatform(request.getPlatform().trim());
+        offer.setContextRegion(trimToNull(request.getRegion()));
+        offer.setContextVariant(trimToNull(request.getVariant()));
         offer.setPrice(request.getPrice());
         offer.setDeliveryMethod(request.getDeliveryMethod().trim());
-        offer.setAvailabilitySource(request.getAvailabilitySource().trim());
-        offer.setAvailabilityStatus(request.getAvailabilityStatus());
+        offer.setAvailabilityStatus(availabilityFor(product));
         recordHistory(offer, OfferStatus.DRAFT, OfferStatus.DRAFT, request.getReason(), request.getSource(), actor);
         return repository.save(offer);
     }
 
-    public Page<Offer> searchPublished(Pageable pageable) {
-        return searchPublished(pageable, null);
-    }
-
     public Page<Offer> searchPublished(Pageable pageable, String search) {
-        String normalizedSearch = search == null ? "" : search.trim();
-        return repository.findAllByStatusAndSearch(OfferStatus.PUBLISHED, normalizedSearch, pageable);
+        return repository.findAllPublishedAndAvailable(normalize(search), pageable);
     }
 
     public Page<Offer> searchAdmin(Pageable pageable, OfferStatus status, String search) {
-        String normalizedSearch = search == null ? "" : search.trim();
-        return repository.searchAdmin(status, normalizedSearch, pageable);
+        return repository.searchAdmin(status, normalize(search), pageable);
     }
 
     public Page<Offer> searchOwned(String username, Pageable pageable, OfferStatus status, String search) {
-        String normalizedSearch = search == null ? "" : search.trim();
-        return repository.searchOwned(username, status, normalizedSearch, pageable);
+        return repository.searchOwned(username, status, normalize(search), pageable);
     }
 
     public Offer findPublishedById(Integer id) {
         Offer offer = repository.findByIdOrThrow(id);
-        if (offer.getStatus() != OfferStatus.PUBLISHED) {
+        if (offer.getStatus() != OfferStatus.PUBLISHED || !isAvailable(offer.getProduct())) {
             throw new EntityNotFoundException(Offer.class, id);
         }
         return offer;
@@ -131,141 +103,152 @@ public class OfferService {
                 .orElseThrow(() -> new EntityNotFoundException(Offer.class, id));
     }
 
-    public List<OfferStatusHistory> history(Integer id) {
-        findById(id);
+    public List<OfferStatusHistory> history(Integer id, String actor, boolean admin) {
+        Offer offer = repository.findByIdOrThrow(id);
+        authorizeOffer(offer, actor, admin);
         return historyRepository.findAllByOfferIdOrderByIdAsc(id);
     }
 
     @Transactional
-    public Offer publish(Integer id, OfferActionRequest request, String actor) {
-        Offer offer = repository.findByIdForUpdateOrThrow(id);
-        requireTransition(offer, OfferStatus.PUBLISHED);
-        if (offer.getPrice() == null || offer.getPrice().signum() <= 0
-                || isBlank(offer.getDeliveryMethod()) || isBlank(offer.getAvailabilitySource())
-                || offer.getAvailabilityStatus() != OfferAvailabilityStatus.AVAILABLE) {
-            throw new OfferValidationException("An offer requires positive price, delivery method, availability source and AVAILABLE status to be published.");
-        }
-        GameContextReference reference = gameContextService.referenceForOfferPublication(offer.getGameContext().getId());
-        updateContextSnapshot(offer, reference);
-        transition(offer, OfferStatus.PUBLISHED, request, actor);
-        return repository.save(offer);
+    public Offer publish(Integer id, OfferActionRequest request, String actor, boolean admin) {
+        return transitionTo(id, OfferStatus.PUBLISHED, request, actor, admin, true);
     }
 
     @Transactional
-    public Offer pause(Integer id, OfferActionRequest request, String actor) {
-        return transitionLocked(id, OfferStatus.PAUSED, request, actor);
+    public Offer pause(Integer id, OfferActionRequest request, String actor, boolean admin) {
+        return transitionTo(id, OfferStatus.PAUSED, request, actor, admin, false);
     }
 
     @Transactional
-    public Offer reactivate(Integer id, OfferActionRequest request, String actor) {
-        Offer offer = repository.findByIdForUpdateOrThrow(id);
-        requireTransition(offer, OfferStatus.PUBLISHED);
-        if (offer.getAvailabilityStatus() != OfferAvailabilityStatus.AVAILABLE) {
-            throw new OfferValidationException("An unavailable offer cannot be reactivated.");
-        }
-        GameContextReference reference = gameContextService.referenceForOfferPublication(offer.getGameContext().getId());
-        updateContextSnapshot(offer, reference);
-        transition(offer, OfferStatus.PUBLISHED, request, actor);
-        return repository.save(offer);
+    public Offer reactivate(Integer id, OfferActionRequest request, String actor, boolean admin) {
+        return transitionTo(id, OfferStatus.PUBLISHED, request, actor, admin, true);
     }
 
     @Transactional
-    public Offer retire(Integer id, OfferActionRequest request, String actor) {
-        return transitionLocked(id, OfferStatus.RETIRED, request, actor);
+    public Offer retire(Integer id, OfferActionRequest request, String actor, boolean admin) {
+        return transitionTo(id, OfferStatus.RETIRED, request, actor, admin, false);
     }
 
     @Transactional
-    public Offer changeAvailability(Integer id, OfferAvailabilityRequest request, String actor) {
+    public Offer changeAvailability(Integer id, OfferAvailabilityRequest request, String actor, boolean admin) {
         if (request == null || request.getAvailabilityStatus() == null) {
             throw new OfferValidationException("availabilityStatus is required.");
         }
+        requireAudit(request.getReason(), request.getSource());
         Offer offer = repository.findByIdForUpdateOrThrow(id);
+        authorizeOffer(offer, actor, admin);
         if (offer.getStatus() == OfferStatus.RETIRED) {
             throw new OfferValidationException("A RETIRED offer cannot change availability.");
         }
-        if (isBlank(request.getReason()) || isBlank(request.getSource())) {
-            throw new OfferValidationException("reason and source are required for availability changes.");
+        OfferAvailabilityStatus actual = availabilityFor(offer.getProduct());
+        if (request.getAvailabilityStatus() != actual) {
+            throw new OfferValidationException("Availability is derived from product quantity.");
         }
-        offer.setAvailabilityStatus(request.getAvailabilityStatus());
+        offer.setAvailabilityStatus(actual);
         recordHistory(offer, offer.getStatus(), offer.getStatus(), request.getReason(), request.getSource(), actor);
         return repository.save(offer);
     }
 
-    /** Revalidates the offer while holding a row lock immediately before checkout. */
+    /** Revalidates status and product stock immediately before checkout. */
     @Transactional
     public Offer validateForCheckout(Integer id) {
         Offer offer = repository.findByIdForUpdateOrThrow(id);
+        OfferAvailabilityStatus actual = availabilityFor(offer.getProduct());
+        offer.setAvailabilityStatus(actual);
         if (offer.getStatus() != OfferStatus.PUBLISHED) {
             throw new OfferValidationException("Offer " + id + " is not published and cannot start checkout.");
         }
-        if (offer.getAvailabilityStatus() != OfferAvailabilityStatus.AVAILABLE) {
+        if (actual != OfferAvailabilityStatus.AVAILABLE) {
+            repository.save(offer);
             throw new OfferValidationException("Offer " + id + " is unavailable and cannot start checkout.");
         }
-        gameContextService.referenceForOfferPublication(offer.getGameContext().getId());
         return offer;
     }
 
-    private Offer transitionLocked(Integer id, OfferStatus target, OfferActionRequest request, String actor) {
+    private Offer transitionTo(Integer id, OfferStatus target, OfferActionRequest request,
+                               String actor, boolean admin, boolean requireAvailable) {
         Offer offer = repository.findByIdForUpdateOrThrow(id);
+        authorizeOffer(offer, actor, admin);
         requireTransition(offer, target);
+        if (requireAvailable) {
+            validatePublishable(offer);
+        }
         transition(offer, target, request, actor);
+        offer.setAvailabilityStatus(availabilityFor(offer.getProduct()));
         return repository.save(offer);
     }
 
+    private void validatePublishable(Offer offer) {
+        if (offer.getPrice() == null || offer.getPrice().signum() <= 0
+                || isBlank(offer.getDeliveryMethod()) || isBlank(offer.getContextGame())
+                || isBlank(offer.getContextPlatform())
+                || availabilityFor(offer.getProduct()) != OfferAvailabilityStatus.AVAILABLE) {
+            throw new OfferValidationException("An offer requires positive price, game, platform, delivery method and available product stock to be published.");
+        }
+    }
+
     private void transition(Offer offer, OfferStatus target, OfferActionRequest request, String actor) {
-        if (request == null || isBlank(request.getReason()) || isBlank(request.getSource())) {
+        if (request == null) {
             throw new OfferValidationException("reason and source are required for offer status changes.");
         }
+        requireAudit(request.getReason(), request.getSource());
         OfferStatus previous = offer.getStatus();
         offer.setStatus(target);
         recordHistory(offer, previous, target, request.getReason(), request.getSource(), actor);
     }
 
     private void requireTransition(Offer offer, OfferStatus target) {
-        OfferStatus current = offer.getStatus();
-        boolean allowed = switch (current) {
+        boolean allowed = switch (offer.getStatus()) {
             case DRAFT -> target == OfferStatus.PUBLISHED || target == OfferStatus.RETIRED;
             case PUBLISHED -> target == OfferStatus.PAUSED || target == OfferStatus.RETIRED;
             case PAUSED -> target == OfferStatus.PUBLISHED || target == OfferStatus.RETIRED;
             case RETIRED -> false;
         };
         if (!allowed) {
-            throw new OfferValidationException("Invalid offer transition from " + current + " to " + target + ".");
+            throw new OfferValidationException("Invalid offer transition from " + offer.getStatus() + " to " + target + ".");
         }
-    }
-
-    private void updateContextSnapshot(Offer offer, GameContextReference reference) {
-        offer.setContextVersion(reference.version());
-        offer.setContextGame(reference.game());
-        offer.setContextPublisher(reference.publisher());
-        offer.setContextPlatform(reference.platform());
-        offer.setContextRegion(reference.region());
-        offer.setContextServer(reference.server());
-        offer.setContextVariant(reference.variant());
     }
 
     private void validateFields(OfferWeb web) {
-        if (web == null || web.getProductId() == null || web.getGameContextId() == null) {
-            throw new OfferValidationException("productId and gameContextId are required.");
+        if (web == null || web.getProductId() == null) {
+            throw new OfferValidationException("productId is required.");
         }
-        validateFields(web.getProductId(), web.getGameContextId(), web.getPrice(), web.getDeliveryMethod(),
-                web.getAvailabilitySource(), web.getAvailabilityStatus());
+        validateFields(web.getProductId(), web.getGame(), web.getPlatform(), web.getPrice(), web.getDeliveryMethod());
     }
 
-    private void validateFields(Integer productId, Integer gameContextId, BigDecimal price, String deliveryMethod,
-                                String availabilitySource, OfferAvailabilityStatus availabilityStatus) {
-        if (productId == null || gameContextId == null) {
-            throw new OfferValidationException("productId and gameContextId are required.");
+    private void validateFields(Integer productId, String game, String platform, BigDecimal price, String deliveryMethod) {
+        if (productId == null) {
+            throw new OfferValidationException("productId is required.");
+        }
+        if (isBlank(game) || isBlank(platform)) {
+            throw new OfferValidationException("game and platform are required.");
         }
         if (price == null || price.signum() <= 0) {
             throw new OfferValidationException("price must be positive.");
         }
-        if (isBlank(deliveryMethod) || isBlank(availabilitySource) || availabilityStatus == null) {
-            throw new OfferValidationException("deliveryMethod, availabilitySource and availabilityStatus are required.");
+        if (isBlank(deliveryMethod)) {
+            throw new OfferValidationException("deliveryMethod is required.");
         }
     }
 
-    private void recordHistory(Offer offer, OfferStatus from, OfferStatus to, String reason, String source, String actor) {
+    private void authorizeProduct(Product product, String actor, boolean admin) {
+        if (!admin && (product.getUser() == null || !actor.equals(product.getUser().getUsername()))) {
+            throw new OfferValidationException("The product does not belong to the authenticated seller.");
+        }
+    }
+
+    private void authorizeOffer(Offer offer, String actor, boolean admin) {
+        authorizeProduct(offer.getProduct(), actor, admin);
+    }
+
+    private void requireAudit(String reason, String source) {
+        if (isBlank(reason) || isBlank(source)) {
+            throw new OfferValidationException("reason and source are required for offer changes.");
+        }
+    }
+
+    private void recordHistory(Offer offer, OfferStatus from, OfferStatus to,
+                               String reason, String source, String actor) {
         historyRepository.save(OfferStatusHistory.builder()
                 .offerId(offer.getId())
                 .fromStatus(from)
@@ -275,6 +258,22 @@ public class OfferService {
                 .changedBy(actor)
                 .recordedAt(LocalDateTime.now())
                 .build());
+    }
+
+    private static OfferAvailabilityStatus availabilityFor(Product product) {
+        return isAvailable(product) ? OfferAvailabilityStatus.AVAILABLE : OfferAvailabilityStatus.UNAVAILABLE;
+    }
+
+    private static boolean isAvailable(Product product) {
+        return product != null && product.getQuantity() != null && product.getQuantity().signum() > 0;
+    }
+
+    private static String normalize(String search) {
+        return search == null ? "" : search.trim();
+    }
+
+    private static String trimToNull(String value) {
+        return isBlank(value) ? null : value.trim();
     }
 
     private static boolean isBlank(String value) {

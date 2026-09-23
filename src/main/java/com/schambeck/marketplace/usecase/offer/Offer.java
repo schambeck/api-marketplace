@@ -1,6 +1,5 @@
 package com.schambeck.marketplace.usecase.offer;
 
-import com.schambeck.marketplace.usecase.gamecontext.GameContext;
 import com.schambeck.marketplace.usecase.product.Product;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,27 +30,14 @@ public class Offer {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "game_context_id", nullable = false)
-    private GameContext gameContext;
-
-    @Column(name = "context_version", nullable = false)
-    private Integer contextVersion;
-
     @Column(name = "context_game", nullable = false)
     private String contextGame;
-
-    @Column(name = "context_publisher")
-    private String contextPublisher;
 
     @Column(name = "context_platform", nullable = false)
     private String contextPlatform;
 
     @Column(name = "context_region")
     private String contextRegion;
-
-    @Column(name = "context_server")
-    private String contextServer;
 
     @Column(name = "context_variant")
     private String contextVariant;
@@ -61,9 +47,6 @@ public class Offer {
 
     @Column(name = "delivery_method", nullable = false)
     private String deliveryMethod;
-
-    @Column(name = "availability_source", nullable = false)
-    private String availabilitySource;
 
     @Enumerated(STRING)
     @Column(name = "availability_status", nullable = false)
