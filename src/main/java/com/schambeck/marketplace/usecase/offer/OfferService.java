@@ -105,6 +105,11 @@ public class OfferService {
         return repository.searchAdmin(status, normalizedSearch, pageable);
     }
 
+    public Page<Offer> searchOwned(String username, Pageable pageable, OfferStatus status, String search) {
+        String normalizedSearch = search == null ? "" : search.trim();
+        return repository.searchOwned(username, status, normalizedSearch, pageable);
+    }
+
     public Offer findPublishedById(Integer id) {
         Offer offer = repository.findByIdOrThrow(id);
         if (offer.getStatus() != OfferStatus.PUBLISHED) {
@@ -119,6 +124,11 @@ public class OfferService {
 
     public Offer findAdminById(Integer id) {
         return repository.findByIdOrThrow(id);
+    }
+
+    public Offer findOwnedById(String username, Integer id) {
+        return repository.findByIdAndOwnerUsername(id, username)
+                .orElseThrow(() -> new EntityNotFoundException(Offer.class, id));
     }
 
     public List<OfferStatusHistory> history(Integer id) {
