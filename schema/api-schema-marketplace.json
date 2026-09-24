@@ -139,6 +139,28 @@
         {"propertyName": "userId", "propertyType": "Long", "columnType": "bigint", "required": true},
         {"propertyName": "version", "propertyType": "Integer", "columnType": "integer", "required": true, "version": true}
       ]
+    },
+    {
+      "name": "InventoryReservation",
+      "resource": "inventory/reservations",
+      "fields": [
+        {"propertyName": "orderItemId", "propertyType": "Integer", "columnType": "integer", "required": true},
+        {"propertyName": "productId", "propertyType": "Integer", "columnType": "integer", "required": true},
+        {"propertyName": "sellerId", "propertyType": "Integer", "columnType": "integer", "required": true},
+        {"propertyName": "quantity", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "status", "propertyType": "InventoryStatus", "columnType": "varchar(32)", "required": true},
+        {"propertyName": "expiresAt", "propertyType": "LocalDateTime", "columnType": "timestamp", "required": true}
+      ]
+    },
+    {
+      "name": "InventoryAllocation",
+      "resource": "inventory/allocations",
+      "fields": [
+        {"propertyName": "reservationId", "propertyType": "Integer", "columnType": "integer", "required": true},
+        {"propertyName": "quantity", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "consumedQuantity", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "status", "propertyType": "InventoryAllocationStatus", "columnType": "varchar(32)", "required": true}
+      ]
     }
   ]
 }
