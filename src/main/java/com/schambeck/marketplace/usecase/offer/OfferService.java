@@ -4,6 +4,8 @@ import com.schambeck.marketplace.exception.EntityNotFoundException;
 import com.schambeck.marketplace.exception.OfferValidationException;
 import com.schambeck.marketplace.usecase.product.Product;
 import com.schambeck.marketplace.usecase.product.ProductRepository;
+import com.schambeck.marketplace.usecase.inventory.InventoryBalance;
+import com.schambeck.marketplace.usecase.inventory.InventoryBalanceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,7 @@ public class OfferService {
     private final OfferRepository repository;
     private final OfferStatusHistoryRepository historyRepository;
     private final ProductRepository productRepository;
+    private final InventoryBalanceRepository inventoryBalanceRepository;
 
     @Transactional
     public Offer create(OfferWeb web, String actor, boolean admin) {
@@ -260,12 +263,19 @@ public class OfferService {
                 .build());
     }
 
-    private static OfferAvailabilityStatus availabilityFor(Product product) {
+    private OfferAvailabilityStatus availabilityFor(Product product) {
         return isAvailable(product) ? OfferAvailabilityStatus.AVAILABLE : OfferAvailabilityStatus.UNAVAILABLE;
     }
 
-    private static boolean isAvailable(Product product) {
-        return product != null && product.getQuantity() != null && product.getQuantity().signum() > 0;
+    private boolean isAvailable(Product product) {
+        if (product == null) return false;
+        if (inventoryBalanceRepository == null) {
+            return product.getQuantity() != null && product.getQuantity().signum() > 0;
+        }
+        return inventoryBalanceRepository.findByProduct_Id(product.getId())
+                .map(InventoryBalance::getAvailableQuantity)
+                .map(quantity -> quantity != null && quantity.signum() > 0)
+                .orElseGet(() -> product.getQuantity() != null && product.getQuantity().signum() > 0);
     }
 
     private static String normalize(String search) {

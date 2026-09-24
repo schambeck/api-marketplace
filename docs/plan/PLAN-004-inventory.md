@@ -30,8 +30,8 @@ Cada produto seller-owned terá um único `inventory_balance`, compartilhado por
 Os estados públicos de inventory serão `AVAILABLE`, `RESERVED`, `ALLOCATED`, `CONSUMED`, `RELEASED` e `EXPIRED`.
 
 - `InventoryBalance` representa o saldo agregado do produto seller-owned; a oferta da linha do pedido identifica a apresentação comercial, mas não cria um segundo saldo.
-- `InventoryReservation` representa a quantidade reservada para uma `OrderItem`, seu prazo e seu estado.
-- `InventoryAllocation` representa a quantidade atribuída à fonte responsável. No MVP a fonte é a própria operação do seller (`SELLER_PRODUCT`); o modelo terá `source_type` e `source_reference` para permitir expansão pelo `PLAN-003`.
+- `InventoryReservation` representa a quantidade reservada para uma `OrderItem`, seu `product_id`, `seller_id`, prazo e estado.
+- `InventoryAllocation` representa a quantidade promovida da reserva para o fulfillment do seller. No MVP ela referencia somente a reservation; não há `source_type` nem `source_reference`.
 - `InventoryMovement` é o ledger imutável/auditável de cada mudança de quantidade e estado.
 
 `AVAILABLE` será o saldo livre calculado como quantidade total menos as quantidades atualmente reservadas, alocadas e consumidas; esses buckets são mutuamente exclusivos e a transição move a quantidade de um bucket para outro. Não haverá reserva persistida por unidade. `RELEASED` e `EXPIRED` serão estados terminais de uma reserva, e o saldo liberado retornará ao disponível. `CONSUMED` somente poderá ser criado para quantidade alocada e confirmada como entregue.
@@ -47,24 +47,21 @@ Os estados públicos de inventory serão `AVAILABLE`, `RESERVED`, `ALLOCATED`, `
 
 Toda operação mutável receberá uma `operation_key` estável. Uma tabela de operações, com índice único por `(reservation_id, operation_type, operation_key)`, armazenará o resultado e impedirá duplicação de reserva, allocation, release, expiration ou consumo. Repetições devem devolver o mesmo resultado, sem novo movimento.
 
-### 2.5 Pedido e pagamento
+### 2.5 Limite com pedido e pagamento
 
-Como o repositório não possui `Order/OrderItem`, este plano inclui o modelo mínimo de pedido. A criação da preferência de pagamento deverá materializar/sincronizar um pedido imutável a partir do carrinho, criar suas reservas e vincular `Payment` ao pedido. O carrinho continuará disponível para compatibilidade, mas não será a âncora do fulfillment.
+Este plano não cria `Order/OrderItem`, não altera `Payment` e não implementa webhook. O `PLAN-005` deverá chamar `reserve` durante o checkout, depois de criar o `OrderItem` e antes de solicitar a preferência Mercado Pago. O inventory recebe apenas o identificador da linha de pedido (`orderItemId`) como referência de integração.
 
-O pedido só poderá avançar para `PAID/READY_FOR_FULFILLMENT` se todas as linhas tiverem reserva válida e allocation válida. O webhook/persistência de pagamento deve ser idempotente e não poderá consumir inventory: consumo depende de confirmação explícita de entrega.
+O `PLAN-006` deverá validar o pagamento e disparar a próxima transição de inventory, normalmente `allocate` após pagamento aprovado. O `PLAN-007` consumirá allocation para criar o fulfillment; a confirmação de entrega chamará `consumeDelivered`. Nenhum desses fluxos será implementado aqui.
 
 ## 3. Persistência e migrações
 
 Criar a próxima migration Flyway, sem editar migrations aplicadas, contendo:
 
-1. `order` e `order_item`, com snapshot de oferta/produto/preço/quantidade, status, timestamps e vínculo ao usuário/carrinho de origem;
-2. extensão de `payment` com `order_id` e restrição/índice apropriados, mantendo `cart_id` durante a transição;
-3. `inventory_balance`, com `product_id` único, quantidades não negativas, `version` e auditoria;
-4. `inventory_reservation`, com `order_item_id`, quantidade, status, `expires_at`, `operation_key`, timestamps e índices para reservas ativas/vencidas;
-5. `inventory_allocation`, com reserva, quantidade, status, `source_type`, `source_reference` e chave de idempotência;
-6. `inventory_movement`, append-only, com operação, estado anterior/novo, quantidade, ator, origem, chave idempotente e data;
-7. tabela de resultado de operação/idempotência, caso não seja incorporada às entidades de reserva e allocation;
-8. backfill de um `inventory_balance` por oferta/produto elegível, usando a quantidade atual de `product`, com validação explícita para ofertas duplicadas ou sem oferta.
+1. `inventory_balance`, com `product_id` único, quantidades não negativas, `version` e auditoria;
+2. `inventory_reservation`, com `order_item_id` como referência externa, quantidade, status, `expires_at`, `operation_key`, timestamps e índices para reservas ativas/vencidas;
+3. `inventory_allocation`, com reservation, quantidade, estado e chave de idempotência;
+4. `inventory_movement`, append-only, com operação, estado anterior/novo, quantidade, ator, origem, chave idempotente e data;
+5. backfill de um `inventory_balance` por produto elegível, usando a quantidade atual de `product`.
 
 As constraints devem impedir quantidades negativas, allocations/consumos acima da reserva e mais de uma reserva ativa incompatível para a mesma operação. A migration deve ser testada sobre banco limpo e sobre uma base que já tenha as migrations V1–V14.
 
@@ -81,21 +78,16 @@ Adicionar o pacote `usecase.inventory` com:
 - exceções de domínio mapeadas para respostas HTTP determinísticas;
 - DTOs de operação e histórico sem expor códigos ou detalhes internos da fonte.
 
-Adicionar `usecase.order` com `Order`, `OrderItem`, status, repositories, serviço de criação a partir do carrinho e vínculo ao pagamento. O snapshot do pedido deve impedir que alteração posterior de oferta/produto mude o preço ou a quantidade originalmente comprada.
-
 Alterar os seguintes pontos existentes:
 
-- `CreatePreferenceService`: criar/obter pedido idempotente, reservar todas as linhas antes de solicitar a preferência e abortar/liberar tudo se uma linha falhar;
-- `Payment`/`PaymentService` e repository: associar o pedido e tratar atualizações repetidas do mesmo pagamento;
 - `OfferService`/`OfferRepository`: derivar disponibilidade do saldo livre do inventory, inclusive `validateForCheckout`;
-- `CreateShoppingCartItemService` e `UpdateShoppingCartItemService`: validar quantidade contra o saldo livre quando aplicável, sem criar reserva permanente no simples ato de adicionar ao carrinho;
 - `ProductService`: impedir que edição comum altere estoque sem passar por uma operação administrativa de ajuste auditada; se ajuste de saldo não entrar no MVP, rejeitar alteração de `quantity` no endpoint existente;
 - `SecurityConfig` e controllers: manter leitura pública do catálogo/ofertas e restringir operações de inventory/pedido/fulfillment ao usuário autenticado, seller dono ou `ADMIN`.
 
 APIs operacionais mínimas, preferencialmente sob `/inventory`, serão:
 
 - `POST /inventory/reservations` — reservar uma linha de pedido com `operationKey`;
-- `POST /inventory/reservations/{id}/allocate` — alocar para a fonte;
+- `POST /inventory/reservations/{id}/allocate` — promover a reserva para fulfillment do seller;
 - `POST /inventory/reservations/{id}/release` — liberar saldo não consumido;
 - `POST /inventory/reservations/{id}/consume` — registrar quantidade efetivamente entregue;
 - `POST /inventory/reservations/{id}/expire` — fallback operacional idempotente;
@@ -105,14 +97,13 @@ Os endpoints podem ser internos ao fluxo de checkout no primeiro incremento; cas
 
 ## 5. Sequência de implementação
 
-1. Confirmar nomes de status, contrato de `Order/OrderItem`, TTL configurável, política de ajuste manual e semântica de `operationKey`.
-2. Criar migration e entidades do pedido, backfill de saldo e constraints do inventory.
+1. Confirmar TTL configurável, política de ajuste manual, referência externa de `orderItemId` e semântica de `operationKey`.
+2. Criar migration, backfill de saldo e constraints do inventory.
 3. Implementar repositories com lock pessimista e o ledger idempotente de movimentos.
 4. Implementar `InventoryService` com transições, release, expiração e consumo parcial.
-5. Integrar criação de pedido/reserva à geração da preferência e associar pagamento ao pedido.
-6. Atualizar disponibilidade de oferta, carrinho e projeção legada de produto.
-7. Implementar scheduler de expiração e endpoint/rotina de recuperação operacional.
-8. Atualizar schema/API, documentação de configuração e testes.
+5. Atualizar disponibilidade de oferta e projeção legada de produto.
+6. Implementar scheduler de expiração e endpoints operacionais.
+7. Atualizar schema/API, documentação de configuração e testes.
 
 ## 6. Testes e evidências
 
@@ -124,9 +115,8 @@ Adicionar testes versionados, usando Testcontainers PostgreSQL — já disponív
 - transições inválidas (`CONSUMED` sem allocation, release após consumo, allocation acima da reserva);
 - cancelamento/falha libera saldo não consumido;
 - timeout expira a reserva e a torna novamente disponível;
-- pagamento repetido não cria outro pedido nem altera duas vezes o inventory;
-- pedido pago sem reserva/alocação válida é rejeitado antes do fulfillment;
-- entrega parcial consome somente a quantidade confirmada e mantém o restante alocado/reservado conforme a regra definida;
+- integração recebe `orderItemId` válido e não permite reservation sem essa referência;
+- entrega parcial consome somente a quantidade confirmada e mantém o restante alocado;
 - autorização: seller não acessa inventory de outro seller e catálogo não expõe histórico operacional indevido;
 - migração V1–V14 + nova migration preserva ofertas/produtos e cria saldos coerentes.
 
@@ -145,7 +135,7 @@ Registrar também a evidência de uma execução concorrente real contra Postgre
 |---|---|
 | Duas compras concorrentes não reservam a mesma unidade | Teste de integração PostgreSQL com duas transações, lock e saldo final não negativo |
 | Reserva expirada é liberada automaticamente ou por processo seguro | Teste do scheduler/job e teste do endpoint operacional idempotente |
-| Pedido pago não avança sem reserva/alocação válida | Teste do serviço de pagamento/fulfillment com reserva ausente, expirada e válida |
+| Pedido pago não avança sem reserva/alocação válida | Critério integrado nos PLAN-005/006/007; o PLAN-004 fornece as transições e rejeita allocation sem reservation válida |
 | Entrega parcial consome somente o confirmado | Teste de consumo parcial, movimentos e saldos restantes |
 | Toda mudança é idempotente e auditável | Testes de repetição de `operationKey` e verificação de `inventory_movement` |
 

@@ -2,6 +2,10 @@ package com.schambeck.marketplace.usecase.product;
 
 import com.schambeck.marketplace.usecase.user.User;
 import com.schambeck.marketplace.usecase.user.UserRepository;
+import com.schambeck.marketplace.exception.InventoryValidationException;
+import com.schambeck.marketplace.usecase.inventory.InventoryBalance;
+import com.schambeck.marketplace.usecase.inventory.InventoryBalanceRepository;
+import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,24 +18,46 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
     private final ProductRepository repository;
     private final UserRepository userRepository;
+    private final InventoryBalanceRepository inventoryBalanceRepository;
 
     @Transactional
     public Product create(Product entity) {
-        return repository.save(entity);
+        Product product = repository.save(entity);
+        initializeInventory(product);
+        return product;
     }
 
     @Transactional
     public Product create(Product entity, String username) {
         User user = userRepository.findByUsernameOrThrow(username);
         entity.setUser(user);
-        return repository.save(entity);
+        Product product = repository.save(entity);
+        initializeInventory(product);
+        return product;
     }
 
     @Transactional
     public Product update(int id, Product entity) {
         Product toUpdate = findById(id);
+        if (entity.getQuantity() != null && (toUpdate.getQuantity() == null
+                || entity.getQuantity().compareTo(toUpdate.getQuantity()) != 0)) {
+            throw new InventoryValidationException("Product quantity must be changed through inventory operations.");
+        }
         ProductMapper.INSTANCE.copy(entity, toUpdate);
         return repository.save(toUpdate);
+    }
+
+    private void initializeInventory(Product product) {
+        if (!inventoryBalanceRepository.existsByProductId(product.getId())) {
+            inventoryBalanceRepository.save(InventoryBalance.builder()
+                    .product(product)
+                    .availableQuantity(product.getQuantity() == null ? BigDecimal.ZERO : product.getQuantity())
+                    .reservedQuantity(BigDecimal.ZERO)
+                    .allocatedQuantity(BigDecimal.ZERO)
+                    .consumedQuantity(BigDecimal.ZERO)
+                    .version(0)
+                    .build());
+        }
     }
 
     @Transactional
