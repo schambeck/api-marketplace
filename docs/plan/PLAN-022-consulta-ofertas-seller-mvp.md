@@ -2,7 +2,7 @@
 
 **Tipo:** Plano corretivo sobre o `PLAN-019` já implementado.
 
-**Status:** IMPLEMENTADO parcialmente no backend; a remoção de `GET /admin/offers` permanece pendente da migração do frontend e a consolidação final dos PLAN-020/021.
+**Status:** implementado; a consulta seller e a migração do consumidor estão concluídas. O detalhe administrativo permanece disponível para moderação.
 
 **Prioridade:** MVP.
 

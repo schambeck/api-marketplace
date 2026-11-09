@@ -77,10 +77,6 @@ public class OfferService {
         return repository.findAllPublishedAndAvailable(normalize(search), pageable);
     }
 
-    public Page<Offer> searchAdmin(Pageable pageable, OfferStatus status, String search) {
-        return repository.searchAdmin(status, normalize(search), pageable);
-    }
-
     public Page<Offer> searchOwned(String username, Pageable pageable, OfferStatus status, String search) {
         return repository.searchOwned(username, status, normalize(search), pageable);
     }
