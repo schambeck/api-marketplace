@@ -4,7 +4,7 @@
 
 **Prioridade:** MVP.
 
-**Status:** planejado; nenhuma implementação deste plano foi iniciada.
+**Status:** implementado no código; a validação completa depende da execução do Maven com as dependências disponíveis e da validação manual dos endpoints com tokens de seller/admin.
 
 ## 1. Objetivo e escopo
 
