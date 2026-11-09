@@ -15,6 +15,12 @@ services:
       MERCADO_PAGO_ACCESS_TOKEN: TEST-140cca7a-e54a-4129-b8ad-946944c0a8cd
       OBJECT_STORAGE_GCS_PROJECT_ID: ${OBJECT_STORAGE_GCS_PROJECT_ID:-prj-marketplace}
       OBJECT_STORAGE_GCS_BUCKET_NAME: ${OBJECT_STORAGE_GCS_BUCKET_NAME:-bkt-marketplace}
+      OBJECT_STORAGE_S3_ENABLED: ${OBJECT_STORAGE_S3_ENABLED:-true}
+      OBJECT_STORAGE_S3_ENDPOINT: ${OBJECT_STORAGE_S3_ENDPOINT:-http://rustfs:9000}
+      OBJECT_STORAGE_S3_ACCESS_KEY: ${RUSTFS_ACCESS_KEY:-${MINIO_ROOT_USER}}
+      OBJECT_STORAGE_S3_SECRET_KEY: ${RUSTFS_SECRET_KEY:-${MINIO_ROOT_PASSWORD}}
+      OBJECT_STORAGE_S3_BUCKET_NAME: ${RUSTFS_BUCKET:-marketplace}
+      OBJECT_STORAGE_S3_REGION: ${RUSTFS_REGION:-us-east-1}
     ports:
         - '${SERVER_PORT:-8080}:${SERVER_PORT:-8080}'
   nginx:
@@ -97,32 +103,35 @@ services:
       - ./realm-dev.json:/opt/keycloak/data/import/realm.json
     ports:
       - '9443:9443'
-  minio-server:
-    image: quay.io/minio/minio
+  rustfs:
+    image: rustfs/rustfs:1.0.4
     restart: always
-    hostname: minio.localhost
-    command: server /data --console-address ":9001"
+    hostname: rustfs.localhost
+    command: server /data
     volumes:
-      - 'minio_data:/data'
+      - 'rustfs_data:/data'
     ports:
       - '9010:9000'
       - '9011:9001'
     environment:
-      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
-      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
-      - MINIO_BUCKET=${MINIO_BUCKET}
-  minio-client:
-    image: minio/mc
+      - RUSTFS_ACCESS_KEY=${RUSTFS_ACCESS_KEY:-${MINIO_ROOT_USER}}
+      - RUSTFS_SECRET_KEY=${RUSTFS_SECRET_KEY:-${MINIO_ROOT_PASSWORD}}
+  rustfs-init:
+    image: amazon/aws-cli:2.27.41
     depends_on:
-      - minio-server
-    volumes:
-      - './minio:/tmp/minio-pictures'
+      rustfs:
+        condition: service_started
     entrypoint: >
       /bin/sh -c "
-      /usr/bin/mc config host add myminio http://minio-server:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
-      /usr/bin/mc mb myminio/${MINIO_BUCKET};
-      /usr/bin/mc cp --recursive /tmp/minio-pictures/* myminio/${MINIO_BUCKET};
+      until aws --endpoint-url http://rustfs:9000 s3api head-bucket --bucket ${RUSTFS_BUCKET:-marketplace} >/dev/null 2>&1; do
+        aws --endpoint-url http://rustfs:9000 s3api create-bucket --bucket ${RUSTFS_BUCKET:-marketplace} >/dev/null 2>&1 || true;
+        sleep 2;
+      done;
       exit 0;
       "
+    environment:
+      AWS_ACCESS_KEY_ID: ${RUSTFS_ACCESS_KEY:-${MINIO_ROOT_USER}}
+      AWS_SECRET_ACCESS_KEY: ${RUSTFS_SECRET_KEY:-${MINIO_ROOT_PASSWORD}}
+      AWS_DEFAULT_REGION: ${RUSTFS_REGION:-us-east-1}
 volumes:
-  minio_data:
+  rustfs_data:

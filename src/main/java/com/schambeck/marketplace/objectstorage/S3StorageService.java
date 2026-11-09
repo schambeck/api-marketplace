@@ -15,34 +15,32 @@ import java.security.NoSuchAlgorithmException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@ConditionalOnExpression("${object-storage.minio.enabled}")
-public class MinioStorageService extends StorageService {
-    private final MinioStorageConfigProperties config;
-    private final MinioClient minioClient;
+@ConditionalOnExpression("${object-storage.s3.enabled:false}")
+public class S3StorageService extends StorageService {
+    private final S3StorageConfigProperties config;
+    private final MinioClient s3Client;
 
     @Override
     protected String getBucketName() {
         return config.getBucketName();
     }
-    
+
     @Override
     protected void createBucket() throws IOException {
         try {
-            boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(config.getBucketName()).build());
+            boolean found = s3Client.bucketExists(BucketExistsArgs.builder().bucket(config.getBucketName()).build());
             if (!found) {
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(config.getBucketName()).build());
-            } else {
-                log.info("Bucket {} already exists", config.getBucketName());
+                s3Client.makeBucket(MakeBucketArgs.builder().bucket(config.getBucketName()).build());
             }
         } catch (MinioException | NoSuchAlgorithmException | InvalidKeyException e) {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     protected void uploadObject(String objectId, String filePath) throws IOException {
         try {
-            minioClient.uploadObject(UploadObjectArgs.builder()
+            s3Client.uploadObject(UploadObjectArgs.builder()
                     .bucket(config.getBucketName())
                     .object(objectId)
                     .filename(filePath)
@@ -51,17 +49,16 @@ public class MinioStorageService extends StorageService {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     protected void downloadObject(String objectId, String destFilePath) throws IOException {
         try {
-            minioClient.downloadObject(
-                    DownloadObjectArgs.builder()
-                            .bucket(config.getBucketName())
-                            .object(objectId)
-                            .filename(destFilePath)
-                            .overwrite(true)
-                            .build());
+            s3Client.downloadObject(DownloadObjectArgs.builder()
+                    .bucket(config.getBucketName())
+                    .object(objectId)
+                    .filename(destFilePath)
+                    .overwrite(true)
+                    .build());
         } catch (MinioException | NoSuchAlgorithmException | InvalidKeyException e) {
             throw new RuntimeException(e);
         }

@@ -58,7 +58,7 @@ Não coloque credenciais reais no repositório. Sobrescreva as propriedades por 
 | `MERCADO_PAGO_REDIRECT_URI` | URL de retorno do fluxo OAuth do Mercado Pago. |
 | `MERCADO_PAGO_ACCESS_TOKEN` | Token de acesso do Mercado Pago. |
 | `OBJECT_STORAGE_GCS_PROJECT_ID` / `OBJECT_STORAGE_GCS_BUCKET_NAME` | Projeto e bucket do Google Cloud Storage. |
-| `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` / `MINIO_BUCKET` | Configuração do MinIO no Compose. |
+| `RUSTFS_ACCESS_KEY` / `RUSTFS_SECRET_KEY` / `RUSTFS_BUCKET` / `RUSTFS_REGION` | Configuração do RustFS/S3 no Compose. Durante a transição, `MINIO_ROOT_USER`, `MINIO_ROOT_PASSWORD` e `MINIO_BUCKET` são aceitos como fallback local. |
 
 O arquivo `application.properties` contém os padrões locais. `application-dev.properties` e `application-tailscale.properties` habilitam HTTPS na porta `8443` e configuram endpoints externos específicos; use-os somente no ambiente correspondente.
 
@@ -107,7 +107,7 @@ make compose-down
 
 ## Docker Compose
 
-O `compose.yaml` define os serviços da aplicação (`web`), Nginx, PostgreSQL, Keycloak e MinIO. O serviço `web` usa a imagem `api-marketplace:latest` por padrão e pode ser sobrescrito com `WEB_IMAGE`.
+O `compose.yaml` define os serviços da aplicação (`web`), Nginx, PostgreSQL, Keycloak e RustFS. O serviço `web` usa a imagem `api-marketplace:latest` por padrão e pode ser sobrescrito com `WEB_IMAGE`.
 
 Para subir os serviços padrão:
 
@@ -121,7 +121,7 @@ Os perfis opcionais do Compose são:
 - `production`: Keycloak em HTTPS na porta `9443`;
 - `tailscale`: Keycloak em HTTPS na porta `9443` com o hostname configurado no Compose.
 
-O PostgreSQL é exposto na porta `5432`. O MinIO usa as portas `9010` (API) e `9011` (console). A persistência do PostgreSQL fica em `db/data` e a do MinIO no volume `minio_data`.
+O PostgreSQL é exposto na porta `5432`. O RustFS usa as portas `9010` (API) e `9011` (console). A persistência do PostgreSQL fica em `db/data` e a do RustFS no volume `rustfs_data`.
 
 Antes de usar MinIO ou ambientes externos, forneça as variáveis e credenciais necessárias por um mecanismo seguro. Não commite esses valores.
 
