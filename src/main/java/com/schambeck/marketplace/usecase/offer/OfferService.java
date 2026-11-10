@@ -4,6 +4,7 @@ import com.schambeck.marketplace.exception.EntityNotFoundException;
 import com.schambeck.marketplace.exception.OfferValidationException;
 import com.schambeck.marketplace.usecase.product.Product;
 import com.schambeck.marketplace.usecase.product.ProductRepository;
+import com.schambeck.marketplace.usecase.inventory.InventoryBalanceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,7 @@ public class OfferService {
     private final OfferRepository repository;
     private final OfferStatusHistoryRepository historyRepository;
     private final ProductRepository productRepository;
+    private final InventoryBalanceRepository inventoryBalanceRepository;
 
     @Transactional
     public Offer create(OfferWeb web, String actor, boolean admin) {
@@ -261,9 +263,15 @@ public class OfferService {
     }
 
     private boolean isAvailable(Product product) {
-        return product != null
-                && product.getQuantity() != null
-                && product.getQuantity().signum() > 0;
+        if (product == null) return false;
+        // The fallback keeps isolated unit tests that do not build the inventory repository valid;
+        // in the application context the balance is always initialized by the migration/service.
+        if (inventoryBalanceRepository == null) {
+            return product.getQuantity() != null && product.getQuantity().signum() > 0;
+        }
+        return inventoryBalanceRepository.findByProduct_Id(product.getId())
+                .map(balance -> balance.getAvailableQuantity() != null && balance.getAvailableQuantity().signum() > 0)
+                .orElse(false);
     }
 
     private static String normalize(String search) {

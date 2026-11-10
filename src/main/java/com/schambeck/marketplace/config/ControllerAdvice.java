@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @RestControllerAdvice
@@ -42,7 +43,9 @@ class ControllerAdvice {
     ResponseEntity<Map<String, String>> handleInventoryValidationException(InventoryValidationException exception) {
         Map<String, String> error = new HashMap<>();
         error.put("message", exception.getMessage());
-        return ResponseEntity.status(BAD_REQUEST).body(error);
+        int status = exception.getMessage() != null && (exception.getMessage().contains("Insufficient inventory")
+                || exception.getMessage().contains("unavailable")) ? CONFLICT.value() : BAD_REQUEST.value();
+        return ResponseEntity.status(status).body(error);
     }
 
     @ExceptionHandler(OrderValidationException.class)

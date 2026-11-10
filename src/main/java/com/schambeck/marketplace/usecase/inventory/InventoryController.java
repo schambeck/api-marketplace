@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("inventory")
@@ -42,6 +43,12 @@ public class InventoryController {
     public ResponseEntity<InventoryReservationWeb> expire(@PathVariable Integer id, @RequestParam String operationKey,
                                                            Principal principal) {
         return ResponseEntity.ok(InventoryReservationWeb.from(service.expire(id, operationKey, username(principal))));
+    }
+
+    @GetMapping("/orders/{orderId}")
+    public ResponseEntity<InventoryOrderWeb> orderSummary(@PathVariable UUID orderId, Principal principal,
+                                                           Authentication authentication) {
+        return ResponseEntity.ok(service.orderSummary(orderId, username(principal), isAdmin(authentication)));
     }
 
     @PostMapping("allocations/{id}/consume")

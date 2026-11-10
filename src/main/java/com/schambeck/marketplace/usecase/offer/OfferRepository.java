@@ -47,9 +47,9 @@ public interface OfferRepository extends JpaRepository<Offer, Integer> {
     Optional<Offer> findByIdAndOwnerUsername(@Param("id") Integer id, @Param("username") String username);
 
     @Query(value = """
-            select offer from Offer offer join fetch offer.product product
+            select offer from Offer offer join fetch offer.product product join InventoryBalance balance on balance.product.id = product.id
             where offer.status = 'PUBLISHED'
-              and product.quantity > 0
+              and balance.availableQuantity > 0
               and (:search = '' or lower(product.name) like lower(concat('%', :search, '%'))
                    or lower(product.description) like lower(concat('%', :search, '%'))
                    or lower(product.category) like lower(concat('%', :search, '%'))
@@ -59,9 +59,9 @@ public interface OfferRepository extends JpaRepository<Offer, Integer> {
                    or lower(coalesce(offer.contextVariant, '')) like lower(concat('%', :search, '%')))
             order by offer.id asc
             """, countQuery = """
-            select count(offer) from Offer offer join offer.product product
+            select count(offer) from Offer offer join offer.product product join InventoryBalance balance on balance.product.id = product.id
             where offer.status = 'PUBLISHED'
-              and product.quantity > 0
+              and balance.availableQuantity > 0
               and (:search = '' or lower(product.name) like lower(concat('%', :search, '%'))
                    or lower(product.description) like lower(concat('%', :search, '%'))
                    or lower(product.category) like lower(concat('%', :search, '%'))

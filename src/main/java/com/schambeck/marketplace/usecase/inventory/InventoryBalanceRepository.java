@@ -13,4 +13,7 @@ public interface InventoryBalanceRepository extends JpaRepository<InventoryBalan
     Optional<InventoryBalance> findByProductIdForUpdate(@Param("productId") Integer productId);
 
     Optional<InventoryBalance> findByProduct_Id(Integer productId);
+
+    @Query("select balance from InventoryBalance balance join fetch balance.product where balance.product.id = :productId")
+    Optional<InventoryBalance> findByProductIdWithProduct(@Param("productId") Integer productId);
 }

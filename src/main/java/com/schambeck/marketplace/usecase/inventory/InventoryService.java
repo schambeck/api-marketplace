@@ -4,6 +4,8 @@ import com.schambeck.marketplace.exception.EntityNotFoundException;
 import com.schambeck.marketplace.exception.InventoryValidationException;
 import com.schambeck.marketplace.usecase.product.Product;
 import com.schambeck.marketplace.usecase.product.ProductRepository;
+import com.schambeck.marketplace.usecase.order.Order;
+import com.schambeck.marketplace.usecase.order.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static com.schambeck.marketplace.usecase.inventory.InventoryStatus.*;
 import static java.math.BigDecimal.ZERO;
@@ -26,6 +29,7 @@ public class InventoryService {
     private final InventoryAllocationRepository allocationRepository;
     private final InventoryMovementRepository movementRepository;
     private final InventoryOperationRepository operationRepository;
+    private final OrderRepository orderRepository;
 
     @Value("${inventory.reservation-ttl:30}")
     private long reservationTtlMinutes;
@@ -213,6 +217,26 @@ public class InventoryService {
                 .stream().limit(expirationBatchSize).toList();
         expired.forEach(reservation -> expire(reservation.getId(), "expiry:" + reservation.getId(), "scheduler"));
         return expired.size();
+    }
+
+    @Transactional(readOnly = true)
+    public InventoryOrderWeb orderSummary(UUID orderId, String actor, boolean admin) {
+        Order order = orderRepository.findByPublicId(orderId)
+                .orElseThrow(() -> new EntityNotFoundException(Order.class, orderId));
+        List<InventoryReservation> reservations = reservationRepository.findByOrderPublicId(orderId);
+        if (!admin && (order.getBuyer() == null || !actor.equals(order.getBuyer().getUsername()))
+                && reservations.stream().noneMatch(r -> r.getSeller() != null && actor.equals(r.getSeller().getUsername()))) {
+            throw new InventoryValidationException("The order does not belong to the authenticated user.");
+        }
+        List<Integer> reservationIds = reservations.stream().map(InventoryReservation::getId).toList();
+        InventoryOrderWeb result = new InventoryOrderWeb();
+        result.setOrderId(orderId);
+        result.setReservations(reservations.stream().map(InventoryReservationWeb::from).toList());
+        result.setAllocations(reservationIds.isEmpty() ? List.of() : allocationRepository.findAllByReservationIdIn(reservationIds)
+                .stream().map(InventoryAllocationWeb::from).toList());
+        result.setMovements(reservationIds.isEmpty() ? List.of() : movementRepository.findAllByReservationIdInOrderByIdAsc(reservationIds)
+                .stream().map(InventoryMovementWeb::from).toList());
+        return result;
     }
 
     private InventoryBalance lockBalance(Integer productId) {

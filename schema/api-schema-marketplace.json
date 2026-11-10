@@ -161,6 +161,30 @@
         {"propertyName": "consumedQuantity", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
         {"propertyName": "status", "propertyType": "InventoryAllocationStatus", "columnType": "varchar(32)", "required": true}
       ]
+    },
+    {
+      "name": "InventoryMovement",
+      "resource": "inventory/movements",
+      "fields": [
+        {"propertyName": "id", "propertyType": "Long", "columnType": "bigint", "required": true},
+        {"propertyName": "reservationId", "propertyType": "Integer", "columnType": "integer", "required": true},
+        {"propertyName": "allocationId", "propertyType": "Integer", "columnType": "integer"},
+        {"propertyName": "operation", "propertyType": "String", "columnType": "varchar(64)", "required": true},
+        {"propertyName": "fromStatus", "propertyType": "String", "columnType": "varchar(32)"},
+        {"propertyName": "toStatus", "propertyType": "String", "columnType": "varchar(32)", "required": true},
+        {"propertyName": "quantity", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "createdAt", "propertyType": "LocalDateTime", "columnType": "timestamp", "required": true}
+      ]
+    },
+    {
+      "name": "InventoryOrder",
+      "resource": "inventory/orders/{orderId}",
+      "fields": [
+        {"propertyName": "orderId", "propertyType": "UUID", "columnType": "uuid", "required": true},
+        {"propertyName": "reservations", "propertyType": "InventoryReservation", "subtype": "collection", "required": true},
+        {"propertyName": "allocations", "propertyType": "InventoryAllocation", "subtype": "collection", "required": true},
+        {"propertyName": "movements", "propertyType": "InventoryMovement", "subtype": "collection", "required": true}
+      ]
     }
   ]
 }
