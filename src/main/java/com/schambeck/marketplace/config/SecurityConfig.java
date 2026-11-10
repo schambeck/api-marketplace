@@ -41,6 +41,7 @@ class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 //                .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.ignoringRequestMatchers(""))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/actuator/health", "/actuator/health/**").permitAll()
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/swagger-resources", "/v3/api-docs/**", "/proxy/**").permitAll()
                         .requestMatchers(GET, "/catalog/**").permitAll()
                         .requestMatchers(GET, "/offers/**").permitAll()
