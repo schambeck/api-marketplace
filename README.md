@@ -207,3 +207,12 @@ Para parar e remover os contêineres criados pelo Compose:
 ```bash
 make compose-down
 ```
+# Configuração do onboarding de seller
+
+A aprovação do seller atribui a role de realm `SELLER` por meio da API REST de administração do Keycloak. Configure estas variáveis de ambiente na API:
+
+- `KEYCLOAK_ADMIN_BASE_URL`: URL base do Keycloak (por exemplo, `http://keycloak:8080` dentro do Compose).
+- `KEYCLOAK_REALM`: nome do realm; o padrão é `marketplace`.
+- `KEYCLOAK_ADMIN_CLIENT_ID` e `KEYCLOAK_ADMIN_CLIENT_SECRET`: cliente confidencial com conta de serviço que usa credenciais de cliente.
+
+Habilite contas de serviço para esse cliente e conceda somente as permissões de gerenciamento do realm necessárias para consultar usuários, visualizar roles do realm e gerenciar as associações de roles dos usuários. Mantenha o segredo fora do controle de versão. Se a integração estiver indisponível, a aprovação não será concluída e a solicitação permanecerá pendente para que um administrador possa tentar novamente após restabelecer o acesso ao Keycloak. A importação das definições de realm fornecidas cria a role `SELLER`; ela só é atribuída após aprovação manual.

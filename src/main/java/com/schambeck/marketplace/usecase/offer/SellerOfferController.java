@@ -20,7 +20,7 @@ import java.util.Locale;
 @RestController
 @RequestMapping("seller/offers")
 @RequiredArgsConstructor
-@PreAuthorize("isAuthenticated()")
+@PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
 public class SellerOfferController {
     private final OfferService service;
     private final AuthenticationService authenticationService;

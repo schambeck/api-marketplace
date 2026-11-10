@@ -21,13 +21,13 @@ public class OfferController {
     private final AuthenticationService authenticationService;
 
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
     public ResponseEntity<OfferWeb> create(@RequestBody OfferWeb web, Principal principal, Authentication authentication) {
         return ResponseEntity.ok(OfferMapper.toWeb(service.create(web, username(principal), isAdmin(authentication))));
     }
 
     @PutMapping("{id}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
     public ResponseEntity<OfferWeb> updateDraft(@PathVariable Integer id, @RequestBody OfferUpdateRequest request,
                                                  Principal principal, Authentication authentication) {
         return ResponseEntity.ok(OfferMapper.toWeb(service.updateDraft(id, request, username(principal), isAdmin(authentication))));
@@ -45,31 +45,31 @@ public class OfferController {
     }
 
     @GetMapping("{id}/history")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
     public ResponseEntity<List<OfferStatusHistory>> history(@PathVariable Integer id, Principal principal, Authentication authentication) {
         return ResponseEntity.ok(service.history(id, username(principal), isAdmin(authentication)));
     }
 
     @PostMapping("{id}/publish")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
     public ResponseEntity<OfferWeb> publish(@PathVariable Integer id, @RequestBody OfferActionRequest request, Principal principal, Authentication authentication) {
         return ResponseEntity.ok(OfferMapper.toWeb(service.publish(id, request, username(principal), isAdmin(authentication))));
     }
 
     @PostMapping("{id}/pause")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
     public ResponseEntity<OfferWeb> pause(@PathVariable Integer id, @RequestBody OfferActionRequest request, Principal principal, Authentication authentication) {
         return ResponseEntity.ok(OfferMapper.toWeb(service.pause(id, request, username(principal), isAdmin(authentication))));
     }
 
     @PostMapping("{id}/reactivate")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
     public ResponseEntity<OfferWeb> reactivate(@PathVariable Integer id, @RequestBody OfferActionRequest request, Principal principal, Authentication authentication) {
         return ResponseEntity.ok(OfferMapper.toWeb(service.reactivate(id, request, username(principal), isAdmin(authentication))));
     }
 
     @PostMapping("{id}/retire")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAnyRole('SELLER', 'ADMIN')")
     public ResponseEntity<OfferWeb> retire(@PathVariable Integer id, @RequestBody OfferActionRequest request, Principal principal, Authentication authentication) {
         return ResponseEntity.ok(OfferMapper.toWeb(service.retire(id, request, username(principal), isAdmin(authentication))));
     }

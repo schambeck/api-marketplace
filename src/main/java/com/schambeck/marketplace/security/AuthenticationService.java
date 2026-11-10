@@ -12,6 +12,10 @@ public class AuthenticationService {
     public String getLoggedUsername(Principal principal) {
         return getTokenAttribute(principal, "preferred_username");
     }
+
+    public String getExternalId(Principal principal) {
+        return getTokenAttribute(principal, "sub");
+    }
     
     public String getEmail(Principal principal) {
         return getTokenAttribute(principal, "email");

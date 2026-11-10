@@ -21,6 +21,7 @@ Os planos `PLAN-001` e `PLAN-002` registram a implementação original. Como ess
 | 022 | [Consulta de ofertas do seller](PLAN-022-consulta-ofertas-seller-mvp.md) | PLAN-019 |
 | 023 | [Migração de MinIO para RustFS](PLAN-023-migracao-rustfs.md) | Infraestrutura de object storage |
 | 024 | [Role Seller e autorização de ofertas](PLAN-024-role-seller-ofertas.md) | Autorização e experiência de criação de offers |
+| 025 | [Onboarding de seller](PLAN-025-onboarding-seller.md) | Solicitação, revisão e provisionamento da role `SELLER` |
 
 Como regra, cada entrega deve introduzir uma migration Flyway nova, manter histórico/auditoria, atualizar os objetos HTTP e o schema JSON quando houver contrato público, e acrescentar testes de concorrência/idempotência nos fluxos que alteram estado. As decisões pendentes de cada PRD precisam ser resolvidas antes de congelar o modelo de dados ou o contrato público correspondente.
 

@@ -50,6 +50,13 @@
   "roles": {
     "realm": [
       {
+        "name": "SELLER",
+        "description": "Approved marketplace seller",
+        "composite": false,
+        "clientRole": false,
+        "attributes": {}
+      },
+      {
         "id": "6c48ebbf-1197-4561-a4eb-254522215bf6",
         "name": "offline_access",
         "description": "${role_offline-access}",
