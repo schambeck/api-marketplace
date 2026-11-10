@@ -49,8 +49,7 @@ public interface OfferRepository extends JpaRepository<Offer, Integer> {
     @Query(value = """
             select offer from Offer offer join fetch offer.product product
             where offer.status = 'PUBLISHED'
-              and exists (select balance.id from InventoryBalance balance
-                          where balance.product = product and balance.availableQuantity > 0)
+              and product.quantity > 0
               and (:search = '' or lower(product.name) like lower(concat('%', :search, '%'))
                    or lower(product.description) like lower(concat('%', :search, '%'))
                    or lower(product.category) like lower(concat('%', :search, '%'))
@@ -62,8 +61,7 @@ public interface OfferRepository extends JpaRepository<Offer, Integer> {
             """, countQuery = """
             select count(offer) from Offer offer join offer.product product
             where offer.status = 'PUBLISHED'
-              and exists (select balance.id from InventoryBalance balance
-                          where balance.product = product and balance.availableQuantity > 0)
+              and product.quantity > 0
               and (:search = '' or lower(product.name) like lower(concat('%', :search, '%'))
                    or lower(product.description) like lower(concat('%', :search, '%'))
                    or lower(product.category) like lower(concat('%', :search, '%'))
