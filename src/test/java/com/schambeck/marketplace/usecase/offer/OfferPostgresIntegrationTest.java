@@ -42,6 +42,8 @@ class OfferPostgresIntegrationTest {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
+    private OfferRepository offerRepository;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -123,6 +125,59 @@ class OfferPostgresIntegrationTest {
         assertThat(service.searchPublished(PageRequest.of(0, 20), "Stocked product")).isEmpty();
         assertThatThrownBy(() -> service.findPublishedById(offer.getId()))
                 .isInstanceOf(com.schambeck.marketplace.exception.EntityNotFoundException.class);
+    }
+
+    @Test
+    void ownedSearchIsolatedByUsernameWithDeterministicPagination() {
+        User sellerA = userRepository.findByIdOrThrow(1);
+        User sellerB = userRepository.findByIdOrThrow(2);
+        Product first = product("Seller A first", sellerA, new BigDecimal("5"));
+        Product second = product("Seller A second", sellerA, new BigDecimal("5"));
+        Product third = product("Seller A third", sellerA, new BigDecimal("5"));
+        Product fourth = product("Seller A fourth", sellerA, new BigDecimal("5"));
+        Product foreign = product("Seller B foreign", sellerB, new BigDecimal("5"));
+
+        offerRepository.saveAll(java.util.List.of(
+                offer(first, OfferStatus.PAUSED),
+                offer(second, OfferStatus.DRAFT),
+                offer(third, OfferStatus.PUBLISHED),
+                offer(fourth, OfferStatus.RETIRED),
+                offer(foreign, OfferStatus.PUBLISHED)));
+        offerRepository.flush();
+
+        Page<Offer> page = service.searchOwned(sellerA.getUsername(), PageRequest.of(0, 1), null, null);
+
+        assertThat(page.getTotalElements()).isEqualTo(4);
+        assertThat(page.getSize()).isEqualTo(1);
+        assertThat(page.getNumber()).isZero();
+        assertThat(page.getContent()).hasSize(1);
+        assertThat(page.getContent().get(0).getProduct().getUser().getUsername()).isEqualTo(sellerA.getUsername());
+        assertThat(service.searchOwned(sellerA.getUsername(), PageRequest.of(0, 20), OfferStatus.PAUSED, null))
+                .extracting(Offer::getStatus)
+                .containsExactly(OfferStatus.PAUSED);
+        assertThatThrownBy(() -> service.findOwnedById(sellerA.getUsername(), foreignOfferId(foreign)))
+                .isInstanceOf(com.schambeck.marketplace.exception.EntityNotFoundException.class);
+    }
+
+    private Integer foreignOfferId(Product foreign) {
+        return offerRepository.findFirstByProduct_IdAndStatusOrderByIdAsc(foreign.getId(), OfferStatus.PUBLISHED)
+                .orElseThrow()
+                .getId();
+    }
+
+    private Offer offer(Product product, OfferStatus status) {
+        return Offer.builder()
+                .product(product)
+                .contextGame("Elden Ring")
+                .contextPlatform("PC")
+                .contextRegion("BR")
+                .contextVariant("Standard")
+                .price(new BigDecimal("25.00"))
+                .deliveryMethod("AUTOMATIC")
+                .availabilityStatus(OfferAvailabilityStatus.AVAILABLE)
+                .status(status)
+                .version(0)
+                .build();
     }
 
     private Product product(String name, User user, BigDecimal quantity) {

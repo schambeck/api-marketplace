@@ -108,6 +108,31 @@ class OfferServiceTest {
     }
 
     @Test
+    void ownedSearchDelegatesUsernameAndFiltersWithoutMutatingState() {
+        PageRequest pageable = PageRequest.of(0, 25);
+        Page<Offer> page = Page.empty();
+        when(repository.searchOwned("seller-a", OfferStatus.PAUSED, "elden", pageable)).thenReturn(page);
+
+        assertThat(service.searchOwned("seller-a", pageable, OfferStatus.PAUSED, "  elden  ")).isSameAs(page);
+
+        verify(repository).searchOwned("seller-a", OfferStatus.PAUSED, "elden", pageable);
+        verifyNoInteractions(historyRepository, productRepository);
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    void ownedDetailReturnsNotFoundForMissingOrForeignOffer() {
+        when(repository.findByIdAndOwnerUsername(7, "seller-a")).thenReturn(java.util.Optional.empty());
+
+        assertThatThrownBy(() -> service.findOwnedById("seller-a", 7))
+                .isInstanceOf(com.schambeck.marketplace.exception.EntityNotFoundException.class);
+
+        verify(repository).findByIdAndOwnerUsername(7, "seller-a");
+        verifyNoInteractions(historyRepository, productRepository);
+        verify(repository, never()).save(any());
+    }
+
+    @Test
     void checkoutBlocksPausedOffer() {
         Offer offer = Offer.builder().id(7).status(OfferStatus.PAUSED)
                 .product(product("seller-a", new BigDecimal("10"))).build();

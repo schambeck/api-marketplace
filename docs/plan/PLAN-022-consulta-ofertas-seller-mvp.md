@@ -2,7 +2,7 @@
 
 **Tipo:** Plano corretivo sobre o `PLAN-019` já implementado.
 
-**Status:** implementado; a consulta seller e a migração do consumidor estão concluídas. O detalhe administrativo permanece disponível para moderação.
+**Status:** backend e evidências automatizadas implementados; o consumidor frontend deste repositório não existe, então a migração para `/seller/offers` deve ser aplicada no repositório consumidor externo. O detalhe administrativo permanece disponível para moderação.
 
 **Prioridade:** MVP.
 
