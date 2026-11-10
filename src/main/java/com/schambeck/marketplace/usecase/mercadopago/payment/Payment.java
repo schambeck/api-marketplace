@@ -1,6 +1,7 @@
 package com.schambeck.marketplace.usecase.mercadopago.payment;
 
 import com.schambeck.marketplace.usecase.cart.Cart;
+import com.schambeck.marketplace.usecase.order.Order;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -31,6 +32,10 @@ public class Payment {
 	@ManyToOne(cascade = MERGE)
 	@JoinColumn(name = "cart_id", referencedColumnName = "id")
 	private Cart cart;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "order_id")
+	private Order order;
 
 	@Column(name = "payment_id")
 	private Long paymentId;

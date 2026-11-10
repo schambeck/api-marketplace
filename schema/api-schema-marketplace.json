@@ -2,6 +2,43 @@
   "packageName": "com.schambeck.marketplace.usecase",
   "entities": [
     {
+      "name": "Order",
+      "resource": "orders",
+      "fields": [
+        {"propertyName": "publicId", "propertyType": "UUID", "columnType": "uuid", "required": true},
+        {"propertyName": "status", "propertyType": "OrderStatus", "columnType": "varchar(40)", "required": true},
+        {"propertyName": "subtotalAmount", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "totalAmount", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "items", "propertyType": "OrderItem", "subtype": "collection", "required": true},
+        {"propertyName": "history", "propertyType": "OrderStatusHistory", "subtype": "collection", "required": true}
+      ]
+    },
+    {
+      "name": "OrderItem",
+      "resource": "orders/{publicId}/items",
+      "fields": [
+        {"propertyName": "productId", "propertyType": "Integer", "columnType": "integer", "required": true},
+        {"propertyName": "offerId", "propertyType": "Integer", "columnType": "integer", "required": true},
+        {"propertyName": "productName", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "unitPrice", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "quantity", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "subtotalAmount", "propertyType": "BigDecimal", "fractionDigits": 2, "columnType": "decimal(12,2)", "required": true},
+        {"propertyName": "snapshotVersion", "propertyType": "Integer", "columnType": "integer", "required": true},
+        {"propertyName": "snapshot", "propertyType": "JsonNode", "columnType": "jsonb", "required": true}
+      ]
+    },
+    {
+      "name": "OrderStatusHistory",
+      "resource": "orders/{publicId}/history",
+      "fields": [
+        {"propertyName": "fromStatus", "propertyType": "OrderStatus", "columnType": "varchar(40)"},
+        {"propertyName": "toStatus", "propertyType": "OrderStatus", "columnType": "varchar(40)", "required": true},
+        {"propertyName": "cause", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "source", "propertyType": "String", "columnType": "varchar(255)", "required": true},
+        {"propertyName": "actor", "propertyType": "String", "columnType": "varchar(255)"}
+      ]
+    },
+    {
       "name": "User",
       "resource": "users",
       "fields": [

@@ -2,6 +2,7 @@ package com.schambeck.marketplace.usecase.mercadopago.preference;
 
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.schambeck.marketplace.usecase.cartitem.CartItem;
+import com.schambeck.marketplace.usecase.order.OrderItem;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,10 @@ class CartPreferenceConverter {
                 .map(this::createPreferenceItem)
                 .collect(Collectors.toList());
     }
+
+    List<PreferenceItemRequest> createOrderPreferenceItems(List<OrderItem> orderItems) {
+        return orderItems.stream().map(this::createPreferenceItem).collect(Collectors.toList());
+    }
     
     private PreferenceItemRequest createPreferenceItem(CartItem cartItem) {
         return PreferenceItemRequest.builder()
@@ -33,6 +38,12 @@ class CartPreferenceConverter {
                 .currencyId(BRL)
                 .unitPrice(cartItem.getPrice())
                 .build();
+    }
+
+    private PreferenceItemRequest createPreferenceItem(OrderItem item) {
+        return PreferenceItemRequest.builder().id(item.getId().toString()).title(item.getProductName())
+                .description(item.getProductDescription()).quantity(item.getQuantity().intValue())
+                .currencyId(BRL).unitPrice(item.getUnitPrice()).build();
     }
     
     private String getPictureUrl(String objectId) {
